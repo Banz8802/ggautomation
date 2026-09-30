@@ -13,7 +13,7 @@ export default function TopBar() {
             title="Call Us"
           >
             <Phone className="w-3.5 h-3.5 text-[#e51a24]" />
-            <span className="font-medium">+63 922-240-1919 / +63 917-703-4552</span>
+            <span className="font-medium">(0922) 240-1919</span>
           </a>
           <a 
             href="mailto:info@ggautomation.tech" 
@@ -26,6 +26,12 @@ export default function TopBar() {
           <div className="hidden lg:flex items-center gap-2 text-slate-400">
             <Clock className="w-3.5 h-3.5 text-[#ffc000]" />
             <span>Mon - Sat: 8:00 AM - 5:00 PM</span>
+          </div>
+
+          {/* Brand Slogan */}
+          <div className="hidden 2xl:flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#0b7337]/30 border border-[#0b7337]/60 text-emerald-300 text-[11px] font-medium tracking-wide">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>&ldquo;On the job, to better everybody&apos;s life!&rdquo;</span>
           </div>
         </div>
 
@@ -41,7 +47,7 @@ export default function TopBar() {
 
           <div className="flex items-center gap-3">
             <a 
-              href="https://facebook.com" 
+              href="https://www.facebook.com/GGAutomation.1" 
               target="_blank" 
               rel="noreferrer"
               className="p-1 hover:text-[#ffc000] hover:bg-white/5 rounded transition-all"

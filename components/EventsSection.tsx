@@ -5,13 +5,14 @@ import { Calendar, MapPin, ArrowRight, Waves, Users } from 'lucide-react';
 
 export default function EventsSection() {
   return (
-    <section id="events" className="py-20 bg-slate-50 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <section id="trainings" className="py-20 bg-slate-50 relative scroll-mt-20">
+      <div id="news-updates" className="scroll-mt-24"></div>
+      <div id="events" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Section Heading */}
         <SectionHeading
-          badge="EVENTS & NEWS"
-          title="Floating Solar PV Seminar & Live Demo"
-          subtitle="Stay updated with GG Automation's latest industry seminars, clean energy demonstrations, and technical workshops across the Philippines."
+          badge="TRAININGS, EVENTS & NEWS"
+          title="Floating Solar PV Seminar, Trainings & Live Demo"
+          subtitle="Stay updated with GG Automation's latest technical trainings, industry seminars, clean energy demonstrations, and workshop updates across the Philippines."
         />
 
         {/* Featured Event Card */}
@@ -71,7 +72,7 @@ export default function EventsSection() {
                 Clean Tech Innovation
               </span>
               <a
-                href="#contact"
+                href="/contact"
                 className="inline-flex items-center gap-2 text-sm font-bold text-[#091833] hover:text-[#e51a24] transition-colors"
               >
                 <span>Inquire About Future Workshops</span>

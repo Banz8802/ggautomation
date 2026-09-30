@@ -2,18 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import Logo from './Logo';
-import { Menu, X, ArrowRight, Phone } from 'lucide-react';
+import { Menu, X, ArrowRight } from 'lucide-react';
 
 const navLinks = [
-  { name: 'Home', href: '#hero' },
-  { name: 'About Us', href: '#about' },
-  { name: 'Services', href: '#services' },
-  { name: 'Solar Systems', href: '#solar-systems' },
-  { name: 'Our Process', href: '#process' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Partners', href: '#partners' },
-  { name: 'Events', href: '#events' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/services' },
+  { name: 'Projects', href: '/projects' },
+  { name: 'About Us', href: '/about' },
+  { name: 'Trainings', href: '/trainings' },
+  { name: 'News & Updates', href: '/news-updates' },
+  { name: 'Contact', href: '/contact' },
 ];
 
 export default function Header() {
@@ -40,17 +38,17 @@ export default function Header() {
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand Logo */}
-        <a href="#hero" className="outline-none focus:ring-2 focus:ring-[#e51a24] rounded-lg">
+        <a href="/" className="outline-none focus:ring-2 focus:ring-[#e51a24] rounded-lg">
           <Logo variant="dark" />
         </a>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden xl:flex items-center space-x-7">
+        <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="text-sm font-semibold text-slate-700 hover:text-[#e51a24] transition-colors relative py-1 group"
+              className="text-sm font-semibold text-slate-700 hover:text-[#e51a24] transition-colors relative py-1 group whitespace-nowrap"
             >
               {link.name}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#e51a24] transition-all duration-300 group-hover:w-full"></span>
@@ -59,19 +57,12 @@ export default function Header() {
         </nav>
 
         {/* CTA Button */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden md:flex items-center">
           <a
-            href="tel:+639222401919"
-            className="flex items-center gap-2 text-xs font-bold text-[#091833] hover:text-[#e51a24] transition-colors"
-          >
-            <Phone className="w-4 h-4 text-[#e51a24]" />
-            <span>+63 922-240-1919</span>
-          </a>
-          <a
-            href="#calculator"
+            href="/contact"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-md hover:shadow-lg transition-all duration-200 group"
           >
-            <span>Get Free Quote</span>
+            <span>Book Now</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -79,7 +70,7 @@ export default function Header() {
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="xl:hidden p-2 rounded-lg text-slate-700 hover:text-[#e51a24] hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#e51a24]"
+          className="lg:hidden p-2 rounded-lg text-slate-700 hover:text-[#e51a24] hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#e51a24]"
           aria-label="Toggle Menu"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -88,7 +79,7 @@ export default function Header() {
 
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
-        <div className="xl:hidden fixed inset-0 top-[65px] bg-slate-900/60 backdrop-blur-sm z-40" onClick={() => setMobileMenuOpen(false)}>
+        <div className="lg:hidden fixed inset-0 top-[65px] bg-slate-900/60 backdrop-blur-sm z-40" onClick={() => setMobileMenuOpen(false)}>
           <div 
             className="absolute top-0 right-0 w-full max-w-sm bg-white h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
@@ -121,16 +112,16 @@ export default function Header() {
 
             <div className="pt-6 border-t border-slate-100 space-y-3">
               <a
-                href="#calculator"
+                href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm font-bold bg-[#e51a24] text-white shadow-md"
               >
-                <span>Get Free Quote</span>
+                <span>Book Now</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
 
               <div className="text-center text-xs text-slate-500 pt-2">
-                <p>Call Us: +63 922-240-1919</p>
+                <p>Call Us: (0922) 240-1919</p>
                 <p>Email: info@ggautomation.tech</p>
               </div>
             </div>

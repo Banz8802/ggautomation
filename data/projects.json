@@ -1,0 +1,144 @@
+[
+  {
+    "id": "super-metro-toledo",
+    "title": "Super Metro - Toledo City, Cebu",
+    "category": "Commercial",
+    "location": "Toledo City, Cebu",
+    "capacity": "100+ kWp",
+    "client": "Metro Retail Stores Group Inc. (Super Metro)",
+    "folder": "/images/projects/commercial/Super Metro - Toledo City, Cebu",
+    "images": "smt1.webp,smt2.webp,smt3.webp,smt4.webp,smt5.webp,smt6.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "145,000+ kWh / Year",
+    "co2Offset": "102 Tons / Year",
+    "description": "Turnkey commercial rooftop solar PV installation engineered to curb peak daytime energy consumption for a major hypermarket retail store in Toledo City, fully synchronized with local distribution utility net-metering.",
+    "highlights": [
+      "Net-Metering Distribution Utility Synchronized",
+      "Real-Time SCADA Cloud Telemetry Dashboard",
+      "Tier-1 Monocrystalline High-Yield Modules",
+      "Wind-Resistant Clamped Aluminum Racking"
+    ],
+    "tags": [
+      "Commercial",
+      "Super Metro",
+      "On-Grid",
+      "Toledo City",
+      "Cebu"
+    ]
+  },
+  {
+    "id": "gaisano-capital-tpadilla",
+    "title": "GAISANO CAPITAL (GAISANO SAVERSMART) – T.PADILLA ST., CEBU CITY 214kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "category": "Commercial",
+    "location": "T. Padilla St., Cebu City",
+    "capacity": "214 kWp",
+    "client": "Gaisano Capital Group (Gaisano Saversmart)",
+    "folder": "/images/projects/commercial/GAISANO CAPITAL (GAISANO SAVERSMART) – T.PADILLA ST., CEBU CITY 214kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "images": "gc-img-01.webp, gc-img-02.webp, gc-img-03.webp, gc-img-04.webp, gc-img-05.webp, gc-img-06.webp, gc-img-07.webp",
+    "systemType": "214kWp Solar On-Grid System Set-Up",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "310,000+ kWh / Year",
+    "co2Offset": "217 Tons / Year",
+    "description": "High-yield 214kWp commercial solar PV on-grid rooftop installation for Gaisano Saversmart along T. Padilla St., Cebu City, drastically lowering hypermarket air-conditioning and refrigeration power overhead.",
+    "highlights": [
+      "214 kWp High-Capacity On-Grid Architecture",
+      "Structural Roof Support & Waterproof Penetration Racking",
+      "Peak-Shaving Energy Cost Minimization",
+      "Automated Substation Power Factor Integration"
+    ],
+    "tags": [
+      "Commercial",
+      "Gaisano Capital",
+      "214 kWp",
+      "On-Grid",
+      "Cebu City"
+    ]
+  },
+  {
+    "id": "uclm-campus-ongoing",
+    "title": "UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project",
+    "category": "School",
+    "location": "Lapu-Lapu & Mandaue City, Cebu",
+    "capacity": "433 kWp",
+    "client": "University of Cebu (UCLM Campus)",
+    "folder": "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project",
+    "images": "uclm-roof.webp, Curved-Building.webp, Maritime-Bldg2-1.webp, Maritime-Inverter-Rack1.webp, Annex-Inverter-Rack-2.webp, MDP-EPM-2.webp, EPM-2.webp, EPM-3.webp, uclm-roof2.webp, uclm-roof3.webp, uclm-roof4.webp, viber_image_2025-10-28_06-46-54-442.webp",
+    "systemType": "433kW On-Grid Campus Solar EPC",
+    "completionDate": "Turnkey Solar Installation Project",
+    "annualYield": "620,000+ kWh / Year",
+    "co2Offset": "435 Tons / Year",
+    "description": "Massive 433kW educational campus rooftop solar energy installation spanning the Curved Building, Maritime Academy, and Academic Annexes, featuring industrial inverter rack setups, main distribution panels (MDP/EPM), and live student research telemetry.",
+    "highlights": [
+      "433 kWp Large-Scale Campus-Wide Generation",
+      "Custom Maritime Building & Annex Inverter Racks",
+      "Advanced MDP & EPM Synchronized Power Distribution",
+      "Over 45% Campus Daytime Utility Bill Offset"
+    ],
+    "tags": [
+      "School",
+      "UCLM",
+      "University of Cebu",
+      "433 kWp",
+      "Mandaue",
+      "Lapu-Lapu"
+    ]
+  },
+  {
+    "id": "sonamco-floating-solar",
+    "title": "Sonamco, Siaton Negros Oriental - Floating solar 242kw",
+    "category": "Industrial",
+    "location": "Siaton, Negros Oriental",
+    "capacity": "242 kWp",
+    "client": "Sonamco Industrial Aquaculture & Agro-Industrial Complex",
+    "folder": "/images/projects/industrial/Sonamco, Siaton Negros Oriental - Floating solar 242kw",
+    "images": "sonamco1.webp,sonamco2.webp,sonamco3.webp,sonamco4.webp,sonamco5.webp",
+    "systemType": "242kW Floating Solar PV Hydro-Array",
+    "completionDate": "Completed & Fully Commissioned",
+    "annualYield": "358,000+ kWh / Year",
+    "co2Offset": "250 Tons / Year",
+    "description": "Pioneering 242kW floating solar array engineered on industrial water reservoirs in Siaton, Negros Oriental. Water natural cooling boosts photovoltaic efficiency while suppressing reservoir water evaporation.",
+    "highlights": [
+      "High-Buoyancy UV-Stabilized HDPE Floating Pontoons",
+      "Enhanced Photovoltaic Yield via Natural Water Cooling",
+      "Submersible & Corrosion-Proof Marine-Grade Cabling",
+      "Zero-Land Footprint Clean Energy Generation"
+    ],
+    "tags": [
+      "Industrial",
+      "Sonamco",
+      "Floating Solar",
+      "242 kWp",
+      "Negros Oriental"
+    ]
+  },
+  {
+    "id": "mr-june-lim-monterassas",
+    "title": "Mr. LUCIO “June” LIM, JR (LITE FERRIES OWNER) MONTERASSAS SUBDIVISION – GUADALUPE, CEBU CITY 13kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "category": "Residential",
+    "location": "Monterassas Subdivision, Guadalupe, Cebu City",
+    "capacity": "13 kWp",
+    "client": "Mr. Lucio 'June' Lim, Jr. (Lite Ferries Owner)",
+    "folder": "/images/projects/residential/Mr. LUCIO “June” LIM, JR (LITE FERRIES OWNER) MONTERASSAS SUBDIVISION – GUADALUPE, CEBU CITY 13kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "images": "mont1.webp, mont2.webp",
+    "systemType": "13kWp Residential Solar On-Grid System",
+    "completionDate": "Completed & Operational",
+    "annualYield": "18,800+ kWh / Year",
+    "co2Offset": "13.2 Tons / Year",
+    "description": "High-end 13kWp residential rooftop on-grid solar installation in Monterassas Subdivision, Guadalupe, Cebu City, custom engineered for luxury estate energy autonomy, premium aesthetics, and silent smart inverter management.",
+    "highlights": [
+      "13 kWp High-Efficiency Sleek Black Monocrystalline Setup",
+      "Smart Cloud Smartphone Mobile Telemetry App",
+      "Seamless Net-Metering with Cebu Distribution Utility",
+      "Premium Hidden Conduit & Architectural Roof Integration"
+    ],
+    "tags": [
+      "Residential",
+      "Monterassas",
+      "13 kWp",
+      "Guadalupe",
+      "Cebu City",
+      "Lite Ferries"
+    ]
+  }
+]

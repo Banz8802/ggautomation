@@ -4,7 +4,11 @@ import React, { useState } from 'react';
 import SectionHeading from './SectionHeading';
 import { Phone, Mail, MapPin, Calculator, Send, CheckCircle2, Building, Sparkles } from 'lucide-react';
 
-export default function QuoteContactSection() {
+interface QuoteContactSectionProps {
+  showLocations?: boolean;
+}
+
+export default function QuoteContactSection({ showLocations = true }: QuoteContactSectionProps) {
   // Calculator state
   const [monthlyBill, setMonthlyBill] = useState(50000); // PHP
   const [facilityType, setFacilityType] = useState('Commercial Building');
@@ -271,71 +275,73 @@ export default function QuoteContactSection() {
         </div>
 
         {/* Office Locations Grid */}
-        <div className="pt-12 border-t border-slate-200">
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#e51a24]">OUR LOCATIONS</span>
-            <h3 className="text-2xl font-black text-[#091833] mt-1">Visit Our Engineering Offices & Showrooms</h3>
+        {showLocations && (
+          <div className="pt-12 border-t border-slate-200">
+            <div className="text-center mb-10">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#e51a24]">OUR LOCATIONS</span>
+              <h3 className="text-2xl font-black text-[#091833] mt-1">Visit Our Engineering Offices & Showrooms</h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-xl bg-[#e51a24]/10 text-[#e51a24]">
+                    <MapPin className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-[#091833]">Engineering EPC Company</h4>
+                    <p className="text-xs text-slate-500">Labangon, Cebu City</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed pt-2">
+                  T1-1614 Casa Mira Condominium, Salvador St., Labangon, Cebu City
+                </p>
+                <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
+                  <p>Phone: <a href="tel:+639222401919" className="text-[#e51a24] hover:underline">(0922) 240-1919</a></p>
+                  <p>Email: info@ggautomation.tech</p>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-xl bg-[#ffc000]/10 text-[#091833]">
+                    <Building className="w-6 h-6 text-[#091833]" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-[#091833]">Showroom</h4>
+                    <p className="text-xs text-slate-500">Tagbilaran City, Bohol</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed pt-2">
+                  Salazar St., Ubujan, Tagbilaran City, Bohol (20m Before Nissan Car Display)
+                </p>
+                <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
+                  <p>Phone: <a href="tel:+639683882510" className="text-[#e51a24] hover:underline">(0968) 388-2510</a></p>
+                  <p>Email: info@ggautomation.tech</p>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-xl bg-[#091833]/10 text-[#091833]">
+                    <MapPin className="w-6 h-6 text-[#091833]" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-[#091833]">Davao City Satellite Office</h4>
+                    <p className="text-xs text-slate-500">Barangay 27-C, Davao City</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed pt-2">
+                  V. Guzman St. corner 5th Avenue (Back of Cyber Tech Trading Corp) Barangay 27-C, Davao City
+                </p>
+                <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
+                  <p>Phone: <a href="tel:+63822242785" className="text-[#e51a24] hover:underline">(082) 224-2785</a></p>
+                  <p>Email: sales@ggautomation.tech</p>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-[#e51a24]/10 text-[#e51a24]">
-                  <MapPin className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg text-[#091833]">Head Office - Cebu</h4>
-                  <p className="text-xs text-slate-500">Cebu City, Philippines</p>
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed pt-2">
-                Main Engineering, Procurement & Project Management Center servicing Visayas & Luzon operations.
-              </p>
-              <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
-                <p>Phone: +63 922-240-1919</p>
-                <p>Email: info@ggautomation.tech</p>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-[#ffc000]/10 text-[#091833]">
-                  <Building className="w-6 h-6 text-[#091833]" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg text-[#091833]">Showroom - Bohol</h4>
-                  <p className="text-xs text-slate-500">Tagbilaran City, Bohol</p>
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed pt-2">
-                Clean Energy Equipment Showroom featuring live hybrid solar inverters and lithium battery displays.
-              </p>
-              <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
-                <p>Phone: +63 917-703-4552</p>
-                <p>Email: info@ggautomation.tech</p>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-[#091833]/10 text-[#091833]">
-                  <MapPin className="w-6 h-6 text-[#091833]" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg text-[#091833]">Satellite Office - Davao</h4>
-                  <p className="text-xs text-slate-500">Davao City, Mindanao</p>
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed pt-2">
-                Mindanao Regional Engineering Support Branch for agricultural and commercial solar installations.
-              </p>
-              <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
-                <p>Phone: +63 922-240-1919</p>
-                <p>Email: info@ggautomation.tech</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );

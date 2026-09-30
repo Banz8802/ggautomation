@@ -5,6 +5,10 @@
   --color-brand-red-hover: #c8141d;
   --color-brand-gold: #ffc000;
   --color-brand-gold-hover: #e0a800;
+  --color-brand-green: #0b7337;
+  --color-brand-green-hover: #085a2b;
+  --color-brand-green-light: #e8f5ed;
+  --color-brand-green-dark: #064420;
   --color-brand-navy: #091833;
   --color-brand-navy-light: #0f2347;
   --color-brand-navy-dark: #050d1e;
@@ -91,4 +95,25 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #e51a24;
+}
+
+/* Infinite Marquee Animation (Right to Left) */
+@keyframes marqueeLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
 }

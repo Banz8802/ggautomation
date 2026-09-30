@@ -1,26 +1,24 @@
 import React from 'react';
 import HeroSlider from '@/components/HeroSlider';
-import AboutSection from '@/components/AboutSection';
-import ServicesSection from '@/components/ServicesSection';
+import SolarServiceTypesSection from '@/components/SolarServiceTypesSection';
 import SolarSystemsSection from '@/components/SolarSystemsSection';
-import ProcessSection from '@/components/ProcessSection';
-import ProjectsSection from '@/components/ProjectsSection';
+import AboutSection from '@/components/AboutSection';
+import VicinityContactSection from '@/components/VicinityContactSection';
 import PartnersSection from '@/components/PartnersSection';
-import EventsSection from '@/components/EventsSection';
-import QuoteContactSection from '@/components/QuoteContactSection';
+import FunderSection from '@/components/FunderSection';
 
 export default function Home() {
   return (
     <>
       <HeroSlider />
-      <AboutSection />
-      <ServicesSection />
+      <SolarServiceTypesSection />
       <SolarSystemsSection />
-      <ProcessSection />
-      <ProjectsSection />
+      <AboutSection />
+      <VicinityContactSection />
       <PartnersSection />
-      <EventsSection />
-      <QuoteContactSection />
+      <FunderSection />
     </>
   );
 }
+
+

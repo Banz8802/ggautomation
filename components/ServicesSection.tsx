@@ -1,207 +1,266 @@
 'use client';
 
-import React, { useState } from 'react';
-import SectionHeading from './SectionHeading';
-import { Sun, Cpu, Waves, Wrench, BatteryCharging, BarChart3, ArrowRight, Check } from 'lucide-react';
+import React from 'react';
+import { 
+  Check, 
+  ArrowRight, 
+  Sun, 
+  Zap, 
+  Sparkles, 
+  Shield, 
+  CheckCircle2, 
+  Award,
+  Waves
+} from 'lucide-react';
 
-const services = [
-  {
-    id: 'solar-epc',
-    icon: <Sun className="w-6 h-6" />,
-    badge: 'Core Service',
-    title: 'Renewable Energy EPC & Consultation',
-    shortDesc: 'Complete turnkey solar engineering, procurement, construction, and grid connection.',
-    fullDesc: 'We handle every aspect of solar photovoltaic system deployment—from initial shade modeling and electrical simulation to equipment procurement, certified installation, net-metering processing, and utility grid interconnection.',
-    features: [
-      'Commercial & Industrial Rooftop Solar PV',
-      'Ground-Mounted Solar Power Plants',
-      'Turnkey Net-Metering & Utility Approvals',
-      'Financial ROI & Energy Payback Modeling',
-    ],
-  },
-  {
-    id: 'electrical-engineering',
-    icon: <Cpu className="w-6 h-6" />,
-    badge: 'Turnkey Power',
-    title: 'Electrical Engineering Services',
-    shortDesc: 'Professional high/low voltage electrical design, wiring, and panel distribution.',
-    fullDesc: 'Our licensed electrical engineers specialize in high and low voltage power distribution, transformer installations, switchgear maintenance, breaker panel upgrades, and complete facility wiring.',
-    features: [
-      'High & Low Voltage Electrical Installations',
-      'Custom Main Distribution Switchboard & Panel Assembly',
-      'Transformer Supply, Testing & Commissioning',
-      'Electrical Code & Safety Compliance Audits',
-    ],
-  },
-  {
-    id: 'floating-solar',
-    icon: <Waves className="w-6 h-6" />,
-    badge: 'Innovation',
-    title: 'Floating Solar PV Systems',
-    shortDesc: 'Pioneering clean energy platforms on water reservoirs, lakes, and aquaculture ponds.',
-    fullDesc: 'Floating Solar PV unlocks clean power generation on water surfaces while mitigating land constraints. Benefits include natural water-cooling boost to panel efficiency and reduced reservoir water evaporation.',
-    features: [
-      'Reservoir & Lake Anchor Mooring Design',
-      'HDPE UV-Resistant Modular Floating Structures',
-      'High-Efficiency Marine-Grade PV Modules',
-      'Environmental Impact & Water Quality Monitoring',
-    ],
-  },
-  {
-    id: 'operations-maintenance',
-    icon: <Wrench className="w-6 h-6" />,
-    badge: 'Life Cycle Care',
-    title: 'Operations & Preventive Maintenance (O&M)',
-    shortDesc: 'Proactive 24/7 system monitoring, thermal imaging inspection, and performance tuning.',
-    fullDesc: 'Protect your renewable energy asset investment with GG Automation’s certified O&M packages. We ensure maximum solar yield through scheduled panel cleaning, inverter health checks, and rapid breakdown response.',
-    features: [
-      'Thermal Imaging & Drone Hotspot Detection',
-      'IV Curve Diagnostics & Electrical Testing',
-      'Automated Solar Panel Washing & Debris Removal',
-      '24/7 Cloud Remote Monitoring & Diagnostics',
-    ],
-  },
-  {
-    id: 'energy-storage',
-    icon: <BatteryCharging className="w-6 h-6" />,
-    badge: 'Grid Resiliency',
-    title: 'Energy Storage Systems (BESS) & Micro-Grids',
-    shortDesc: 'Lithium battery energy storage for zero-outage backup and island micro-grids.',
-    fullDesc: 'Ensure continuous 24/7 operation during power grid interruptions with smart Battery Energy Storage Systems (BESS). Integrated with hybrid inverters for seamless automatic generator or solar switching.',
-    features: [
-      'Lithium Iron Phosphate (LiFePO4) Battery Racks',
-      'Hybrid Peak-Shaving & Load Displacement',
-      'Off-Grid Island Micro-Grid Controllers',
-      'Uninterrupted Power Supply (UPS) Zero-Transfer Time',
-    ],
-  },
-  {
-    id: 'energy-audits',
-    icon: <BarChart3 className="w-6 h-6" />,
-    badge: 'Efficiency',
-    title: 'Energy Conservation & Power Quality Audits',
-    shortDesc: 'Comprehensive energy usage analysis, harmonic filtering, and power factor correction.',
-    fullDesc: 'Optimize your building energy profile. We conduct power quality measurements to eliminate penalty charges from utility providers and identify energy waste across HVAC, lighting, and heavy machinery.',
-    features: [
-      'Harmonic Analysis & Transient Voltage Suppression',
-      'Automatic Power Factor Capacitor Banks (APFC)',
-      'Building Energy Audit & Energy Baseline Reports',
-      'Smart Metering & Sub-Metering Installations',
-    ],
-  },
+const renewableServices = [
+  { name: 'Solar PV Systems', highlight: 'Rooftop & Ground' },
+  { name: 'Wave Energy', highlight: 'Marine Tech' },
+  { name: 'Floating Solar PV', highlight: 'Pioneering EPC' },
+  { name: 'Micro-grids & BESS', highlight: 'Island Power' },
+  { name: 'Tidal In-stream', highlight: 'Clean Hydro' },
+  { name: 'Energy Audit', highlight: 'ISO Standards' },
 ];
 
-export default function ServicesSection() {
-  const [activeService, setActiveService] = useState(services[0].id);
+const electricalServices = [
+  { name: 'Design and Installation', highlight: 'Full Turnkey' },
+  { name: 'Electrical Automation', highlight: 'PLC & SCADA' },
+  { name: 'Transformer Banking', highlight: 'High Voltage' },
+  { name: 'Consultation & Audit', highlight: 'PRC Certified' },
+  { name: 'Lightning Protection', highlight: 'NFPA & PEC' },
+  { name: 'General PMS', highlight: 'Preventive Care' },
+  { name: 'Generator Set-up & Install', highlight: 'Auto-Sync' },
+  { name: 'Equipment Supply', highlight: 'Tier-1 Brands' },
+  { name: 'Specialized Works', highlight: 'Custom Engineering' },
+];
 
-  const selected = services.find((s) => s.id === activeService) || services[0];
+const credentials = [
+  { icon: <Shield className="w-4 h-4 text-[#0b7337]" />, text: 'Licensed PRC Electrical Engineers' },
+  { icon: <Zap className="w-4 h-4 text-[#e51a24]" />, text: 'Utility Net-Metering Approved' },
+  { icon: <Waves className="w-4 h-4 text-[#091833]" />, text: 'Floating Solar EPC Specialist' },
+  { icon: <Award className="w-4 h-4 text-[#ffc000]" />, text: '25-Year Equipment Performance' },
+];
 
+interface ServicesSectionProps {
+  showHeader?: boolean;
+  badge?: string;
+  title?: string;
+  description?: string;
+}
+
+export default function ServicesSection({
+  showHeader = false,
+  badge = 'SPECIALIZED EXPERTISE',
+  title = 'Core Engineering Disciplines',
+  description = 'Turnkey engineering capabilities delivering clean renewable power and heavy-duty electrical infrastructure across the Philippines.',
+}: ServicesSectionProps) {
   return (
-    <section id="services" className="py-20 bg-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        {/* Section Heading */}
-        <SectionHeading
-          badge="OUR SERVICES"
-          title="Turnkey Engineering & Solar Solutions"
-          subtitle="From initial site feasibility and CAD design to procurement, construction, and lifetime maintenance, we provide end-to-end engineering excellence."
-        />
+    <section id="services" className="relative py-16 sm:py-20 bg-white text-slate-900 overflow-hidden scroll-mt-16 border-b border-slate-200">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#091833_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.03] pointer-events-none"></div>
 
-        {/* Services Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => {
-            const isSelected = service.id === activeService;
-            return (
-              <div
-                key={service.id}
-                onClick={() => setActiveService(service.id)}
-                className={`cursor-pointer rounded-2xl p-7 border transition-all duration-300 flex flex-col justify-between group ${
-                  isSelected
-                    ? 'bg-[#091833] text-white border-[#e51a24] shadow-xl ring-2 ring-[#e51a24]/50 translate-y-[-4px]'
-                    : 'bg-white text-slate-800 border-slate-200 hover:border-[#e51a24]/40 hover:shadow-lg hover:translate-y-[-2px]'
-                }`}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                      isSelected ? 'bg-[#e51a24] text-white' : 'bg-slate-100 text-[#091833] group-hover:bg-[#e51a24] group-hover:text-white'
-                    }`}>
-                      {service.icon}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        {/* Optional Section Heading */}
+        {showHeader && (
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#e51a24]/10 border border-[#e51a24]/20 text-[#e51a24] text-xs font-black uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#e51a24] animate-ping"></span>
+              <span>{badge}</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-black text-[#091833] tracking-tight leading-none">
+              {title}
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 font-normal max-w-lg mx-auto leading-relaxed">
+              {description}
+            </p>
+            <div className="w-16 h-1 bg-[#e51a24] mx-auto rounded-full mt-2"></div>
+          </div>
+        )}
+
+        {/* 2 Main Highlight Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          
+          {/* Card 1: Renewable Energy */}
+          <div className="bg-slate-50/90 hover:bg-white rounded-3xl p-7 sm:p-9 border border-slate-200/90 shadow-lg hover:shadow-2xl hover:border-[#0b7337]/50 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#0b7337]/5 rounded-full blur-3xl pointer-events-none group-hover:bg-[#0b7337]/10 transition-colors"></div>
+
+            <div className="space-y-6 relative z-10">
+              {/* Card Header */}
+              <div className="flex items-start justify-between gap-4 pb-5 border-b border-slate-200">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-2xl bg-[#0b7337]/10 text-[#0b7337] border border-[#0b7337]/20 shadow-sm group-hover:scale-105 transition-transform">
+                      <Sun className="w-6 h-6" />
                     </div>
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
-                      isSelected ? 'bg-white/10 text-[#ffc000]' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      {service.badge}
-                    </span>
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-black text-[#091833] tracking-tight">
+                        Renewable Energy
+                      </h3>
+                      <p className="text-xs sm:text-sm font-bold text-[#0b7337] uppercase tracking-wider">
+                        EPC and Consultation
+                      </p>
+                    </div>
                   </div>
-
-                  <h3 className={`text-xl font-bold ${isSelected ? 'text-white' : 'text-[#091833] group-hover:text-[#e51a24]'}`}>
-                    {service.title}
-                  </h3>
-
-                  <p className={`text-sm leading-relaxed ${isSelected ? 'text-slate-300' : 'text-slate-600'}`}>
-                    {service.shortDesc}
-                  </p>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-slate-200/20 flex items-center justify-between">
-                  <span className={`text-xs font-extrabold ${isSelected ? 'text-[#ffc000]' : 'text-[#e51a24]'}`}>
-                    {isSelected ? 'Currently Viewing' : 'Click for Specs'}
-                  </span>
-                  <ArrowRight className={`w-4 h-4 transition-transform ${isSelected ? 'text-[#ffc000] translate-x-1' : 'text-slate-400 group-hover:text-[#e51a24] group-hover:translate-x-1'}`} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Selected Service Detailed Showcase Card */}
-        <div className="bg-[#091833] rounded-2xl p-8 sm:p-10 text-white shadow-2xl border border-white/10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#e51a24]/10 rounded-full blur-3xl pointer-events-none"></div>
-
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-[#ffc000] uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full">
-                <span>{selected.badge}</span>
-                <span>•</span>
-                <span>Detailed Overview</span>
+                <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full bg-[#0b7337]/10 border border-[#0b7337]/20 text-[#0b7337] text-[11px] font-bold">
+                  6 Core Pillars
+                </span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-                {selected.title}
-              </h3>
-
-              <p className="text-slate-300 text-base leading-relaxed">
-                {selected.fullDesc}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                {selected.features.map((feat, fIdx) => (
-                  <div key={fIdx} className="flex items-start gap-2.5">
-                    <div className="w-5 h-5 rounded-full bg-[#e51a24] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white" />
+              {/* 2-Column Checklist */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                {renewableServices.map((item, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-white hover:bg-emerald-50/60 border border-slate-200/80 hover:border-[#0b7337]/30 transition-all shadow-xs group/item"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-5 h-5 rounded-md bg-[#ffc000]/20 flex items-center justify-center flex-shrink-0 text-amber-600">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </div>
+                      <span className="text-sm font-semibold text-slate-800 truncate group-hover/item:text-[#0b7337]">
+                        {item.name}
+                      </span>
                     </div>
-                    <span className="text-sm text-slate-200 font-medium">{feat}</span>
+                    <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md whitespace-nowrap ml-1">
+                      {item.highlight}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-white/5 p-6 sm:p-8 rounded-xl border border-white/10 space-y-6 text-center lg:text-left">
-              <h4 className="text-lg font-bold text-[#ffc000]">Request Engineering Proposal</h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Get a customized technical quotation, payback ROI schedule, and system design tailored for your facility.
-              </p>
+            {/* Card Footer Bar */}
+            <div className="pt-6 mt-6 border-t border-slate-200 flex items-center justify-between text-xs font-bold relative z-10">
+              <span className="text-[#0b7337] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Zero-Emission Engineering</span>
+              </span>
               <a
-                href="#calculator"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-lg transition-all"
+                href="/contact"
+                className="text-[#091833] hover:text-[#0b7337] inline-flex items-center gap-1.5 transition-colors group/link py-1 px-3 rounded-lg hover:bg-slate-100"
               >
-                <span>Request Free Consultation</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Consult EPC Team</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#0b7337] group-hover/link:translate-x-1 transition-transform" />
               </a>
             </div>
           </div>
+
+          {/* Card 2: Electrical Engineering Services */}
+          <div className="bg-slate-50/90 hover:bg-white rounded-3xl p-7 sm:p-9 border border-slate-200/90 shadow-lg hover:shadow-2xl hover:border-[#e51a24]/40 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#e51a24]/5 rounded-full blur-3xl pointer-events-none group-hover:bg-[#e51a24]/10 transition-colors"></div>
+
+            <div className="space-y-6 relative z-10">
+              {/* Card Header */}
+              <div className="flex items-start justify-between gap-4 pb-5 border-b border-slate-200">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-2xl bg-[#e51a24]/10 text-[#e51a24] border border-[#e51a24]/20 shadow-sm group-hover:scale-105 transition-transform">
+                      <Zap className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-black text-[#091833] tracking-tight">
+                        Electrical Engineering
+                      </h3>
+                      <p className="text-xs sm:text-sm font-bold text-[#e51a24] uppercase tracking-wider">
+                        High & Low Voltage Services
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full bg-[#e51a24]/10 border border-[#e51a24]/20 text-[#e51a24] text-[11px] font-bold">
+                  9 Disciplines
+                </span>
+              </div>
+
+              {/* 2-Column Checklist */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                {electricalServices.map((item, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-white hover:bg-red-50/60 border border-slate-200/80 hover:border-[#e51a24]/30 transition-all shadow-xs group/item"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-5 h-5 rounded-md bg-[#ffc000]/20 flex items-center justify-center flex-shrink-0 text-amber-600">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </div>
+                      <span className="text-sm font-semibold text-slate-800 truncate group-hover/item:text-[#e51a24]">
+                        {item.name}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md whitespace-nowrap ml-1">
+                      {item.highlight}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Card Footer Bar */}
+            <div className="pt-6 mt-6 border-t border-slate-200 flex items-center justify-between text-xs font-bold relative z-10">
+              <span className="text-amber-700 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>Heavy Industrial Compliance</span>
+              </span>
+              <a
+                href="/contact"
+                className="text-[#091833] hover:text-[#e51a24] inline-flex items-center gap-1.5 transition-colors group/link py-1 px-3 rounded-lg hover:bg-slate-100"
+              >
+                <span>Inquire Scope</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#e51a24] group-hover/link:translate-x-1 transition-transform" />
+              </a>
+            </div>
+          </div>
+
         </div>
+
+        {/* Credentials Strip Bar */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2">
+          {credentials.map((cred, idx) => (
+            <div 
+              key={idx}
+              className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-[#091833] shadow-xs"
+            >
+              {cred.icon}
+              <span>{cred.text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Action Callout Bar */}
+        <div className="bg-gradient-to-br from-[#091833] to-[#0f2347] text-white rounded-3xl p-6 sm:p-8 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="space-y-1 text-center md:text-left">
+            <h4 className="text-lg sm:text-xl font-black text-white">
+              Planning a Solar or Electrical Engineering Project?
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-300 font-normal">
+              Our registered master electricians and solar engineers provide comprehensive feasibility audits and ROI schedules.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3.5 flex-shrink-0">
+            <a
+              href="/contact"
+              className="px-6 py-3 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+            >
+              ROI Estimator
+            </a>
+            <a
+              href="/contact"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-extrabold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-lg transition-all group"
+            >
+              <span>Book Site Inspection</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+
       </div>
     </section>
   );
 }
+
+
+

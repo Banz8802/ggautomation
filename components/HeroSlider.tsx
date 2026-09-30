@@ -28,10 +28,10 @@ const slides: Slide[] = [
     highlightText: 'Renewable Energy & Power Systems',
     subtitle: 'Handling small to medium scale installation, maintenance, and turnkey electrical engineering services across commercial, industrial, and institutional sites.',
     primaryCtaText: 'Explore Services',
-    primaryCtaHref: '#services',
+    primaryCtaHref: '/services',
     secondaryCtaText: 'Get Free Quote',
-    secondaryCtaHref: '#calculator',
-    image: '/images/hero-solar-engineering.jpg',
+    secondaryCtaHref: '/contact',
+    image: '/images/hero-solar-engineering.webp',
     stats: [
       { label: 'Installed Capacity', value: '15+ MWp' },
       { label: 'Utility Bill Savings', value: 'Up to 70%' },
@@ -46,10 +46,10 @@ const slides: Slide[] = [
     highlightText: 'Off-Grid Solar Power Systems',
     subtitle: 'Engineered for maximum efficiency, zero-outage battery storage backup, and long-term net-metering energy cost reduction.',
     primaryCtaText: 'View Solar Systems',
-    primaryCtaHref: '#solar-systems',
+    primaryCtaHref: '/services',
     secondaryCtaText: 'Consult Our Engineers',
-    secondaryCtaHref: '#contact',
-    image: '/images/hero-commercial-systems.jpg',
+    secondaryCtaHref: '/contact',
+    image: '/images/hero-commercial-systems.webp',
     stats: [
       { label: 'Tier-1 Hardware', value: '25-Yr Warranty' },
       { label: 'Monitoring', value: '24/7 Smart Cloud' },
@@ -64,14 +64,14 @@ const slides: Slide[] = [
     highlightText: 'Turnkey Commercial Micro-Grids',
     subtitle: 'Leading sustainable engineering with water-reservoir floating solar arrays, micro-grids, and structured project financing up to 500MW capacity.',
     primaryCtaText: 'Our Installation Process',
-    primaryCtaHref: '#process',
+    primaryCtaHref: '/services',
     secondaryCtaText: 'View Projects',
-    secondaryCtaHref: '#projects',
-    image: '/images/hero-floating-solar.jpg',
+    secondaryCtaHref: '/projects',
+    image: '/images/hero-floating-solars.webp',
     stats: [
-      { label: 'Floating Solar', value: 'Cavinti Laguna' },
-      { label: 'Funding Capacity', value: '100kW - 500MW' },
-      { label: 'Commercial Clients', value: '50+ Major Sites' },
+      { label: 'Floating Solar', value: 'Prawn Farm' },
+      { label: 'Funding Capacity', value: '315 kwp' },
+      { label: 'Commercial Clients', value: '5+ Major Sites' },
     ],
   },
 ];
@@ -128,8 +128,8 @@ export default function HeroSlider() {
   };
 
   return (
-    <section 
-      id="hero" 
+    <section
+      id="hero"
       className="relative bg-[#091833] text-white min-h-[620px] md:min-h-[700px] lg:min-h-[760px] flex items-center overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -142,9 +142,8 @@ export default function HeroSlider() {
       {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-          }`}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+            }`}
         >
           <Image
             src={slide.image}
@@ -259,9 +258,8 @@ export default function HeroSlider() {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                index === currentSlide ? 'w-10 bg-[#e51a24]' : 'w-2.5 bg-white/40 hover:bg-white/70'
-              }`}
+              className={`h-2.5 rounded-full transition-all duration-300 ${index === currentSlide ? 'w-10 bg-[#e51a24]' : 'w-2.5 bg-white/40 hover:bg-white/70'
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
