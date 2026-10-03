@@ -267,7 +267,7 @@ export default function FacebookFeedSection() {
                 </a>
 
                 <a
-                  href="https://m.me/GGAutomation.1"
+                  href="https://www.facebook.com/messages/t/GGAutomation.1"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all duration-200"
@@ -293,7 +293,7 @@ export default function FacebookFeedSection() {
           </div>
 
           <a
-            href="https://m.me/GGAutomation.1"
+            href="https://www.facebook.com/messages/t/GGAutomation.1"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold bg-[#091833] hover:bg-[#e51a24] text-white transition-all shadow-md flex-shrink-0"
