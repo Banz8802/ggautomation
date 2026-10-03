@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   MessageSquare,
+  MessageCircle,
   X,
   Send,
   Sparkles,
@@ -12,7 +13,9 @@ import {
   Sun,
   ShieldCheck,
   Phone,
+  PhoneCall,
   ArrowRight,
+  ExternalLink,
   Calculator,
   Building2,
   RefreshCw,
@@ -21,7 +24,8 @@ import {
   Maximize2,
   HelpCircle,
   CheckCircle2,
-  MapPin
+  MapPin,
+  UserCheck
 } from 'lucide-react';
 
 interface ChatMessage {
@@ -29,7 +33,7 @@ interface ChatMessage {
   sender: 'bot' | 'user';
   text: string;
   time: string;
-  quickActions?: { label: string; action: string; href?: string }[];
+  quickActions?: { label: string; action: string; href?: string; isExternal?: boolean }[];
   calculationResult?: {
     systemSize: string;
     monthlySavings: string;
@@ -41,9 +45,10 @@ interface ChatMessage {
 const initialBotMessage: ChatMessage = {
   id: 'msg-1',
   sender: 'bot',
-  text: 'Hello! 👋 Welcome to GG Automation Construction Services. I am your AI Solar & Electrical Engineering Assistant.\n\nHow can I assist your project today?',
+  text: 'Hello! 👋 Welcome to GG Automation Construction Services. I am your AI Solar & Electrical Engineering Assistant.\n\nHow can I assist your project today? You can calculate solar savings, explore our systems, or talk directly with our live engineering team on Facebook Messenger.',
   time: 'Just now',
   quickActions: [
+    { label: '💬 Talk to Live Human (FB Messenger)', action: 'human', href: 'https://m.me/GGAutomation.1', isExternal: true },
     { label: '💡 Estimate Solar Savings', action: 'calc' },
     { label: '⚡ On-Grid vs Hybrid vs Off-Grid', action: 'systems' },
     { label: '🌊 Floating Solar Tech', action: 'floating' },
@@ -129,7 +134,7 @@ export default function ChatBot() {
     setTimeout(() => {
       const lower = userInput.toLowerCase();
       let replyText = '';
-      let quickActions: { label: string; action: string; href?: string }[] | undefined = undefined;
+      let quickActions: { label: string; action: string; href?: string; isExternal?: boolean }[] | undefined = undefined;
       let calcResult: any = undefined;
 
       // Extract number for electric bill
@@ -146,8 +151,39 @@ export default function ChatBot() {
           `Would you like our engineering team to prepare a detailed 3D CAD simulation and exact ROI proposal?`;
         
         quickActions = [
+          { label: '💬 Chat on Messenger (Live Engineer)', action: 'fb', href: 'https://m.me/GGAutomation.1', isExternal: true },
           { label: '📅 Request Free Site Survey', action: 'go_contact', href: '/contact' },
           { label: '📁 View Completed Projects', action: 'go_projects', href: '/projects' },
+        ];
+      } else if (
+        lower.includes('human') ||
+        lower.includes('agent') ||
+        lower.includes('person') ||
+        lower.includes('representative') ||
+        lower.includes('rep') ||
+        lower.includes('live') ||
+        lower.includes('real person') ||
+        lower.includes('facebook') ||
+        lower.includes('messenger') ||
+        lower.includes('fb') ||
+        lower.includes('talk to someone') ||
+        lower.includes('customer service') ||
+        lower.includes('support') ||
+        lower.includes('operator')
+      ) {
+        replyText = '👨‍💼 **Connect with our Live Engineering Team**:\n\n' +
+          'Our PRC-licensed engineers and technical consultants are ready to assist you right now!\n\n' +
+          '• **Facebook Messenger**: Chat live with our engineering desk.\n' +
+          '• **Cebu Office Hotline**: (0922) 240-1919\n' +
+          '• **Bohol Office Hotline**: (0968) 388-2510\n' +
+          '• **Davao Satellite**: (082) 224-2785\n' +
+          '• **Official Email**: info@ggautomation.tech\n\n' +
+          'Click the button below to start a live chat on Facebook Messenger:';
+        
+        quickActions = [
+          { label: '💬 Chat on Facebook Messenger', action: 'fb', href: 'https://m.me/GGAutomation.1', isExternal: true },
+          { label: '📞 Call Cebu: (0922) 240-1919', action: 'tel', href: 'tel:+639222401919' },
+          { label: '📅 Book Free Site Survey', action: 'go_contact', href: '/contact' },
         ];
       } else if (lower.includes('calc') || lower.includes('estimate') || lower.includes('saving') || lower.includes('roi') || lower.includes('how much')) {
         replyText = '💡 **Instant Solar Savings Estimator**\n\nPlease type your average monthly electric bill amount (e.g. "₱15,000" or "50000") and I will calculate your recommended solar kWp capacity and expected annual savings!';
@@ -156,6 +192,7 @@ export default function ChatBot() {
           { label: '₱25,000 / month', action: 'input_25000' },
           { label: '₱80,000 / month', action: 'input_80000' },
           { label: '₱250,000+ / month', action: 'input_250000' },
+          { label: '💬 Talk to Human (Messenger)', action: 'human', href: 'https://m.me/GGAutomation.1', isExternal: true },
         ];
       } else if (lower.includes('system') || lower.includes('on-grid') || lower.includes('hybrid') || lower.includes('off-grid')) {
         replyText = '⚡ **Solar Power System Architectures**:\n\n' +
@@ -166,6 +203,7 @@ export default function ChatBot() {
         
         quickActions = [
           { label: 'Explore Systems Page', action: 'go_services', href: '/services' },
+          { label: '💬 Chat with Engineer (Messenger)', action: 'human', href: 'https://m.me/GGAutomation.1', isExternal: true },
           { label: 'Consult Our Engineers', action: 'go_contact', href: '/contact' },
         ];
       } else if (lower.includes('floating') || lower.includes('water') || lower.includes('lake') || lower.includes('sonamco')) {
@@ -177,6 +215,7 @@ export default function ChatBot() {
         
         quickActions = [
           { label: 'View Sonamco Case Study', action: 'go_projects', href: '/projects' },
+          { label: '💬 Inquire with Engineer (FB)', action: 'human', href: 'https://m.me/GGAutomation.1', isExternal: true },
           { label: 'Inquire Floating EPC', action: 'go_contact', href: '/contact' },
         ];
       } else if (lower.includes('project') || lower.includes('school') || lower.includes('commercial') || lower.includes('portfolio') || lower.includes('uclm') || lower.includes('metro') || lower.includes('gaisano')) {
@@ -189,6 +228,7 @@ export default function ChatBot() {
         
         quickActions = [
           { label: 'Browse Full Project Gallery', action: 'go_projects', href: '/projects' },
+          { label: '💬 Talk to Solar Consultant', action: 'human', href: 'https://m.me/GGAutomation.1', isExternal: true },
           { label: 'Request Proposal', action: 'go_contact', href: '/contact' },
         ];
       } else if (lower.includes('fund') || lower.includes('ditrolic') || lower.includes('ppa') || lower.includes('lease') || lower.includes('zero capex') || lower.includes('financing')) {
@@ -201,23 +241,28 @@ export default function ChatBot() {
         
         quickActions = [
           { label: 'View Funder Details', action: 'go_services', href: '/services#funders' },
+          { label: '💬 Discuss PPA on Messenger', action: 'human', href: 'https://m.me/GGAutomation.1', isExternal: true },
           { label: 'Inquire PPA Eligibility', action: 'go_contact', href: '/contact' },
         ];
+      } else if (lower.includes('contact') || lower.includes('address') || lower.includes('location') || lower.includes('phone') || lower.includes('office') || lower.includes('branch')) {
         replyText = '📍 **GG Automation Offices & Contact Details**:\n\n' +
           '• **Cebu EPC Company (Head Office)**:\n  T1-1614 Casa Mira Condominium, Salvador St., Labangon, Cebu City\n  📞 Phone: (0922) 240-1919\n\n' +
           '• **Bohol Showroom**:\n  Salazar St., Ubujan, Tagbilaran City, Bohol (20m Before Nissan Car Display)\n  📞 Phone: (0968) 388-2510\n\n' +
           '• **Davao City Satellite Office**:\n  V. Guzman St. corner 5th Avenue (Back of Cyber Tech Trading Corp) Barangay 27-C, Davao City\n  📞 Phone: (082) 224-2785\n\n' +
+          '💬 **Facebook Messenger**: m.me/GGAutomation.1\n' +
           '✉️ **Email**: info@ggautomation.tech';
         
         quickActions = [
+          { label: '💬 Chat on Facebook Messenger', action: 'fb', href: 'https://m.me/GGAutomation.1', isExternal: true },
           { label: 'Open Contact & Map Page', action: 'go_contact', href: '/contact' },
           { label: 'Call Cebu (0922) 240-1919', action: 'tel', href: 'tel:+639222401919' },
           { label: 'Call Bohol (0968) 388-2510', action: 'tel', href: 'tel:+639683882510' },
           { label: 'Call Davao (082) 224-2785', action: 'tel', href: 'tel:+63822242785' },
         ];
       } else {
-        replyText = 'Thank you for your message! Our PRC-licensed solar engineers are ready to assist you with customized site inspections, electrical audits, and turnkey EPC proposals.\n\nWould you like to book a free site survey, calculate your solar ROI, or view our completed projects?';
+        replyText = 'Thank you for your message! Our PRC-licensed solar engineers are ready to assist you with customized site inspections, electrical audits, and turnkey EPC proposals.\n\nWould you like to chat with a live engineer on Messenger, book a free site survey, calculate your solar ROI, or view our completed projects?';
         quickActions = [
+          { label: '💬 Talk to Human (Messenger)', action: 'human', href: 'https://m.me/GGAutomation.1', isExternal: true },
           { label: '📅 Book Free Site Survey', action: 'go_contact', href: '/contact' },
           { label: '💡 Estimate Solar ROI', action: 'calc' },
           { label: '📁 View Completed Projects', action: 'go_projects', href: '/projects' },
@@ -258,13 +303,30 @@ export default function ChatBot() {
     processBotResponse(userText);
   };
 
-  const handleQuickAction = (action: string, label: string, href?: string) => {
+  const handleQuickAction = (action: string, label: string, href?: string, isExternal?: boolean) => {
     if (href) {
-      window.location.href = href;
-      return;
+      if (isExternal || href.startsWith('http') || href.startsWith('https://m.me')) {
+        window.open(href, '_blank', 'noopener,noreferrer');
+        return;
+      } else if (href.startsWith('tel:') || href.startsWith('mailto:')) {
+        window.location.href = href;
+        return;
+      } else {
+        window.location.href = href;
+        return;
+      }
     }
 
-    if (action === 'calc') {
+    if (action === 'human') {
+      const newMsg: ChatMessage = {
+        id: `msg-${Date.now()}`,
+        sender: 'user',
+        text: 'I want to talk to a human representative / Facebook Messenger',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages((prev) => [...prev, newMsg]);
+      processBotResponse('human');
+    } else if (action === 'calc') {
       const newMsg: ChatMessage = {
         id: `msg-${Date.now()}`,
         sender: 'user',
@@ -503,16 +565,23 @@ export default function ChatBot() {
                     {/* Quick Action Buttons */}
                     {msg.quickActions && (
                       <div className="flex flex-wrap gap-1.5 mt-2.5 max-w-[95%]">
-                        {msg.quickActions.map((qa, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => handleQuickAction(qa.action, qa.label, qa.href)}
-                            className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-[#ffc000] text-slate-200 hover:text-[#091833] border border-white/10 text-[11px] font-bold transition-all duration-200 hover:scale-105 active:scale-95 text-left flex items-center gap-1.5"
-                          >
-                            <span>{qa.label}</span>
-                            {qa.href && <ArrowRight className="w-3 h-3" />}
-                          </button>
-                        ))}
+                        {msg.quickActions.map((qa, idx) => {
+                          const isFb = qa.href?.includes('m.me') || qa.action === 'human' || qa.action === 'fb';
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => handleQuickAction(qa.action, qa.label, qa.href, qa.isExternal)}
+                              className={`px-3 py-1.5 rounded-xl border text-[11px] font-bold transition-all duration-200 hover:scale-105 active:scale-95 text-left flex items-center gap-1.5 cursor-pointer ${
+                                isFb
+                                  ? 'bg-[#0084ff]/20 hover:bg-[#0084ff] text-sky-200 hover:text-white border-[#0084ff]/40 shadow-sm'
+                                  : 'bg-white/10 hover:bg-[#ffc000] text-slate-200 hover:text-[#091833] border-white/10'
+                              }`}
+                            >
+                              <span>{qa.label}</span>
+                              {qa.href && (qa.isExternal || qa.href.startsWith('http') ? <ExternalLink className="w-3 h-3" /> : <ArrowRight className="w-3 h-3" />)}
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -547,7 +616,7 @@ export default function ChatBot() {
                   <input
                     ref={inputRef}
                     type="text"
-                    placeholder="Ask solar sizing, monthly bill, PPA..."
+                    placeholder="Ask solar sizing, monthly bill, talk to human..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     className="flex-1 px-4 py-2.5 rounded-xl bg-white/10 text-white placeholder-slate-400 text-xs outline-none border border-white/10 focus:border-[#ffc000] transition-colors"
@@ -563,12 +632,17 @@ export default function ChatBot() {
                 </form>
 
                 {/* Micro Footer Note */}
-                <div className="pt-2 flex items-center justify-between text-[10px] text-slate-500 px-1">
-                  <span className="flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                    <span>PRC Licensed Engineering EPC</span>
-                  </span>
-                  <a href="tel:+639222401919" className="hover:text-slate-300 transition-colors">
+                <div className="pt-2 flex items-center justify-between text-[10px] text-slate-400 px-1">
+                  <a 
+                    href="https://m.me/GGAutomation.1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[#40a9ff] hover:text-[#69c0ff] hover:underline font-semibold"
+                  >
+                    <MessageCircle className="w-3 h-3" />
+                    <span>Talk to Human on FB</span>
+                  </a>
+                  <a href="tel:+639222401919" className="hover:text-slate-200 transition-colors">
                     +63 922-240-1919
                   </a>
                 </div>
