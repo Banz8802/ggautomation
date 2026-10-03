@@ -25,7 +25,7 @@ import {
   Check
 } from 'lucide-react';
 
-import { projects, ProjectItem, ProjectCategory } from '@/data/projectsData';
+import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectCategory, ProjectRawInput } from '@/data/projectsData';
 export type { ProjectItem, ProjectCategory };
 
 const categoryTabs: { label: ProjectCategory; icon: React.ReactNode }[] = [
@@ -465,6 +465,7 @@ function ProjectModal({
 /* Main ProjectsSection Component                                             */
 /* -------------------------------------------------------------------------- */
 export default function ProjectsSection() {
+  const [projectList, setProjectList] = useState<ProjectItem[]>(initialProjects);
   const [activeTab, setActiveTab] = useState<ProjectCategory>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [modalState, setModalState] = useState<{ isOpen: boolean; project: ProjectItem | null; index: number }>({
@@ -472,6 +473,29 @@ export default function ProjectsSection() {
     project: null,
     index: 0,
   });
+
+  // Sync latest projects from API route if available
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDynamicProjects() {
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.projects) && data.projects.length > 0 && isMounted) {
+            const parsed = parseRawProjects(data.projects as ProjectRawInput[]);
+            setProjectList(parsed);
+          }
+        }
+      } catch {
+        // Fallback gracefully to bundled initialProjects
+      }
+    }
+    loadDynamicProjects();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const openModal = (project: ProjectItem, initialIndex: number) => {
     setModalState({ isOpen: true, project, index: initialIndex });
@@ -481,7 +505,7 @@ export default function ProjectsSection() {
     setModalState({ isOpen: false, project: null, index: 0 });
   };
 
-  const filteredProjects = projects.filter((project) => {
+  const filteredProjects = projectList.filter((project) => {
     const matchesCategory = activeTab === 'All' ? true : project.category === activeTab;
     const matchesSearch =
       searchQuery.trim() === '' ||
@@ -513,7 +537,7 @@ export default function ProjectsSection() {
           <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200">
             {categoryTabs.map((tab) => {
               const isActive = activeTab === tab.label;
-              const count = tab.label === 'All' ? projects.length : projects.filter((p) => p.category === tab.label).length;
+              const count = tab.label === 'All' ? projectList.length : projectList.filter((p) => p.category === tab.label).length;
               return (
                 <button
                   key={tab.label}

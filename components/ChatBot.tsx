@@ -400,12 +400,12 @@ export default function ChatBot() {
       {/* -------------------------------------------------------------------------- */}
       {/* Floating Trigger Button & Teaser Speech Bubble                             */}
       {/* -------------------------------------------------------------------------- */}
-      <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 flex items-center gap-2.5 pointer-events-auto">
+      <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 flex flex-col items-end gap-2 pointer-events-auto">
         
-        {/* Floating Bubble Teaser (Positioned horizontally to the LEFT of the button) */}
+        {/* Floating Bubble Teaser (Positioned on TOP of the button) */}
         {!isOpen && !hasOpened && (
           <div 
-            className="hidden sm:flex items-center gap-2 cursor-pointer bg-white text-slate-900 text-xs font-extrabold py-2 px-3.5 rounded-full shadow-2xl border border-slate-200/90 animate-bounce hover:border-[#e51a24]/40 transition-all select-none relative group"
+            className="flex items-center gap-2 cursor-pointer bg-white text-slate-900 text-xs font-extrabold py-2 px-3.5 rounded-full shadow-2xl border border-slate-200/90 animate-bounce hover:border-[#e51a24]/40 transition-all select-none relative group mr-1"
           >
             <div 
               onClick={handleOpen}
@@ -420,12 +420,13 @@ export default function ChatBot() {
                 setHasOpened(true);
               }}
               title="Dismiss"
+              aria-label="Dismiss label"
               className="ml-0.5 p-0.5 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
             >
               <X className="w-3 h-3" />
             </button>
-            {/* Tooltip pointer pointing right to the chatbot button */}
-            <div className="w-2 h-2 bg-white transform rotate-45 absolute -right-1 top-1/2 -translate-y-1/2 border-t border-r border-slate-200"></div>
+            {/* Tooltip pointer pointing down to the chatbot button */}
+            <div className="w-2 h-2 bg-white transform rotate-45 absolute -bottom-1 right-8 border-b border-r border-slate-200"></div>
           </div>
         )}
 

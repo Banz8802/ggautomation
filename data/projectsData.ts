@@ -72,10 +72,11 @@ export function normalizeProjectImages(imagesInput: string | string[], folder?: 
 }
 
 /**
- * Parses and returns all projects with full defaults and resolved image arrays
+ * Parses a raw list of projects with full defaults and resolved image arrays
  */
-export function getProjects(): ProjectItem[] {
-  return (rawProjectsData as unknown as ProjectRawInput[]).map((raw) => {
+export function parseRawProjects(rawList: ProjectRawInput[]): ProjectItem[] {
+  if (!Array.isArray(rawList)) return [];
+  return rawList.map((raw) => {
     const resolvedImages = normalizeProjectImages(raw.images, raw.folder);
 
     return {
@@ -91,16 +92,24 @@ export function getProjects(): ProjectItem[] {
       completionDate: raw.completionDate || 'Completed & Fully Commissioned',
       annualYield: raw.annualYield || 'High-Yield Clean Generation',
       co2Offset: raw.co2Offset || 'Significant Carbon Offset',
-      description: raw.description || `Premium ${raw.category.toLowerCase()} solar installation engineered for optimal efficiency and reliability.`,
+      description: raw.description || `Premium ${raw.category?.toLowerCase() || 'solar'} installation engineered for optimal efficiency and reliability.`,
       highlights: raw.highlights && raw.highlights.length > 0 ? raw.highlights : [
         'Tier-1 Solar Photovoltaic Modules',
         'Smart Cloud Telemetry & Monitoring',
         'Utility Net-Metering Synchronized',
         'Engineered Structural Racking'
       ],
-      tags: raw.tags && raw.tags.length > 0 ? raw.tags : [raw.category, 'Solar PV', 'Clean Energy']
+      tags: raw.tags && raw.tags.length > 0 ? raw.tags : [raw.category || 'Solar', 'Solar PV', 'Clean Energy']
     };
   });
 }
 
+/**
+ * Parses and returns all static projects from projects.json
+ */
+export function getProjects(): ProjectItem[] {
+  return parseRawProjects(rawProjectsData as unknown as ProjectRawInput[]);
+}
+
 export const projects: ProjectItem[] = getProjects();
+
