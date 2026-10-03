@@ -567,18 +567,28 @@ export default function ChatBot() {
                       <div className="flex flex-wrap gap-1.5 mt-2.5 max-w-[95%]">
                         {msg.quickActions.map((qa, idx) => {
                           const isFb = qa.href?.includes('m.me') || qa.action === 'human' || qa.action === 'fb';
+                          const isTel = qa.href?.startsWith('tel:') || qa.action === 'tel';
                           return (
                             <button
                               key={idx}
                               onClick={() => handleQuickAction(qa.action, qa.label, qa.href, qa.isExternal)}
-                              className={`px-3 py-1.5 rounded-xl border text-[11px] font-bold transition-all duration-200 hover:scale-105 active:scale-95 text-left flex items-center gap-1.5 cursor-pointer ${
+                              className={`px-3 py-1.5 rounded-xl border text-[11px] font-bold transition-all duration-200 hover:scale-105 active:scale-95 text-left flex items-center gap-1.5 cursor-pointer shadow-sm ${
                                 isFb
-                                  ? 'bg-[#0084ff]/20 hover:bg-[#0084ff] text-sky-200 hover:text-white border-[#0084ff]/40 shadow-sm'
+                                  ? 'bg-gradient-to-r from-[#0084ff]/25 to-[#00c6ff]/20 hover:from-[#0084ff] hover:to-[#0070d6] text-sky-200 hover:text-white border-[#0084ff]/50 hover:shadow-md hover:shadow-[#0084ff]/30'
+                                  : isTel
+                                  ? 'bg-emerald-500/20 hover:bg-emerald-600 text-emerald-200 hover:text-white border-emerald-500/40 hover:shadow-md hover:shadow-emerald-500/30'
                                   : 'bg-white/10 hover:bg-[#ffc000] text-slate-200 hover:text-[#091833] border-white/10'
                               }`}
                             >
+                              {isFb ? (
+                                <svg className="w-3.5 h-3.5 flex-shrink-0 fill-current" viewBox="0 0 24 24">
+                                  <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.518 3.735 7.207v3.535l3.39-1.862c.907.251 1.875.388 2.875.388 5.523 0 10-4.145 10-9.268C22 6.145 17.523 2 12 2zm1.066 12.443l-2.612-2.784-5.099 2.784 5.61-5.955 2.678 2.784 5.033-2.784-5.61 5.955z" />
+                                </svg>
+                              ) : isTel ? (
+                                <PhoneCall className="w-3.5 h-3.5 flex-shrink-0" />
+                              ) : null}
                               <span>{qa.label}</span>
-                              {qa.href && (qa.isExternal || qa.href.startsWith('http') ? <ExternalLink className="w-3 h-3" /> : <ArrowRight className="w-3 h-3" />)}
+                              {qa.href && (qa.isExternal || qa.href.startsWith('http') ? <ExternalLink className="w-3 h-3 opacity-70" /> : <ArrowRight className="w-3 h-3 opacity-70" />)}
                             </button>
                           );
                         })}
@@ -610,8 +620,8 @@ export default function ChatBot() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Chat Input Bar */}
-              <div className="p-3 bg-slate-950 border-t border-white/10">
+              {/* Chat Input Bar & Action Ribbon */}
+              <div className="p-3 bg-slate-950 border-t border-white/10 space-y-2.5">
                 <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                   <input
                     ref={inputRef}
@@ -631,19 +641,29 @@ export default function ChatBot() {
                   </button>
                 </form>
 
-                {/* Micro Footer Note */}
-                <div className="pt-2 flex items-center justify-between text-[10px] text-slate-400 px-1">
+                {/* Enhanced Contact & Human Handoff Action Bar */}
+                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/5">
                   <a 
                     href="https://m.me/GGAutomation.1"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-[#40a9ff] hover:text-[#69c0ff] hover:underline font-semibold"
+                    className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-gradient-to-r from-[#0084ff]/25 via-[#0084ff]/35 to-[#00c6ff]/25 hover:from-[#0084ff] hover:to-[#0070d6] text-[#78c5ff] hover:text-white border border-[#0084ff]/50 hover:border-[#0084ff] transition-all text-[11px] font-bold group shadow-md hover:shadow-[#0084ff]/40"
                   >
-                    <MessageCircle className="w-3 h-3" />
-                    <span>Talk to Human on FB</span>
+                    <div className="relative flex items-center justify-center flex-shrink-0">
+                      <span className="animate-ping absolute inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400 opacity-75"></span>
+                      <svg className="w-3.5 h-3.5 fill-current relative flex-shrink-0" viewBox="0 0 24 24">
+                        <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.518 3.735 7.207v3.535l3.39-1.862c.907.251 1.875.388 2.875.388 5.523 0 10-4.145 10-9.268C22 6.145 17.523 2 12 2zm1.066 12.443l-2.612-2.784-5.099 2.784 5.61-5.955 2.678 2.784 5.033-2.784-5.61 5.955z" />
+                      </svg>
+                    </div>
+                    <span className="truncate">Talk to Human (FB)</span>
                   </a>
-                  <a href="tel:+639222401919" className="hover:text-slate-200 transition-colors">
-                    +63 922-240-1919
+
+                  <a 
+                    href="tel:+639222401919" 
+                    className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 hover:border-emerald-400 transition-all text-[11px] font-bold group shadow-md hover:shadow-emerald-500/30"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5 text-emerald-400 group-hover:text-white group-hover:scale-110 transition-transform flex-shrink-0" />
+                    <span className="truncate">Call Hotline</span>
                   </a>
                 </div>
               </div>
