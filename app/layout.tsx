@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     'Davao Renewable Energy',
   ],
   authors: [{ name: 'GG Automation Construction Services' }],
+  icons: {
+    icon: [
+      { url: '/images/icon-logo.png', type: 'image/png' },
+    ],
+    shortcut: '/images/icon-logo.png',
+    apple: '/images/icon-logo.png',
+  },
   openGraph: {
     title: 'GG Automation Construction Services | Renewable Energy & Solar EPC Specialist',
     description: 'Engineering high-yield renewable energy power systems, rooftop solar PV, and floating solar arrays across the Philippines.',

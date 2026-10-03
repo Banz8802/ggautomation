@@ -358,7 +358,7 @@ export default function QuoteContactSection({ showLocations = true }: QuoteConta
                 </p>
                 <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
                   <p>Phone: <a href="tel:+639222401919" className="text-[#e51a24] hover:underline">(0922) 240-1919</a></p>
-                  <p>Email: info@ggautomation.tech</p>
+                  <p>Email: <a href="mailto:jr@ggautomation.tech" className="hover:text-[#e51a24]">jr@ggautomation.tech</a></p>
                 </div>
               </div>
 
@@ -377,7 +377,7 @@ export default function QuoteContactSection({ showLocations = true }: QuoteConta
                 </p>
                 <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
                   <p>Phone: <a href="tel:+639683882510" className="text-[#e51a24] hover:underline">(0968) 388-2510</a></p>
-                  <p>Email: info@ggautomation.tech</p>
+                  <p>Email: <a href="mailto:jr@ggautomation.tech" className="hover:text-[#e51a24]">jr@ggautomation.tech</a></p>
                 </div>
               </div>
 

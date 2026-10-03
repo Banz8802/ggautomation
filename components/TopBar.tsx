@@ -16,12 +16,12 @@ export default function TopBar() {
             <span className="font-medium">(0922) 240-1919</span>
           </a>
           <a 
-            href="mailto:info@ggautomation.tech" 
+            href="mailto:jr@ggautomation.tech" 
             className="flex items-center gap-2 hover:text-[#ffc000] transition-colors"
             title="Email Us"
           >
             <Mail className="w-3.5 h-3.5 text-[#e51a24]" />
-            <span>info@ggautomation.tech</span>
+            <span>jr@ggautomation.tech</span>
           </a>
           <div className="hidden lg:flex items-center gap-2 text-slate-400">
             <Clock className="w-3.5 h-3.5 text-[#ffc000]" />

@@ -19,7 +19,6 @@ interface ContactPayload {
 }
 
 const TARGET_EMAIL = 'jr@ggautomation.tech';
-const CC_EMAIL = 'info@ggautomation.tech';
 
 export async function POST(request: Request) {
   try {
@@ -126,7 +125,6 @@ export async function POST(request: Request) {
           body: JSON.stringify({
             from: process.env.RESEND_FROM || 'GG Automation Website <onboarding@resend.dev>',
             to: [TARGET_EMAIL],
-            cc: [CC_EMAIL],
             reply_to: data.email,
             subject,
             html: htmlBody,

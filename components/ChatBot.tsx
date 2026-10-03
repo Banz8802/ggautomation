@@ -179,7 +179,7 @@ export default function ChatBot() {
           '• **Cebu Office Hotline**: (0922) 240-1919\n' +
           '• **Bohol Office Hotline**: (0968) 388-2510\n' +
           '• **Davao Satellite**: (082) 224-2785\n' +
-          '• **Official Email**: info@ggautomation.tech\n\n' +
+          '• **Official Email**: jr@ggautomation.tech\n\n' +
           'Click the button below to start a live chat on Facebook Messenger:';
         
         quickActions = [
@@ -252,7 +252,7 @@ export default function ChatBot() {
           '• **Bohol Showroom**:\n  Salazar St., Ubujan, Tagbilaran City, Bohol (20m Before Nissan Car Display)\n  📞 Phone: (0968) 388-2510\n\n' +
           '• **Davao City Satellite Office**:\n  V. Guzman St. corner 5th Avenue (Back of Cyber Tech Trading Corp) Barangay 27-C, Davao City\n  📞 Phone: (082) 224-2785\n\n' +
           '💬 **Facebook Messenger**: facebook.com/messages/t/GGAutomation.1\n' +
-          '✉️ **Email**: info@ggautomation.tech';
+          '✉️ **Email**: jr@ggautomation.tech';
         
         quickActions = [
           { label: '💬 Chat on Facebook Messenger', action: 'fb', href: FB_MESSENGER_URL, isExternal: true },
@@ -400,17 +400,32 @@ export default function ChatBot() {
       {/* -------------------------------------------------------------------------- */}
       {/* Floating Trigger Button & Teaser Speech Bubble                             */}
       {/* -------------------------------------------------------------------------- */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-auto">
+      <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 flex items-center gap-2.5 pointer-events-auto">
         
-        {/* Floating Bubble Teaser (Shown when closed) */}
+        {/* Floating Bubble Teaser (Positioned horizontally to the LEFT of the button) */}
         {!isOpen && !hasOpened && (
           <div 
-            onClick={handleOpen}
-            className="mb-3 cursor-pointer bg-white text-slate-800 text-xs font-bold py-2.5 px-4 rounded-2xl shadow-xl border border-slate-200/90 flex items-center gap-2.5 animate-bounce hover:border-[#e51a24]/40 transition-all select-none"
+            className="hidden sm:flex items-center gap-2 cursor-pointer bg-white text-slate-900 text-xs font-extrabold py-2 px-3.5 rounded-full shadow-2xl border border-slate-200/90 animate-bounce hover:border-[#e51a24]/40 transition-all select-none relative group"
           >
-            <div className="w-2 h-2 rounded-full bg-[#0b7337] animate-ping"></div>
-            <span>Need a Solar Estimate? Ask our AI!</span>
-            <div className="w-2 h-2 bg-white transform rotate-45 absolute -bottom-1 right-6 border-r border-b border-slate-200"></div>
+            <div 
+              onClick={handleOpen}
+              className="flex items-center gap-2"
+            >
+              <div className="w-2 h-2 rounded-full bg-[#0b7337] animate-ping flex-shrink-0"></div>
+              <span className="whitespace-nowrap">Need a Solar Estimate? Ask AI</span>
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setHasOpened(true);
+              }}
+              title="Dismiss"
+              className="ml-0.5 p-0.5 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              <X className="w-3 h-3" />
+            </button>
+            {/* Tooltip pointer pointing right to the chatbot button */}
+            <div className="w-2 h-2 bg-white transform rotate-45 absolute -right-1 top-1/2 -translate-y-1/2 border-t border-r border-slate-200"></div>
           </div>
         )}
 
@@ -419,17 +434,17 @@ export default function ChatBot() {
           <button
             onClick={handleOpen}
             aria-label="Open Solar AI Chat Assistant"
-            className="group relative flex items-center gap-3 px-4 sm:px-5 py-3.5 rounded-full bg-gradient-to-r from-[#091833] via-[#0d2247] to-[#091833] text-white shadow-2xl hover:shadow-cyan-900/40 border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+            className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#091833] via-[#0d2247] to-[#091833] text-white shadow-2xl hover:shadow-cyan-900/40 border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer flex-shrink-0"
           >
             {/* Glowing Halo */}
             <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#e51a24]/30 via-[#ffc000]/30 to-[#0b7337]/30 blur-md opacity-70 group-hover:opacity-100 transition-opacity"></span>
 
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/15 p-1 shadow-inner overflow-hidden border border-white/25">
+            <div className="relative flex items-center justify-center w-7 h-7 rounded-full bg-white/15 p-1 shadow-inner overflow-hidden border border-white/25">
               <Image
                 src="/images/icon-logo.png"
                 alt="GG Automation Icon"
-                width={32}
-                height={32}
+                width={28}
+                height={28}
                 className="w-full h-full object-contain"
               />
             </div>
@@ -458,8 +473,8 @@ export default function ChatBot() {
         <div 
           className={`fixed right-4 sm:right-6 z-50 transition-all duration-300 flex flex-col bg-[#091833] border border-white/15 rounded-3xl shadow-2xl overflow-hidden backdrop-blur-2xl ${
             isMinimized 
-              ? 'bottom-6 w-[320px] sm:w-[360px] h-16' 
-              : 'bottom-4 sm:bottom-6 w-[calc(100vw-2rem)] sm:w-[420px] h-[580px] max-h-[85vh]'
+              ? 'bottom-20 sm:bottom-24 w-[320px] sm:w-[360px] h-16' 
+              : 'bottom-20 sm:bottom-24 w-[calc(100vw-2rem)] sm:w-[420px] h-[580px] max-h-[75vh]'
           }`}
         >
           {/* Header */}

@@ -116,8 +116,8 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#e51a24] flex-shrink-0" />
-                <a href="mailto:info@ggautomation.tech" className="hover:text-[#ffc000]">
-                  info@ggautomation.tech
+                <a href="mailto:jr@ggautomation.tech" className="hover:text-[#ffc000]">
+                  jr@ggautomation.tech
                 </a>
               </li>
             </ul>
@@ -143,7 +143,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar & Copyright */}
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div className="pt-8 pb-6 sm:pb-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p>© {new Date().getFullYear()} GG Automation Construction Services. All rights reserved.</p>
 
           <div className="flex items-center gap-6">
