@@ -1,5 +1,97 @@
 [
   {
+    "id": "project-1791220857575",
+    "title": "MANDAUE FOAM FACTORY - 308kW SOLAR ON-GRID SET-UP",
+    "category": "Commercial",
+    "location": "Mandaue City, Philippines",
+    "capacity": "308 kw",
+    "client": "MANDAUE FOAM FACTORY",
+    "folder": "",
+    "images": "/images/projects/uploads/1791221136720_image67.webp, /images/projects/uploads/1791221143513_image73.webp, /images/projects/uploads/1791221143514_image77.webp, /images/projects/uploads/1791221143517_image76.webp, /images/projects/uploads/1791221143519_image75.webp, /images/projects/uploads/1791221143521_image74.webp, /images/projects/uploads/1791221143526_image72.webp, /images/projects/uploads/1791221143529_image70.webp, /images/projects/uploads/1791221143531_image71.webp, /images/projects/uploads/1791221143533_image69.webp, /images/projects/uploads/1791221143535_image68.webp",
+    "systemType": "SOLAR ON-GRID SET-UP",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791220289848",
+    "title": "CANGS SHOPPING COMPLEX - 140.4 kW SOLAR ON-GRID SET-UP (PANASONIC HYBRID PV)",
+    "category": "Commercial",
+    "location": "National Highway, Dumaguete City, 6200 Negros Oriental",
+    "capacity": "140.4 kw",
+    "client": "CANGS SHOPPING COMPLEX",
+    "folder": "",
+    "images": "/images/projects/uploads/1791220541455_image65.webp, /images/projects/uploads/1791220548459_image66.webp, /images/projects/uploads/1791220551285_image62.webp, /images/projects/uploads/1791220562291_image63.webp, /images/projects/uploads/1791220566291_image64.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791220013113",
+    "title": "GAISANO CAPITAL – OZAMIS CITY - 834kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "category": "Commercial",
+    "location": "OZAMIS CITY",
+    "capacity": "834kWp",
+    "client": "GAISANO CAPITAL",
+    "folder": "",
+    "images": "/images/projects/uploads/1791220134394_Screenshot_6.webp, /images/projects/uploads/1791220137338_Screenshot_5.webp",
+    "systemType": "ON-GRID SYSTEM SET-UP",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791219286209",
+    "title": "GAISANO CAPITAL – SURIGAO CITY - 713kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "category": "Commercial",
+    "location": "SURIGAO CITY",
+    "capacity": "713kWp",
+    "client": "GAISANO CAPITAL",
+    "folder": "",
+    "images": "/images/projects/uploads/1791219687475_gc-sur-01.webp, /images/projects/uploads/1791219696690_gc-sur-07.webp, /images/projects/uploads/1791219696694_gc-sur-06.webp, /images/projects/uploads/1791219696696_gc-sur-05.webp, /images/projects/uploads/1791219696697_gc-sur-04.webp, /images/projects/uploads/1791219696699_gc-sur-03.webp, /images/projects/uploads/1791219696700_gc-sur-02.webp",
+    "systemType": "SOLAR ON-GRID SYSTEM SET-UP",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
     "id": "super-metro-toledo",
     "title": "Super Metro - Toledo City, Cebu",
     "category": "Commercial",
