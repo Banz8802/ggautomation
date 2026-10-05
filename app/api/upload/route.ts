@@ -18,25 +18,45 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'No files uploaded' }, { status: 400 });
     }
 
-    const uploadDir = path.join(process.cwd(), 'public', 'images', 'projects', 'uploads');
-    await mkdir(uploadDir, { recursive: true });
-
     const uploadedUrls: string[] = [];
+
+    // Check if we can write to public folder (local dev environment)
+    let canWriteToDisk = true;
+    const uploadDir = path.join(process.cwd(), 'public', 'images', 'projects', 'uploads');
+    
+    try {
+      await mkdir(uploadDir, { recursive: true });
+    } catch {
+      canWriteToDisk = false;
+    }
 
     for (const file of files) {
       if (typeof file === 'string' || !file.name) continue;
 
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
+      const mimeType = file.type || 'image/jpeg';
 
-      // Clean filename
-      const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const timestamp = Date.now();
-      const fileName = `${timestamp}_${originalName}`;
-      const filePath = path.join(uploadDir, fileName);
+      if (canWriteToDisk) {
+        try {
+          const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+          const timestamp = Date.now();
+          const fileName = `${timestamp}_${originalName}`;
+          const filePath = path.join(uploadDir, fileName);
 
-      await writeFile(filePath, buffer);
-      uploadedUrls.push(`/images/projects/uploads/${fileName}`);
+          await writeFile(filePath, buffer);
+          uploadedUrls.push(`/images/projects/uploads/${fileName}`);
+          continue;
+        } catch {
+          // If disk write fails at runtime, fall back to base64 data URL
+          canWriteToDisk = false;
+        }
+      }
+
+      // Serverless / Read-Only Environment Fallback: Base64 Data URL
+      const base64Data = buffer.toString('base64');
+      const dataUrl = `data:${mimeType};base64,${base64Data}`;
+      uploadedUrls.push(dataUrl);
     }
 
     return NextResponse.json({
