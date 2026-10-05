@@ -1,13 +1,38 @@
 import { NextResponse } from 'next/server';
 import { readFile, writeFile } from 'fs/promises';
+import { existsSync } from 'fs';
 import path from 'path';
+import os from 'os';
 
-const dataFilePath = path.join(process.cwd(), 'data', 'trainings.json');
+const localFilePath = path.join(process.cwd(), 'data', 'trainings.json');
+const tmpFilePath = path.join(os.tmpdir(), 'ggautomation_trainings.json');
 
-async function readTrainingsData() {
+// In-memory cache for fast serverless persistence across executions in the same instance
+let trainingsMemoryCache: unknown[] | null = null;
+
+async function readTrainingsData(): Promise<any[]> {
+  if (trainingsMemoryCache && Array.isArray(trainingsMemoryCache) && trainingsMemoryCache.length > 0) {
+    return [...trainingsMemoryCache];
+  }
+
+  // 1. Try reading from writable /tmp
   try {
-    const raw = await readFile(dataFilePath, 'utf-8');
-    return JSON.parse(raw);
+    if (existsSync(tmpFilePath)) {
+      const raw = await readFile(tmpFilePath, 'utf-8');
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        trainingsMemoryCache = parsed;
+        return [...parsed];
+      }
+    }
+  } catch {}
+
+  // 2. Fall back to bundled data file
+  try {
+    const raw = await readFile(localFilePath, 'utf-8');
+    const parsed = JSON.parse(raw);
+    trainingsMemoryCache = parsed;
+    return [...parsed];
   } catch (err) {
     console.error('Error reading trainings.json:', err);
     return [];
@@ -15,7 +40,21 @@ async function readTrainingsData() {
 }
 
 async function writeTrainingsData(data: unknown[]) {
-  await writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
+  trainingsMemoryCache = [...data];
+
+  // Try writing to local project directory (works in local dev)
+  try {
+    await writeFile(localFilePath, JSON.stringify(data, null, 2), 'utf-8');
+  } catch {
+    // Read-only filesystem on Vercel / Lambda - expected
+  }
+
+  // Always write to /tmp for serverless runtime persistence
+  try {
+    await writeFile(tmpFilePath, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Error writing to tmp trainings file:', err);
+  }
 }
 
 export async function GET() {
