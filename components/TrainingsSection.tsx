@@ -81,22 +81,15 @@ export default function TrainingsSection() {
     });
   }, [trainings, selectedCategory, searchQuery]);
 
-  // Find the primary featured milestone (e.g., Cavinti Live Demo)
+  // Always pick the latest training program for the featured "Live Demo & Seminar" milestone banner
   const featuredMilestone = useMemo(() => {
-    return (
-      trainings.find(
-        (t) =>
-          t.category.toLowerCase().includes('featured') ||
-          t.badge.toLowerCase().includes('live demo') ||
-          t.videoUrl.length > 0
-      ) || trainings[0]
-    );
+    return trainings[0] || null;
   }, [trainings]);
 
   return (
     <div className="space-y-16 sm:space-y-24">
       {/* ---------------------------------------------------------------------- */}
-      {/* 1. FEATURED EVENT MILESTONE HERO BANNER (Power Ai Cavinti Demo)        */}
+      {/* 1. FEATURED EVENT MILESTONE HERO BANNER (Latest Training / Live Demo)  */}
       {/* ---------------------------------------------------------------------- */}
       {featuredMilestone && (
         <section className="py-12 sm:py-16 bg-white text-slate-900 relative overflow-hidden border-b border-slate-200">
@@ -105,7 +98,7 @@ export default function TrainingsSection() {
             <div className="text-center space-y-3 max-w-2xl mx-auto">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#e51a24]/10 border border-[#e51a24]/20 text-[#e51a24] text-xs font-black uppercase tracking-widest">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#e51a24] animate-ping"></span>
-                <span>{featuredMilestone.badge || 'FEATURED EVENT MILESTONE'}</span>
+                <span>{featuredMilestone.badge || 'LIVE DEMO & SEMINAR'}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#091833] tracking-tight leading-tight">
                 {featuredMilestone.organizer.includes('&') ? (
@@ -114,11 +107,11 @@ export default function TrainingsSection() {
                     <span className="block mt-1 sm:mt-1.5">{featuredMilestone.organizer.split('&')[1].trim()}</span>
                   </>
                 ) : (
-                  featuredMilestone.organizer || 'Power Ai Philippines'
+                  featuredMilestone.organizer || 'Live Demo & Seminar'
                 )}
               </h2>
               <p className="text-sm sm:text-base text-slate-600">
-                On-site demonstration and specialized technical workshop on lake-reservoir floating solar engineering.
+                Latest practical demonstration and specialized technical workshop on solar engineering.
               </p>
               <div className="w-16 h-1 bg-[#e51a24] mx-auto rounded-full mt-2"></div>
             </div>
@@ -207,7 +200,7 @@ export default function TrainingsSection() {
                 <div className="relative z-10 text-center space-y-5 max-w-md mx-auto p-6 rounded-3xl bg-slate-900/80 backdrop-blur-md border border-white/20 shadow-2xl">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-extrabold uppercase tracking-wider border border-cyan-400/30">
                     <Waves className="w-3.5 h-3.5" />
-                    <span>Live Demonstration Preview</span>
+                    <span>Live Demo & Seminar Preview</span>
                   </div>
 
                   <div className="space-y-1">
@@ -215,7 +208,7 @@ export default function TrainingsSection() {
                       {featuredMilestone.title}
                     </h4>
                     <p className="text-xs text-slate-300 font-bold uppercase tracking-widest text-[#ffc000]">
-                      SEMINAR AND TRAINING
+                      {featuredMilestone.badge || 'SEMINAR AND TRAINING'}
                     </p>
                   </div>
 
