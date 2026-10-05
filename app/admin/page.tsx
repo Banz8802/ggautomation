@@ -41,7 +41,8 @@ import {
   Play,
   Factory,
   Newspaper,
-  Phone
+  Phone,
+  Lock
 } from 'lucide-react';
 
 /* -------------------------------------------------------------------------- */
