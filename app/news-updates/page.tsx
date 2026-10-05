@@ -27,13 +27,32 @@ import {
 } from 'lucide-react';
 
 export default function NewsUpdatesPage() {
+  const [articles, setArticles] = useState<NewsArticle[]>(newsArticles);
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
 
+  // Fetch updated news from /api/news
+  React.useEffect(() => {
+    async function loadNews() {
+      try {
+        const res = await fetch('/api/news');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.news) && data.news.length > 0) {
+            setArticles(data.news);
+          }
+        }
+      } catch (err) {
+        console.warn('Using fallback news articles dataset', err);
+      }
+    }
+    loadNews();
+  }, []);
+
   const categories = ['All', 'Scholarship', 'Global Tour', 'Exhibition', 'Technical Seminar'];
 
-  const filteredArticles = newsArticles.filter((article) => {
+  const filteredArticles = articles.filter((article) => {
     const matchesCategory = activeCategory === 'All' ? true : article.category === activeCategory;
     const matchesSearch =
       searchQuery.trim() === '' ||
