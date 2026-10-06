@@ -39,6 +39,22 @@ export interface ProjectItem {
 }
 
 /**
+ * Helper to check if a media URL or file path is a video file
+ */
+export function isVideoUrl(url: string | undefined | null): boolean {
+  if (!url) return false;
+  const clean = url.toLowerCase().split('?')[0];
+  return (
+    clean.endsWith('.mp4') ||
+    clean.endsWith('.webm') ||
+    clean.endsWith('.mov') ||
+    clean.endsWith('.m4v') ||
+    clean.endsWith('.ogg') ||
+    clean.startsWith('data:video/')
+  );
+}
+
+/**
  * Normalizes project image paths:
  * 1. If images is a comma-separated string, it splits and trims each filename.
  * 2. If folder is provided and image doesn't start with / or http, it prepends the folder.

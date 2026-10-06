@@ -46,6 +46,8 @@ import {
   Briefcase
 } from 'lucide-react';
 import AdminCareersManager from '@/components/admin/AdminCareersManager';
+import AdminHomeCategoriesManager from '@/components/admin/AdminHomeCategoriesManager';
+import { isVideoUrl } from '@/data/projectsData';
 
 /* -------------------------------------------------------------------------- */
 /* Type Definitions                                                           */
@@ -126,7 +128,14 @@ export default function AdminPage() {
 function AdminDashboardContent() {
   const searchParams = useSearchParams();
   const initialTab =
-    (searchParams.get('tab') as 'projects' | 'trainings' | 'news' | 'careers' | 'overview' | 'inquiries') || 'projects';
+    (searchParams.get('tab') as
+      | 'projects'
+      | 'trainings'
+      | 'news'
+      | 'careers'
+      | 'home-categories'
+      | 'overview'
+      | 'inquiries') || 'projects';
 
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -137,7 +146,9 @@ function AdminDashboardContent() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Dashboard active tab
-  const [activeMenu, setActiveMenu] = useState<'projects' | 'trainings' | 'news' | 'careers' | 'overview' | 'inquiries'>(initialTab);
+  const [activeMenu, setActiveMenu] = useState<
+    'projects' | 'trainings' | 'news' | 'careers' | 'home-categories' | 'overview' | 'inquiries'
+  >(initialTab);
   const [careersCount, setCareersCount] = useState(2);
 
   // Sync tab with URL if param changes
@@ -148,6 +159,7 @@ function AdminDashboardContent() {
       tabParam === 'projects' ||
       tabParam === 'news' ||
       tabParam === 'careers' ||
+      tabParam === 'home-categories' ||
       tabParam === 'overview' ||
       tabParam === 'inquiries'
     ) {
@@ -1165,19 +1177,12 @@ function AdminDashboardContent() {
                 </div>
               </div>
 
-              {/* Pre-fill Helper */}
+              {/* Security Note */}
               <div className="flex items-center justify-between text-xs pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setUsername('admin');
-                    setPassword('Qwe123automation!@#');
-                  }}
-                  className="text-[#ffc000] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Auto-fill Admin Credentials</span>
-                </button>
+                <span className="text-slate-400 text-[11px] flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Authorized Personnel Only</span>
+                </span>
                 <span className="text-slate-400 text-[11px]">Protected Portal</span>
               </div>
 
@@ -1272,18 +1277,18 @@ function AdminDashboardContent() {
             {/* Projects Menu Item */}
             <button
               onClick={() => setActiveMenu('projects')}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'projects'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <Layers className="w-4 h-4" />
-                <span>Projects Portfolio</span>
+              <div className="flex items-center gap-3 min-w-0 text-left">
+                <Layers className="w-4 h-4 shrink-0" />
+                <span className="truncate text-left">Projects Portfolio</span>
               </div>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
+                className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full font-black ${
                   activeMenu === 'projects' ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'
                 }`}
               >
@@ -1294,18 +1299,18 @@ function AdminDashboardContent() {
             {/* Trainings & Seminars Menu Item */}
             <button
               onClick={() => setActiveMenu('trainings')}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'trainings'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <GraduationCap className="w-4 h-4" />
-                <span>Trainings & Seminars</span>
+              <div className="flex items-center gap-3 min-w-0 text-left">
+                <GraduationCap className="w-4 h-4 shrink-0" />
+                <span className="truncate text-left">Trainings & Seminars</span>
               </div>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
+                className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full font-black ${
                   activeMenu === 'trainings' ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'
                 }`}
               >
@@ -1316,18 +1321,18 @@ function AdminDashboardContent() {
             {/* News & Updates Menu Item */}
             <button
               onClick={() => setActiveMenu('news')}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'news'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <Newspaper className="w-4 h-4" />
-                <span>News & Updates</span>
+              <div className="flex items-center gap-3 min-w-0 text-left">
+                <Newspaper className="w-4 h-4 shrink-0" />
+                <span className="truncate text-left">News & Updates</span>
               </div>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
+                className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full font-black ${
                   activeMenu === 'news' ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'
                 }`}
               >
@@ -1338,18 +1343,18 @@ function AdminDashboardContent() {
             {/* Careers & Hiring Menu Item */}
             <button
               onClick={() => setActiveMenu('careers')}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'careers'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <Briefcase className="w-4 h-4" />
-                <span>Careers & Hiring</span>
+              <div className="flex items-center gap-3 min-w-0 text-left">
+                <Briefcase className="w-4 h-4 shrink-0" />
+                <span className="truncate text-left">Careers & Hiring</span>
               </div>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
+                className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full font-black ${
                   activeMenu === 'careers' ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'
                 }`}
               >
@@ -1357,35 +1362,57 @@ function AdminDashboardContent() {
               </span>
             </button>
 
+            {/* Home Project Categories Menu Item */}
+            <button
+              onClick={() => setActiveMenu('home-categories')}
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
+                activeMenu === 'home-categories'
+                  ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <div className="flex items-center gap-3 min-w-0 text-left">
+                <LayoutGrid className="w-4 h-4 shrink-0" />
+                <span className="truncate text-left">Home Project Categories</span>
+              </div>
+              <span
+                className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full font-black ${
+                  activeMenu === 'home-categories' ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'
+                }`}
+              >
+                4
+              </span>
+            </button>
+
             {/* Overview / Analytics */}
             <button
               onClick={() => setActiveMenu('overview')}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'overview'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-4 h-4" />
-                <span>Portfolio Metrics</span>
+              <div className="flex items-center gap-3 min-w-0 text-left">
+                <TrendingUp className="w-4 h-4 shrink-0" />
+                <span className="truncate text-left">Portfolio Metrics</span>
               </div>
             </button>
 
             {/* Inquiries & Form Routing */}
             <button
               onClick={() => setActiveMenu('inquiries')}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'inquiries'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4" />
-                <span>Form Inquiries</span>
+              <div className="flex items-center gap-3 min-w-0 text-left">
+                <Mail className="w-4 h-4 shrink-0" />
+                <span className="truncate text-left">Form Inquiries</span>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#e51a24] text-white font-bold">
+              <span className="shrink-0 text-[10px] px-2 py-0.5 rounded-full bg-[#e51a24] text-white font-bold">
                 jr@
               </span>
             </button>
@@ -1502,6 +1529,8 @@ function AdminDashboardContent() {
                   ? 'News & Announcements CRM'
                   : activeMenu === 'careers'
                   ? 'Careers & Recruitment CRM'
+                  : activeMenu === 'home-categories'
+                  ? 'Home Project Categories'
                   : activeMenu === 'overview'
                   ? 'Portfolio Metrics'
                   : 'Inquiry Routing'}
@@ -1516,6 +1545,8 @@ function AdminDashboardContent() {
                 ? 'News & Updates Management'
                 : activeMenu === 'careers'
                 ? 'Careers & Hiring Management'
+                : activeMenu === 'home-categories'
+                ? 'Home Project Categories Management'
                 : activeMenu === 'overview'
                 ? 'Portfolio Analytics'
                 : 'Form Inquiries & Leads'}
@@ -1624,6 +1655,17 @@ function AdminDashboardContent() {
               >
                 <ExternalLink className="w-3.5 h-3.5 text-[#ffc000]" />
                 <span className="hidden sm:inline">Live Careers Page</span>
+              </Link>
+            )}
+
+            {activeMenu === 'home-categories' && (
+              <Link
+                href="/#services"
+                target="_blank"
+                className="px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors flex items-center gap-2 text-xs font-bold"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-[#ffc000]" />
+                <span className="hidden sm:inline">Live Homepage Services</span>
               </Link>
             )}
           </div>
@@ -1767,13 +1809,23 @@ function AdminDashboardContent() {
                       ) : (
                         filteredProjects.map((p) => {
                           const imgUrl = getFirstProjectImage(p);
+                          const isVid = isVideoUrl(imgUrl);
                           const imgCount = p.images ? p.images.split(',').length : 0;
                           return (
                             <tr key={p.id} className="hover:bg-white/5 transition-colors group">
                               <td className="py-3 px-4">
                                 <div className="flex items-center gap-3">
                                   <div className="relative w-12 h-12 rounded-xl bg-slate-800 overflow-hidden flex-shrink-0 border border-white/10">
-                                    <Image src={imgUrl} alt={p.title} fill className="object-cover" sizes="48px" />
+                                    {isVid ? (
+                                      <div className="w-full h-full relative bg-slate-900">
+                                        <video src={imgUrl} className="w-full h-full object-cover" muted playsInline />
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                          <Play className="w-3 h-3 text-[#ffc000] fill-current" />
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <Image src={imgUrl} alt={p.title} fill className="object-cover" sizes="48px" />
+                                    )}
                                   </div>
                                   <div className="min-w-0 max-w-[280px]">
                                     <div className="font-bold text-white text-xs truncate group-hover:text-[#ffc000] transition-colors">
@@ -1856,6 +1908,7 @@ function AdminDashboardContent() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProjects.map((p) => {
                   const imgUrl = getFirstProjectImage(p);
+                  const isVid = isVideoUrl(imgUrl);
                   return (
                     <div
                       key={p.id}
@@ -1863,15 +1916,25 @@ function AdminDashboardContent() {
                     >
                       <div>
                         <div className="relative h-48 w-full bg-slate-800 overflow-hidden">
-                          <Image
-                            src={imgUrl}
-                            alt={p.title}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#091833] via-transparent to-transparent"></div>
-                          <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                          {isVid ? (
+                            <div className="w-full h-full relative bg-slate-900">
+                              <video src={imgUrl} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+                              <div className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-md text-[#ffc000] text-[9px] font-bold flex items-center gap-1">
+                                <Play className="w-2.5 h-2.5 fill-current" />
+                                <span>Video</span>
+                              </div>
+                            </div>
+                          ) : (
+                            <Image
+                              src={imgUrl}
+                              alt={p.title}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#091833] via-transparent to-transparent pointer-events-none"></div>
+                          <div className="absolute top-3 left-3 flex items-center gap-2 pointer-events-none">
                             <span className="px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-black border border-white/10">
                               {p.category}
                             </span>
@@ -2626,6 +2689,15 @@ function AdminDashboardContent() {
         )}
 
         {/* ==================================================================== */}
+        {/* HOME PROJECT CATEGORIES CRM TAB                                      */}
+        {/* ==================================================================== */}
+        {activeMenu === 'home-categories' && (
+          <div className="p-6 max-w-7xl w-full mx-auto">
+            <AdminHomeCategoriesManager />
+          </div>
+        )}
+
+        {/* ==================================================================== */}
         {/* INQUIRIES & FORM ROUTING TAB                                         */}
         {/* ==================================================================== */}
         {activeMenu === 'inquiries' && (
@@ -2867,7 +2939,7 @@ function AdminDashboardContent() {
                       type="file"
                       ref={projectFileInputRef}
                       multiple
-                      accept="image/*"
+                      accept="image/*,video/mp4,video/webm,video/quicktime,video/mov,video/*"
                       onChange={handleProjectFileUpload}
                       className="hidden"
                       id="project-photo-upload"
@@ -2879,9 +2951,9 @@ function AdminDashboardContent() {
                       <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-[#ffc000]">
                         <Upload className="w-6 h-6" />
                       </div>
-                      <div className="text-xs font-bold text-white">Click here to upload project photos directly</div>
+                      <div className="text-xs font-bold text-white">Click here to upload project photos & short videos directly</div>
                       <div className="text-[11px] text-slate-400">
-                        Supports WebP, PNG, JPG — automatically saved to project uploads folder
+                        Supports WebP, PNG, JPG, MP4, WebM, MOV — automatically saved to project uploads folder
                       </div>
                     </label>
                     {isUploading && (
@@ -2895,11 +2967,11 @@ function AdminDashboardContent() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                        Image File Names or URLs (Comma-separated)
+                        Image / Video File Names or URLs (Comma-separated)
                       </label>
                       <textarea
                         rows={2}
-                        placeholder="e.g. gc-img-01.webp, gc-img-02.webp OR /images/projects/uploads/sample.jpg"
+                        placeholder="e.g. gc-img-01.webp, /images/projects/uploads/video.mp4, gc-img-02.webp"
                         value={formData.images}
                         onChange={(e) => setFormData({ ...formData, images: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-[#ffc000] transition-colors"
@@ -2923,29 +2995,42 @@ function AdminDashboardContent() {
                   {parsedImageList.length > 0 && (
                     <div className="space-y-2 pt-2">
                       <div className="text-xs font-bold text-slate-300">
-                        Current Attached Photos ({parsedImageList.length})
+                        Current Attached Photos & Videos ({parsedImageList.length})
                       </div>
                       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                        {parsedImageList.map((url, idx) => (
-                          <div
-                            key={idx}
-                            className="relative h-20 rounded-xl overflow-hidden bg-slate-800 border border-white/15 group"
-                          >
-                            <Image src={url} alt={`Photo ${idx + 1}`} fill className="object-cover" />
-                            <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const updated = parsedImageList.filter((_, i) => i !== idx).join(', ');
-                                  setFormData({ ...formData, images: updated });
-                                }}
-                                className="p-1 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
-                              >
-                                <X className="w-3.5 h-3.5" />
-                              </button>
+                        {parsedImageList.map((url, idx) => {
+                          const isVid = isVideoUrl(url);
+                          return (
+                            <div
+                              key={idx}
+                              className="relative h-20 rounded-xl overflow-hidden bg-slate-800 border border-white/15 group"
+                            >
+                              {isVid ? (
+                                <div className="w-full h-full relative bg-slate-900">
+                                  <video src={url} className="w-full h-full object-cover" muted playsInline />
+                                  <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-black/80 text-[8px] font-black text-white flex items-center gap-1">
+                                    <Play className="w-2 h-2 fill-current text-[#ffc000]" />
+                                    <span>VIDEO</span>
+                                  </div>
+                                </div>
+                              ) : (
+                                <Image src={url} alt={`Photo ${idx + 1}`} fill className="object-cover" />
+                              )}
+                              <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = parsedImageList.filter((_, i) => i !== idx).join(', ');
+                                    setFormData({ ...formData, images: updated });
+                                  }}
+                                  className="p-1 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -3070,22 +3155,42 @@ function AdminDashboardContent() {
 
                   <div className="max-w-md mx-auto bg-white text-slate-900 rounded-3xl overflow-hidden border border-slate-200 shadow-2xl flex flex-col justify-between">
                     <div>
-                      <div className="relative h-60 w-full bg-slate-900">
-                        <Image
-                          src={parsedImageList[0] || '/images/placeholder.webp'}
-                          alt={formData.title}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                      <div className="relative h-60 w-full bg-slate-900 overflow-hidden">
+                        {isVideoUrl(parsedImageList[0]) ? (
+                          <div className="w-full h-full relative">
+                            <video
+                              src={parsedImageList[0]}
+                              controls
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute top-4 right-4 z-10 px-2 py-0.5 rounded-full bg-black/80 text-[#ffc000] text-[10px] font-bold flex items-center gap-1">
+                              <Play className="w-3 h-3 fill-current" />
+                              <span>Video Reel</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <Image
+                            src={parsedImageList[0] || '/images/placeholder.webp'}
+                            alt={formData.title}
+                            fill
+                            className="object-cover"
+                          />
+                        )}
+                        <div className="absolute top-4 left-4 z-10 pointer-events-none">
                           <span className="bg-white/95 text-[#091833] text-[11px] font-black px-3 py-1 rounded-full shadow-md">
                             {formData.category}
                           </span>
-                          <div className="bg-[#e51a24] text-white text-xs font-black px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5">
+                        </div>
+                        {!isVideoUrl(parsedImageList[0]) && (
+                          <div className="absolute top-4 right-4 z-10 bg-[#e51a24] text-white text-xs font-black px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5 pointer-events-none">
                             <Zap className="w-3.5 h-3.5 fill-current text-[#ffc000]" />
                             <span>{formData.capacity || 'Custom kWp'}</span>
                           </div>
-                        </div>
+                        )}
                       </div>
 
                       <div className="p-6 space-y-3">

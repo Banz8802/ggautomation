@@ -5,70 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import SectionHeading from './SectionHeading';
 import { ArrowRight, Home, Building2, Factory, GraduationCap, Camera, ChevronLeft, ChevronRight } from 'lucide-react';
-import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectRawInput } from '@/data/projectsData';
-
-interface ServiceTypeConfig {
-  id: string;
-  category: 'Residential' | 'Commercial' | 'Industrial' | 'School';
-  title: string;
-  icon: React.ReactNode;
-  image: string;
-  headline: string;
-  description: string;
-  link: string;
-  badge: string;
-}
-
-const serviceTypes: ServiceTypeConfig[] = [
-  {
-    id: 'residential',
-    category: 'Residential',
-    title: 'Residential',
-    icon: <Home className="w-5 h-5 text-[#0b7337]" />,
-    image: '/images/service-residential.webp',
-    headline: 'Turn your roof into a source of savings.',
-    description:
-      'GG Automation delivers smart, efficient solar solutions that cut your electricity bills and power your home with clean energy. We handle everything—from design to installation and net-metering support—so you can enjoy worry-free savings and a greener lifestyle.',
-    link: '/projects?category=Residential',
-    badge: 'Home Solar',
-  },
-  {
-    id: 'commercial',
-    category: 'Commercial',
-    title: 'Commercial',
-    icon: <Building2 className="w-5 h-5 text-[#e51a24]" />,
-    image: '/images/service-commercial.webp',
-    headline: 'Power your business, lower your overhead.',
-    description:
-      'GG Automation provides tailored solar solutions for commercial spaces, helping you cut energy costs, boost efficiency, and showcase your commitment to sustainability. We deliver full-service installations with minimal disruption to your operations.',
-    link: '/projects?category=Commercial',
-    badge: 'Business Solar',
-  },
-  {
-    id: 'industrial',
-    category: 'Industrial',
-    title: 'Industrial',
-    icon: <Factory className="w-5 h-5 text-[#ffc000]" />,
-    image: '/images/service-industrial.webp',
-    headline: 'Energy solutions built for heavy demand.',
-    description:
-      'Our industrial solar systems are engineered for high-performance and long-term reliability. From factories to large facilities, GG Automation ensures robust installations that reduce operating costs and future-proof your energy needs.',
-    link: '/projects?category=Industrial',
-    badge: 'Heavy Industry',
-  },
-  {
-    id: 'schools',
-    category: 'School',
-    title: 'School & Universities',
-    icon: <GraduationCap className="w-5 h-5 text-indigo-500" />,
-    image: '/images/uclm-roof2.webp',
-    headline: 'Clean campus energy, lower institutional overhead.',
-    description:
-      'GG Automation designs turnkey institutional solar installations for campuses, academies, and universities. We help educational institutions cut operating costs, advance sustainability, and provide live energy learning for students.',
-    link: '/projects?category=School',
-    badge: 'Campus Solar',
-  },
-];
+import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectRawInput, isVideoUrl } from '@/data/projectsData';
+import { initialHomeCategories, HomeCategoryItem } from '@/data/homeCategoriesData';
 
 interface ProjectSlideImage {
   src: string;
@@ -82,7 +20,7 @@ function ServiceCard({
   projectImages,
   cardIndex,
 }: {
-  item: ServiceTypeConfig;
+  item: HomeCategoryItem;
   projectImages: ProjectSlideImage[];
   cardIndex: number;
 }) {
@@ -112,7 +50,7 @@ function ServiceCard({
     };
   }, [projectImages.length, isHovered, cardIndex]);
 
-  const activeImage = projectImages[currentIdx] || { src: item.image };
+  const activeImage = projectImages[currentIdx] || { src: item.defaultImage || '/images/placeholder.webp' };
 
   const handlePrev = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -135,22 +73,40 @@ function ServiceCard({
       <div className="space-y-4">
         {/* Card Top Image Carousel with Rounded Corners */}
         <Link
-          href={item.link}
+          href={item.link || '/projects'}
           className="block relative h-48 sm:h-52 w-full rounded-2xl overflow-hidden bg-slate-900 shadow-inner group/img cursor-pointer"
         >
-          {/* Active Image with smooth crossfade */}
-          <div className="relative w-full h-full">
-            <Image
-              key={activeImage.src}
-              src={activeImage.src}
-              alt={activeImage.projectTitle || `${item.title} Solar Services`}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            />
+          {/* Sliding Track for Images & Videos */}
+          <div
+            className="flex h-full w-full transition-transform duration-700 ease-out"
+            style={{ transform: `translateX(-${currentIdx * 100}%)` }}
+          >
+            {projectImages.map((slide, sIdx) => (
+              <div key={sIdx} className="relative w-full h-full flex-shrink-0">
+                {isVideoUrl(slide.src) ? (
+                  <video
+                    src={slide.src}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700 ease-out pointer-events-none"
+                  />
+                ) : (
+                  <Image
+                    src={slide.src}
+                    alt={slide.projectTitle || `${item.title} Solar Services`}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    priority={cardIndex < 4 && sIdx === 0}
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none"></div>
 
           {/* Top Category Badge */}
           <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#091833] text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm border border-slate-200 z-10 pointer-events-none">
@@ -219,7 +175,7 @@ function ServiceCard({
         </Link>
 
         {/* Card Title */}
-        <Link href={item.link} className="block">
+        <Link href={item.link || '/projects'} className="block">
           <h3 className="text-xl sm:text-2xl font-black text-[#091833] tracking-tight group-hover:text-[#e51a24] transition-colors">
             {item.title}
           </h3>
@@ -239,7 +195,7 @@ function ServiceCard({
       {/* Action Button */}
       <div className="pt-6 mt-4 border-t border-slate-100">
         <Link
-          href={item.link}
+          href={item.link || '/projects'}
           className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-xs sm:text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-md hover:shadow-red-600/30 transition-all duration-200 group/btn"
         >
           <span>Learn more</span>
@@ -251,34 +207,92 @@ function ServiceCard({
 }
 
 export default function SolarServiceTypesSection() {
+  const [categoriesList, setCategoriesList] = useState<HomeCategoryItem[]>(initialHomeCategories);
   const [projectsList, setProjectsList] = useState<ProjectItem[]>(initialProjects);
 
-  // Fetch live projects from /api/projects on mount
+  // Fetch live home-categories and projects from API on mount
   useEffect(() => {
-    async function loadProjects() {
+    async function loadData() {
       try {
-        const res = await fetch('/api/projects');
-        const data = await res.json();
-        if (data.success && Array.isArray(data.projects)) {
-          const parsed = parseRawProjects(data.projects as ProjectRawInput[]);
+        const [catRes, projRes] = await Promise.all([
+          fetch('/api/home-categories'),
+          fetch('/api/projects')
+        ]);
+
+        const catData = await catRes.json();
+        if (catData.success && Array.isArray(catData.categories) && catData.categories.length > 0) {
+          setCategoriesList(catData.categories);
+        }
+
+        const projData = await projRes.json();
+        if (projData.success && Array.isArray(projData.projects)) {
+          const parsed = parseRawProjects(projData.projects as ProjectRawInput[]);
           if (parsed.length > 0) {
             setProjectsList(parsed);
           }
         }
       } catch (err) {
-        console.error('Failed to load projects for services section:', err);
+        console.error('Failed to load home categories data:', err);
       }
     }
-    loadProjects();
+    loadData();
   }, []);
 
-  // Map ONLY the first image per project for each category from live projects
-  const getCategoryImages = (category: ServiceTypeConfig['category'], defaultImage: string): ProjectSlideImage[] => {
-    const matchingProjects = projectsList.filter((p) => p.category === category);
+  // Map images for a category based on its configured mode (Projects vs Auto vs Custom)
+  const getCategoryImages = (cat: HomeCategoryItem): ProjectSlideImage[] => {
+    // 1. Projects selection mode (or when projectSelections are explicitly configured)
+    if (
+      cat.mode === 'projects' ||
+      (cat.projectSelections && cat.projectSelections.length > 0 && cat.mode !== 'auto' && cat.mode !== 'custom')
+    ) {
+      const slides: ProjectSlideImage[] = [];
+      const enabledSelections = (cat.projectSelections || []).filter((s) => s.enabled !== false);
 
+      enabledSelections.forEach((sel) => {
+        // Find matching project by ID or Title
+        const proj = projectsList.find(
+          (p) => p.id === sel.projectId || p.title.toLowerCase() === sel.projectTitle.toLowerCase()
+        );
+
+        if (proj && proj.images && proj.images.length > 0) {
+          // If specific images are chosen, use them; otherwise take first `photoCount` images
+          let chosenImgs: string[] = [];
+          if (sel.selectedImages && sel.selectedImages.length > 0) {
+            chosenImgs = sel.selectedImages;
+          } else {
+            const count = Math.max(1, sel.photoCount || 1);
+            chosenImgs = proj.images.slice(0, count);
+          }
+
+          chosenImgs.forEach((src) => {
+            if (src && !slides.some((s) => s.src === src)) {
+              slides.push({
+                src,
+                projectTitle: proj.title,
+                capacity: proj.capacity,
+                location: proj.location,
+              });
+            }
+          });
+        }
+      });
+
+      if (slides.length > 0) return slides;
+    }
+
+    // 2. Custom Uploaded Reel mode with customImages array
+    if (cat.mode === 'custom' && cat.customImages && cat.customImages.length > 0) {
+      return cat.customImages.map((src) => ({
+        src,
+        projectTitle: `${cat.title} Solar Installation`,
+        location: 'Philippines',
+      }));
+    }
+
+    // 3. Auto mode: Collect only the first (primary) image from each project in this category
+    const matchingProjects = projectsList.filter((p) => p.category === cat.category);
     const slides: ProjectSlideImage[] = [];
 
-    // Collect only the first (primary) image from each project in this category
     matchingProjects.forEach((proj) => {
       const firstImg = proj.images && proj.images.length > 0 ? proj.images[0] : null;
       if (firstImg && !slides.some((s) => s.src === firstImg)) {
@@ -291,11 +305,16 @@ export default function SolarServiceTypesSection() {
       }
     });
 
-    if (slides.length === 0) {
-      return [{ src: defaultImage }];
+    if (slides.length > 0) {
+      return slides;
     }
 
-    return slides;
+    // 4. Fallback to custom images or default image
+    if (cat.customImages && cat.customImages.length > 0) {
+      return cat.customImages.map((src) => ({ src, projectTitle: cat.title }));
+    }
+
+    return [{ src: cat.defaultImage || '/images/placeholder.webp', projectTitle: cat.title }];
   };
 
   return (
@@ -316,20 +335,23 @@ export default function SolarServiceTypesSection() {
 
         {/* Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {serviceTypes.map((item, idx) => {
-            const categoryImages = getCategoryImages(item.category, item.image);
-            return (
-              <ServiceCard
-                key={item.id}
-                item={item}
-                projectImages={categoryImages}
-                cardIndex={idx}
-              />
-            );
-          })}
+          {categoriesList
+            .filter((cat) => cat.enabled !== false)
+            .map((item, idx) => {
+              const categoryImages = getCategoryImages(item);
+              return (
+                <ServiceCard
+                  key={item.id}
+                  item={item}
+                  projectImages={categoryImages}
+                  cardIndex={idx}
+                />
+              );
+            })}
         </div>
       </div>
     </section>
   );
 }
+
 

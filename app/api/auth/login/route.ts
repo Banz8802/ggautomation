@@ -5,8 +5,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { username, password } = body;
 
-    const validUser = 'admin';
-    const validPass = 'Qwe123automation!@#';
+    const validUser = process.env.ADMIN_USERNAME || 'admin';
+    const validPass = process.env.ADMIN_PASSWORD || 'Qwe123automation!@#';
 
     if (username === validUser && password === validPass) {
       const token = Buffer.from(`${username}:${Date.now()}:ggautomation_secret_session`).toString('base64');

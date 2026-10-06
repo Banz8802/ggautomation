@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import TopBar from '@/components/TopBar';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import ChatBot from '@/components/ChatBot';
+import SiteLayoutWrapper from '@/components/SiteLayoutWrapper';
 
 export const metadata: Metadata = {
   title: 'GG Automation Construction Services | Renewable Energy & Solar EPC Specialist',
@@ -47,11 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className="antialiased bg-white text-slate-900 flex flex-col min-h-screen">
-        <TopBar />
-        <Header />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <ChatBot />
+        <SiteLayoutWrapper>{children}</SiteLayoutWrapper>
       </body>
     </html>
   );

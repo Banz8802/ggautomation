@@ -1,5 +1,120 @@
 [
   {
+    "id": "project-1791312844870",
+    "title": "ARCHT. EDWIN SANICOLAS, 5kWp On-Grid & 3kW  Hybrid Additional",
+    "category": "Residential",
+    "location": "Juan Luna Ave, Cebu City",
+    "capacity": "5kWp On-Grid & 3kWp Hybrid Additional",
+    "client": "ARCHT. EDWIN SANICOLAS",
+    "folder": "",
+    "images": "/images/projects/uploads/1791312954614_edwin.webp",
+    "systemType": "On-Grid /  Hybrid Additional",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791312738381",
+    "title": "GOV. GWEN GARCIA’s HOUSE 5kWp & 3kWp additional ON-GRID",
+    "category": "Residential",
+    "location": "SUN VALLEY DRIVE, Cebu City",
+    "capacity": "5kWp & 3kWp additional ON-GRID",
+    "client": "GOV. GWEN GARCIA’s HOUSE",
+    "folder": "",
+    "images": "/images/projects/uploads/1791312837443_gwen.webp",
+    "systemType": "On-Grid",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791312475449",
+    "title": "Gaisano Grand Mall Toledo 780kwp ON-GRID",
+    "category": "Commercial",
+    "location": "Toledo City, Cebu",
+    "capacity": "780kWp",
+    "client": "Gaisano Grand Mall ",
+    "folder": "",
+    "images": "/images/projects/uploads/1791312586676_abefb770-b025-466e-aed0-5b3da9e776b4.mp4, /images/projects/uploads/1791312586679_dd7a4a4e-4a2b-4ded-b6ff-dc6ca3152990.jpg, /images/projects/uploads/1791312586681_28d0743e-c1bc-4d0e-865b-82b4fade245a.jpg, /images/projects/uploads/1791312586683_461826f0-726e-4432-affb-66fbb7966991.jpg, /images/projects/uploads/1791312586687_644ee452-6719-41ab-be58-bbf475d1b5ed.jpg, /images/projects/uploads/1791312586690_cda7ee38-fc47-4622-989f-30f9f34528b0.jpg, /images/projects/uploads/1791312586692_4d3239a3-8aa2-430f-87a5-866c32a2e295.jpg, /images/projects/uploads/1791312586694_04152f69-6e9e-49d4-824c-688ac59e995b.jpg, /images/projects/uploads/1791312586696_c90d869e-3ea4-4770-aa55-e4774bc476c4.jpg, /images/projects/uploads/1791312586698_a1c39aba-609e-4f3d-ab67-500ba93cb857.jpg, /images/projects/uploads/1791312586702_566fbb38-7c0d-478d-af78-4469fbd3a9e6.jpg, /images/projects/uploads/1791312586704_6839932c-02e5-46a2-bbd1-346a7f576c1d.jpg, /images/projects/uploads/1791312586705_8aa629c1-e2ae-41e3-b824-f017975d9bdf.jpg, /images/projects/uploads/1791312586707_18ec48d7-f565-419d-9959-7cc601d98903.jpg",
+    "systemType": "On-Grid Commercial Solar System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791311771958",
+    "title": "Sean Agro Bolinawan, CarCar City, Cebu",
+    "category": "Industrial",
+    "location": "Bolinawan, CarCar City, Cebu",
+    "capacity": "505kWp",
+    "client": "Sean Agro",
+    "folder": "",
+    "images": "/images/projects/uploads/1791311915199_6ba66714-2de0-4fd2-8154-6594fb61f684.jpg, /images/projects/uploads/1791311958284_ccd3cfa0-3452-4183-a11a-f63c806ea044.jpg, /images/projects/uploads/1791311964078_fab5f355-7e77-4cda-ac32-27be2d156672.jpg, /images/projects/uploads/1791311967580_705cc34f-e923-4926-bac7-74e624afa226.jpg, /images/projects/uploads/1791311971750_5408c43d-3594-429b-8b70-050eba9234da.jpg, /images/projects/uploads/1791311974980_82410816-c901-4c87-953d-2d8f4408d099.jpg, /images/projects/uploads/1791312311088_e2e21cc7-c724-4791-82d9-efa0c4983ce9.mp4",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Sean Agro (505kwp total) Rooftop using SMA & Glass pv module (made in Germany)",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791307990397",
+    "title": "ATENEO de CEBU, (Sacred Heart School) 106kWp ON-GRID & HYBRID SYSTEM",
+    "category": "School",
+    "location": "Mandaue City, Cebu",
+    "capacity": "106kWp",
+    "client": "ATENEO de CEBU, (Sacred Heart School)",
+    "folder": "",
+    "images": "/images/projects/uploads/1791308986788_e8daf55a-3eee-440e-86d7-32be0cea6e53.jpg, /images/projects/uploads/1791308990520_aa791c43-1fc4-470a-8329-7739d305ca44.jpg, /images/projects/uploads/1791308993782_753e00e2-f95e-4e52-a34f-5e3bfd37365b.jpg, /images/projects/uploads/1791308996524_753e00e2-f95e-4e52-a34f-5e3bfd37365b.jpg, /images/projects/uploads/1791308999592_f2e4af84-ba03-4e58-8849-4c35721786eb.jpg, /images/projects/uploads/1791309002190_3d683d6d-2c97-4ad6-8d98-c20e3aea533c.jpg, /images/projects/uploads/1791309004694_b373b3df-68e9-4169-a9d1-b007780af011.jpg",
+    "systemType": "ON-GRID & HYBRID SYSTEM",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
     "id": "project-1791220857575",
     "title": "MANDAUE FOAM FACTORY - 308kW SOLAR ON-GRID SET-UP",
     "category": "Commercial",

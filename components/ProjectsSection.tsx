@@ -22,10 +22,11 @@ import {
   Maximize2,
   X,
   Camera,
-  Check
+  Check,
+  Play
 } from 'lucide-react';
 
-import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectCategory, ProjectRawInput } from '@/data/projectsData';
+import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectCategory, ProjectRawInput, isVideoUrl } from '@/data/projectsData';
 export type { ProjectItem, ProjectCategory };
 
 const categoryTabs: { label: ProjectCategory; icon: React.ReactNode }[] = [
@@ -66,13 +67,30 @@ function ProjectCard({
           className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900 cursor-pointer select-none group/img"
           onClick={() => onOpenModal(project, activeImageIdx)}
         >
-          <Image
-            src={project.images[activeImageIdx]}
-            alt={`${project.title} - Photo ${activeImageIdx + 1}`}
-            fill
-            className="object-cover group-hover/img:scale-105 transition-transform duration-700"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          {isVideoUrl(project.images[activeImageIdx]) ? (
+            <div className="w-full h-full relative">
+              <video
+                src={project.images[activeImageIdx]}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute top-14 left-4 z-10 bg-black/80 backdrop-blur-md text-[#ffc000] text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 shadow-sm">
+                <Play className="w-2.5 h-2.5 fill-current" />
+                <span>Video Reel</span>
+              </div>
+            </div>
+          ) : (
+            <Image
+              src={project.images[activeImageIdx]}
+              alt={`${project.title} - Photo ${activeImageIdx + 1}`}
+              fill
+              className="object-cover group-hover/img:scale-105 transition-transform duration-700"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#091833]/90 via-[#091833]/15 to-transparent pointer-events-none"></div>
 
           {/* Top Badges */}
@@ -123,10 +141,12 @@ function ProjectCard({
           )}
 
           {/* Photo Counter Pill */}
-          <div className="absolute top-14 left-4 bg-[#091833]/85 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 shadow-sm">
-            <Camera className="w-3 h-3 text-[#ffc000]" />
-            <span>{activeImageIdx + 1} / {project.images.length} Photos</span>
-          </div>
+          {!isVideoUrl(project.images[activeImageIdx]) && (
+            <div className="absolute top-14 left-4 bg-[#091833]/85 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 shadow-sm">
+              <Camera className="w-3 h-3 text-[#ffc000]" />
+              <span>{activeImageIdx + 1} / {project.images.length} Media</span>
+            </div>
+          )}
 
           {/* Expand Overlay Pill */}
           <div className="absolute top-14 right-4 bg-white/25 hover:bg-white/40 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 shadow-sm opacity-0 group-hover/img:opacity-100 transition-opacity">
@@ -305,16 +325,32 @@ function ProjectModal({
         {/* Modal Scrollable Body */}
         <div className="overflow-y-auto p-6 space-y-6 flex-grow">
           
-          {/* Main Photo Viewer Row */}
+          {/* Main Photo / Video Viewer Row */}
           <div className="space-y-3">
-            <div className="relative h-[320px] sm:h-[460px] w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200">
-              <Image
-                src={project.images[activePhotoIdx]}
-                alt={`${project.title} - Photo ${activePhotoIdx + 1}`}
-                fill
-                className="object-cover"
-                priority
-              />
+            <div className="relative h-[320px] sm:h-[460px] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 flex items-center justify-center">
+              {isVideoUrl(project.images[activePhotoIdx]) ? (
+                <div className="w-full h-full relative flex items-center justify-center bg-black">
+                  <video
+                    src={project.images[activePhotoIdx]}
+                    controls
+                    autoPlay
+                    playsInline
+                    className="max-h-full max-w-full object-contain"
+                  />
+                  <div className="absolute top-4 left-4 z-10 bg-black/80 backdrop-blur-md text-[#ffc000] text-xs font-bold px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-1.5">
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>Video Clip</span>
+                  </div>
+                </div>
+              ) : (
+                <Image
+                  src={project.images[activePhotoIdx]}
+                  alt={`${project.title} - Photo ${activePhotoIdx + 1}`}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              )}
 
               {/* Prev / Next Lightbox Overlay Arrows */}
               {project.images.length > 1 && (
@@ -322,14 +358,14 @@ function ProjectModal({
                   <button
                     onClick={prevPhoto}
                     aria-label="Previous Photo"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-[#0b7337] text-white flex items-center justify-center shadow-xl backdrop-blur-md transition-all hover:scale-110"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-[#0b7337] text-white flex items-center justify-center shadow-xl backdrop-blur-md transition-all hover:scale-110 z-20 cursor-pointer"
                   >
                     <ChevronLeft className="w-6 h-6" />
                   </button>
                   <button
                     onClick={nextPhoto}
                     aria-label="Next Photo"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-[#0b7337] text-white flex items-center justify-center shadow-xl backdrop-blur-md transition-all hover:scale-110"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-[#0b7337] text-white flex items-center justify-center shadow-xl backdrop-blur-md transition-all hover:scale-110 z-20 cursor-pointer"
                   >
                     <ChevronRight className="w-6 h-6" />
                   </button>
@@ -337,33 +373,45 @@ function ProjectModal({
               )}
 
               {/* Capacity Badge */}
-              <div className="absolute top-4 right-4 bg-[#e51a24] text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 border border-white/20">
+              <div className="absolute top-4 right-4 bg-[#e51a24] text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 border border-white/20 z-10 pointer-events-none">
                 <Zap className="w-4 h-4 fill-current text-[#ffc000]" />
                 <span>{project.capacity}</span>
               </div>
 
               {/* Photo Counter */}
-              <div className="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-2">
+              <div className="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-2 z-10 pointer-events-none">
                 <Camera className="w-4 h-4 text-[#ffc000]" />
-                <span>Image {activePhotoIdx + 1} of {project.images.length}</span>
+                <span>Media {activePhotoIdx + 1} of {project.images.length}</span>
               </div>
             </div>
 
             {/* Thumbnail Selectors */}
             <div className="flex items-center gap-3 overflow-x-auto pb-1">
-              {project.images.map((imgSrc, tIdx) => (
-                <button
-                  key={tIdx}
-                  onClick={() => setActivePhotoIdx(tIdx)}
-                  className={`relative h-16 w-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
-                    tIdx === activePhotoIdx
-                      ? 'border-[#0b7337] ring-2 ring-[#0b7337]/50 scale-105 shadow-md'
-                      : 'border-slate-200 opacity-60 hover:opacity-100'
-                  }`}
-                >
-                  <Image src={imgSrc} alt="" fill className="object-cover" sizes="96px" />
-                </button>
-              ))}
+              {project.images.map((imgSrc, tIdx) => {
+                const isThumbVid = isVideoUrl(imgSrc);
+                return (
+                  <button
+                    key={tIdx}
+                    onClick={() => setActivePhotoIdx(tIdx)}
+                    className={`relative h-16 w-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
+                      tIdx === activePhotoIdx
+                        ? 'border-[#0b7337] ring-2 ring-[#0b7337]/50 scale-105 shadow-md'
+                        : 'border-slate-200 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    {isThumbVid ? (
+                      <div className="w-full h-full relative bg-slate-900">
+                        <video src={imgSrc} className="w-full h-full object-cover" muted />
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                          <Play className="w-3.5 h-3.5 text-[#ffc000] fill-current" />
+                        </div>
+                      </div>
+                    ) : (
+                      <Image src={imgSrc} alt="" fill className="object-cover" sizes="96px" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

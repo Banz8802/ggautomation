@@ -1,0 +1,200 @@
+[
+  {
+    "id": "residential",
+    "category": "Residential",
+    "title": "Residential",
+    "badge": "Home Solar",
+    "headline": "Turn your roof into a source of savings.",
+    "description": "GG Automation delivers smart, efficient solar solutions that cut your electricity bills and power your home with clean energy. We handle everything—from design to installation and net-metering support—so you can enjoy worry-free savings and a greener lifestyle.",
+    "link": "/projects?category=Residential",
+    "mode": "auto",
+    "customImages": [
+      "/images/service-residential.webp"
+    ],
+    "defaultImage": "/images/service-residential.webp",
+    "enabled": true,
+    "order": 1
+  },
+  {
+    "id": "commercial",
+    "category": "Commercial",
+    "title": "Commercial",
+    "badge": "Business Solar",
+    "headline": "Power your business, lower your overhead.",
+    "description": "GG Automation provides tailored solar solutions for commercial spaces, helping you cut energy costs, boost efficiency, and showcase your commitment to sustainability. We deliver full-service installations with minimal disruption to your operations.",
+    "link": "/projects?category=Commercial",
+    "mode": "projects",
+    "customImages": [
+      "/images/projects/uploads/1791312586705_8aa629c1-e2ae-41e3-b824-f017975d9bdf.jpg",
+      "/images/projects/uploads/1791312586696_c90d869e-3ea4-4770-aa55-e4774bc476c4.jpg",
+      "/images/projects/uploads/1791312586690_cda7ee38-fc47-4622-989f-30f9f34528b0.jpg",
+      "/images/projects/uploads/1791221136720_image67.webp",
+      "/images/projects/uploads/1791221143513_image73.webp",
+      "/images/projects/commercial/Super Metro - Toledo City, Cebu/smt1.webp",
+      "/images/projects/commercial/Super Metro - Toledo City, Cebu/smt4.webp",
+      "/images/projects/commercial/Super Metro - Toledo City, Cebu/smt2.webp"
+    ],
+    "defaultImage": "/images/service-commercial.webp",
+    "enabled": true,
+    "order": 2,
+    "projectSelections": [
+      {
+        "projectId": "project-1791312475449",
+        "projectTitle": "Gaisano Grand Mall Toledo 780kwp ON-GRID",
+        "photoCount": 3,
+        "selectedImages": [
+          "/images/projects/uploads/1791312586705_8aa629c1-e2ae-41e3-b824-f017975d9bdf.jpg",
+          "/images/projects/uploads/1791312586696_c90d869e-3ea4-4770-aa55-e4774bc476c4.jpg",
+          "/images/projects/uploads/1791312586690_cda7ee38-fc47-4622-989f-30f9f34528b0.jpg"
+        ],
+        "enabled": true
+      },
+      {
+        "projectId": "project-1791220857575",
+        "projectTitle": "MANDAUE FOAM FACTORY - 308kW SOLAR ON-GRID SET-UP",
+        "photoCount": 2,
+        "selectedImages": [
+          "/images/projects/uploads/1791221136720_image67.webp",
+          "/images/projects/uploads/1791221143513_image73.webp"
+        ],
+        "enabled": true
+      },
+      {
+        "projectId": "project-1791220289848",
+        "projectTitle": "CANGS SHOPPING COMPLEX - 140.4 kW SOLAR ON-GRID SET-UP (PANASONIC HYBRID PV)",
+        "photoCount": 2,
+        "selectedImages": [
+          "/images/projects/uploads/1791220541455_image65.webp",
+          "/images/projects/uploads/1791220548459_image66.webp"
+        ],
+        "enabled": false
+      },
+      {
+        "projectId": "project-1791220013113",
+        "projectTitle": "GAISANO CAPITAL – OZAMIS CITY - 834kWp SOLAR ON-GRID SYSTEM SET-UP",
+        "photoCount": 1,
+        "selectedImages": [
+          "/images/projects/uploads/1791220134394_Screenshot_6.webp"
+        ],
+        "enabled": false
+      },
+      {
+        "projectId": "project-1791219286209",
+        "projectTitle": "GAISANO CAPITAL – SURIGAO CITY - 713kWp SOLAR ON-GRID SYSTEM SET-UP",
+        "photoCount": 1,
+        "selectedImages": [
+          "/images/projects/uploads/1791219687475_gc-sur-01.webp"
+        ],
+        "enabled": false
+      },
+      {
+        "projectId": "super-metro-toledo",
+        "projectTitle": "Super Metro - Toledo City, Cebu",
+        "photoCount": 3,
+        "selectedImages": [
+          "/images/projects/commercial/Super Metro - Toledo City, Cebu/smt1.webp",
+          "/images/projects/commercial/Super Metro - Toledo City, Cebu/smt4.webp",
+          "/images/projects/commercial/Super Metro - Toledo City, Cebu/smt2.webp"
+        ],
+        "enabled": true
+      },
+      {
+        "projectId": "gaisano-capital-tpadilla",
+        "projectTitle": "GAISANO CAPITAL (GAISANO SAVERSMART) – T.PADILLA ST., CEBU CITY 214kWp SOLAR ON-GRID SYSTEM SET-UP",
+        "photoCount": 1,
+        "selectedImages": [
+          "/images/projects/commercial/GAISANO CAPITAL (GAISANO SAVERSMART) – T.PADILLA ST., CEBU CITY 214kWp SOLAR ON-GRID SYSTEM SET-UP/gc-img-01.webp"
+        ],
+        "enabled": false
+      }
+    ]
+  },
+  {
+    "id": "industrial",
+    "category": "Industrial",
+    "title": "Industrial",
+    "badge": "Heavy Industry",
+    "headline": "Energy solutions built for heavy demand.",
+    "description": "Our industrial solar systems are engineered for high-performance and long-term reliability. From factories to large facilities, GG Automation ensures robust installations that reduce operating costs and future-proof your energy needs.",
+    "link": "/projects?category=Industrial",
+    "mode": "projects",
+    "customImages": [
+      "/images/projects/uploads/1791311915199_6ba66714-2de0-4fd2-8154-6594fb61f684.jpg",
+      "/images/projects/uploads/1791311964078_fab5f355-7e77-4cda-ac32-27be2d156672.jpg",
+      "/images/projects/uploads/1791311971750_5408c43d-3594-429b-8b70-050eba9234da.jpg",
+      "/images/projects/uploads/1791311967580_705cc34f-e923-4926-bac7-74e624afa226.jpg",
+      "/images/projects/uploads/1791311974980_82410816-c901-4c87-953d-2d8f4408d099.jpg",
+      "/images/projects/industrial/Sonamco, Siaton Negros Oriental - Floating solar 242kw/sonamco1.webp",
+      "/images/projects/industrial/Sonamco, Siaton Negros Oriental - Floating solar 242kw/sonamco2.webp",
+      "/images/projects/industrial/Sonamco, Siaton Negros Oriental - Floating solar 242kw/sonamco5.webp"
+    ],
+    "defaultImage": "/images/service-industrial.webp",
+    "enabled": true,
+    "order": 3,
+    "projectSelections": [
+      {
+        "projectId": "project-1791311771958",
+        "projectTitle": "Sean Agro Bolinawan, CarCar City, Cebu",
+        "photoCount": 5,
+        "selectedImages": [
+          "/images/projects/uploads/1791311915199_6ba66714-2de0-4fd2-8154-6594fb61f684.jpg",
+          "/images/projects/uploads/1791311964078_fab5f355-7e77-4cda-ac32-27be2d156672.jpg",
+          "/images/projects/uploads/1791311971750_5408c43d-3594-429b-8b70-050eba9234da.jpg",
+          "/images/projects/uploads/1791311967580_705cc34f-e923-4926-bac7-74e624afa226.jpg",
+          "/images/projects/uploads/1791311974980_82410816-c901-4c87-953d-2d8f4408d099.jpg"
+        ],
+        "enabled": true
+      },
+      {
+        "projectId": "sonamco-floating-solar",
+        "projectTitle": "Sonamco, Siaton Negros Oriental - Floating solar 242kw",
+        "photoCount": 3,
+        "selectedImages": [
+          "/images/projects/industrial/Sonamco, Siaton Negros Oriental - Floating solar 242kw/sonamco1.webp",
+          "/images/projects/industrial/Sonamco, Siaton Negros Oriental - Floating solar 242kw/sonamco2.webp",
+          "/images/projects/industrial/Sonamco, Siaton Negros Oriental - Floating solar 242kw/sonamco5.webp"
+        ],
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "id": "schools",
+    "category": "School",
+    "title": "School & Universities",
+    "badge": "Campus Solar",
+    "headline": "Clean campus energy, lower institutional overhead.",
+    "description": "GG Automation designs turnkey institutional solar installations for campuses, academies, and universities. We help educational institutions cut operating costs, advance sustainability, and provide live energy learning for students.",
+    "link": "/projects?category=School",
+    "mode": "projects",
+    "customImages": [
+      "/images/projects/uploads/1791308986788_e8daf55a-3eee-440e-86d7-32be0cea6e53.jpg",
+      "/images/projects/uploads/1791308990520_aa791c43-1fc4-470a-8329-7739d305ca44.jpg",
+      "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project/uclm-roof.webp"
+    ],
+    "defaultImage": "/images/uclm-roof2.webp",
+    "enabled": true,
+    "order": 4,
+    "projectSelections": [
+      {
+        "projectId": "project-1791307990397",
+        "projectTitle": "ATENEO de CEBU, (Sacred Heart School) 106kWp ON-GRID & HYBRID SYSTEM",
+        "photoCount": 2,
+        "selectedImages": [
+          "/images/projects/uploads/1791308986788_e8daf55a-3eee-440e-86d7-32be0cea6e53.jpg",
+          "/images/projects/uploads/1791308990520_aa791c43-1fc4-470a-8329-7739d305ca44.jpg"
+        ],
+        "enabled": true
+      },
+      {
+        "projectId": "uclm-campus-ongoing",
+        "projectTitle": "UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project",
+        "photoCount": 1,
+        "selectedImages": [
+          "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project/uclm-roof.webp"
+        ],
+        "enabled": true
+      }
+    ]
+  }
+]
