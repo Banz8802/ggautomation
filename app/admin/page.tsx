@@ -42,8 +42,10 @@ import {
   Factory,
   Newspaper,
   Phone,
-  Lock
+  Lock,
+  Briefcase
 } from 'lucide-react';
+import AdminCareersManager from '@/components/admin/AdminCareersManager';
 
 /* -------------------------------------------------------------------------- */
 /* Type Definitions                                                           */
@@ -124,7 +126,7 @@ export default function AdminPage() {
 function AdminDashboardContent() {
   const searchParams = useSearchParams();
   const initialTab =
-    (searchParams.get('tab') as 'projects' | 'trainings' | 'news' | 'overview' | 'inquiries') || 'projects';
+    (searchParams.get('tab') as 'projects' | 'trainings' | 'news' | 'careers' | 'overview' | 'inquiries') || 'projects';
 
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -135,7 +137,8 @@ function AdminDashboardContent() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Dashboard active tab
-  const [activeMenu, setActiveMenu] = useState<'projects' | 'trainings' | 'news' | 'overview' | 'inquiries'>(initialTab);
+  const [activeMenu, setActiveMenu] = useState<'projects' | 'trainings' | 'news' | 'careers' | 'overview' | 'inquiries'>(initialTab);
+  const [careersCount, setCareersCount] = useState(2);
 
   // Sync tab with URL if param changes
   useEffect(() => {
@@ -144,6 +147,7 @@ function AdminDashboardContent() {
       tabParam === 'trainings' ||
       tabParam === 'projects' ||
       tabParam === 'news' ||
+      tabParam === 'careers' ||
       tabParam === 'overview' ||
       tabParam === 'inquiries'
     ) {
@@ -1331,6 +1335,28 @@ function AdminDashboardContent() {
               </span>
             </button>
 
+            {/* Careers & Hiring Menu Item */}
+            <button
+              onClick={() => setActiveMenu('careers')}
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                activeMenu === 'careers'
+                  ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Briefcase className="w-4 h-4" />
+                <span>Careers & Hiring</span>
+              </div>
+              <span
+                className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
+                  activeMenu === 'careers' ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'
+                }`}
+              >
+                {careersCount}
+              </span>
+            </button>
+
             {/* Overview / Analytics */}
             <button
               onClick={() => setActiveMenu('overview')}
@@ -1408,6 +1434,18 @@ function AdminDashboardContent() {
             </Link>
 
             <Link
+              href="/careers"
+              target="_blank"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#ffc000] hover:bg-white/5 transition-all"
+            >
+              <div className="flex items-center gap-2.5">
+                <Briefcase className="w-3.5 h-3.5 text-amber-400" />
+                <span>View /careers Live</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+            </Link>
+
+            <Link
               href="/"
               target="_blank"
               className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#ffc000] hover:bg-white/5 transition-all"
@@ -1462,6 +1500,8 @@ function AdminDashboardContent() {
                   ? 'Trainings & Seminars CRM'
                   : activeMenu === 'news'
                   ? 'News & Announcements CRM'
+                  : activeMenu === 'careers'
+                  ? 'Careers & Recruitment CRM'
                   : activeMenu === 'overview'
                   ? 'Portfolio Metrics'
                   : 'Inquiry Routing'}
@@ -1474,6 +1514,8 @@ function AdminDashboardContent() {
                 ? 'Trainings & Seminars Management'
                 : activeMenu === 'news'
                 ? 'News & Updates Management'
+                : activeMenu === 'careers'
+                ? 'Careers & Hiring Management'
                 : activeMenu === 'overview'
                 ? 'Portfolio Analytics'
                 : 'Form Inquiries & Leads'}
@@ -1572,6 +1614,17 @@ function AdminDashboardContent() {
                   <span>Add News Article</span>
                 </button>
               </>
+            )}
+
+            {activeMenu === 'careers' && (
+              <Link
+                href="/careers"
+                target="_blank"
+                className="px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors flex items-center gap-2 text-xs font-bold"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-[#ffc000]" />
+                <span className="hidden sm:inline">Live Careers Page</span>
+              </Link>
             )}
           </div>
         </header>
@@ -2560,6 +2613,16 @@ function AdminDashboardContent() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* ==================================================================== */}
+        {/* CAREERS & RECRUITMENT CRM TAB                                        */}
+        {/* ==================================================================== */}
+        {activeMenu === 'careers' && (
+          <AdminCareersManager
+            showToast={showToast}
+            onJobsCountChange={(count) => setCareersCount(count)}
+          />
         )}
 
         {/* ==================================================================== */}

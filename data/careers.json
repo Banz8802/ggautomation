@@ -1,0 +1,84 @@
+{
+  "pageSettings": {
+    "badge": "WE ARE HIRING!",
+    "title": "Join Our Growing Team & Build Your Career in Clean Energy",
+    "subtitle": "Looking for a start of your career opportunity? We're expanding our team and looking for motivated, hardworking, and passionate individuals to join us!",
+    "bannerImage": "/images/hero-career.webp",
+    "posterImage": "",
+    "applicationEmail": "Info@ggautomation.tech",
+    "location": "Cebu City, Philippines",
+    "headline": "Be part of our team in helping build a cleaner, brighter, and more sustainable future through solar energy!",
+    "generalRequirements": [
+      "Excellent at communication and interpersonal skills",
+      "Responsible and organized",
+      "Willing to learn and grow",
+      "Team-oriented and hardworking",
+      "Preferably female and resident of Cebu City"
+    ],
+    "applicationInstructions": "For interested applicants: Send your updated resume to Info@ggautomation.tech — Your career opportunity could start at one application away!"
+  },
+  "jobs": [
+    {
+      "id": "sales-representative",
+      "title": "Sales Representative",
+      "department": "Sales & Business Development",
+      "location": "Cebu City, Philippines",
+      "type": "Full-Time",
+      "status": "Open",
+      "experience": "Entry Level / Fresh Graduates Welcome",
+      "preference": "Preferably female and resident of Cebu City",
+      "description": "Drive clean energy adoption by engaging prospective clients, presenting customized solar PV solutions, and expanding GG Automation's footprint in commercial and residential solar sectors.",
+      "requirements": [
+        "Excellent communication, presentation, and interpersonal skills",
+        "Responsible, organized, and results-driven mindset",
+        "Willingness to learn solar energy systems and technical sales processes",
+        "Team-oriented with high enthusiasm and strong work ethic",
+        "Preferably female and resident of Cebu City"
+      ],
+      "responsibilities": [
+        "Reach out to potential commercial and residential solar clients",
+        "Explain the benefits of solar energy, net-metering, and ROI payback",
+        "Coordinate with engineering team for project feasibility and proposals",
+        "Build and maintain strong customer relationships"
+      ],
+      "tags": [
+        "Sales",
+        "Full-Time",
+        "Solar PV",
+        "Cebu City"
+      ],
+      "bannerImage": "/images/projects/uploads/1791300743074_825351064_10232660186836501_6390927357308557089_n.jpg"
+    },
+    {
+      "id": "admin-staff",
+      "title": "Administrative Staff",
+      "department": "Operations & Administration",
+      "location": "Cebu City, Philippines",
+      "type": "Full-Time",
+      "status": "Open",
+      "experience": "Entry Level / Experienced",
+      "preference": "Preferably female and resident of Cebu City",
+      "description": "Support daily office operations, client communication, document filing, and project coordination within our rapidly expanding solar engineering firm.",
+      "requirements": [
+        "Strong organizational, administrative, and multitasking abilities",
+        "Excellent verbal and written communication skills",
+        "Proficient in office productivity software and document management",
+        "Responsible, detail-oriented, willing to learn and grow",
+        "Preferably female and resident of Cebu City"
+      ],
+      "responsibilities": [
+        "Handle administrative filing, records keeping, and correspondence",
+        "Manage incoming inquiries and customer communication channels",
+        "Assist project teams with permits, logistics, and scheduling",
+        "Support executive and engineering staff with operational needs"
+      ],
+      "tags": [
+        "Administration",
+        "Full-Time",
+        "Office",
+        "Cebu City"
+      ],
+      "bannerImage": "/images/projects/uploads/1791302063908_825351064_10232660186836501_6390927357308557089_n.jpg"
+    }
+  ]
+}
