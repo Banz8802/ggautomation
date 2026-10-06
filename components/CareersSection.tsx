@@ -355,10 +355,10 @@ export default function CareersSection() {
       {/* ---------------------------------------------------------------------- */}
       {selectedJob && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/85 backdrop-blur-md animate-fade-in">
-          <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-y-auto text-slate-900 shadow-2xl relative border border-slate-200 overflow-hidden flex flex-col md:flex-row">
+          <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] text-slate-900 shadow-2xl relative border border-slate-200 overflow-hidden flex flex-col md:flex-row">
             {/* Modal Image Flyer Column (Whole Image Display) */}
-            <div className="md:w-5/12 bg-gradient-to-br from-slate-950 via-[#061021] to-[#091833] relative min-h-[300px] sm:min-h-[380px] p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 flex-shrink-0">
-              <div className="relative w-full h-full min-h-[280px] sm:min-h-[360px] rounded-2xl overflow-hidden">
+            <div className="md:w-5/12 bg-gradient-to-br from-slate-950 via-[#061021] to-[#091833] relative min-h-[260px] sm:min-h-[340px] md:min-h-full p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 flex-shrink-0">
+              <div className="relative w-full h-full min-h-[240px] sm:min-h-[320px] rounded-2xl overflow-hidden">
                 <Image
                   src={selectedJob.bannerImage || selectedJob.image || pageSettings.bannerImage || '/images/hero-career.webp'}
                   alt={selectedJob.title}
@@ -375,14 +375,14 @@ export default function CareersSection() {
             </div>
 
             {/* Modal Content Column */}
-            <div className="flex-1 flex flex-col justify-between overflow-y-auto">
+            <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
               {/* Modal Top Bar */}
-              <div className="p-6 border-b border-slate-100 flex items-start justify-between gap-4">
+              <div className="p-5 sm:p-6 border-b border-slate-100 flex items-start justify-between gap-4 flex-shrink-0">
                 <div>
                   <span className="text-xs font-black uppercase tracking-wider text-[#0b7337] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block mb-2">
                     {selectedJob.department}
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-black text-[#091833]">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-[#091833] leading-tight">
                     {selectedJob.title}
                   </h3>
                 </div>
@@ -396,7 +396,8 @@ export default function CareersSection() {
                 </button>
               </div>
 
-              <div className="p-6 sm:p-8 space-y-6 flex-1 overflow-y-auto">
+              {/* Scrollable Content Body */}
+              <div className="p-5 sm:p-8 space-y-6 flex-1 overflow-y-auto">
                 <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-600">
                   <span className="bg-slate-100 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-[#e51a24]" />
@@ -422,78 +423,64 @@ export default function CareersSection() {
                     {selectedJob.status === 'Open' ? '● Open (Actively Hiring)' : '○ Closed'}
                   </span>
                 </div>
-                {selectedJob.experience && (
-                  <span className="bg-slate-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-                    <Briefcase className="w-3.5 h-3.5 text-indigo-500" />
-                    {selectedJob.experience}
-                  </span>
+
+                {selectedJob.preference && (
+                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-semibold flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                    <span>{selectedJob.preference}</span>
+                  </div>
                 )}
-                <span
-                  className={`px-3 py-1 rounded-lg text-xs font-bold ${
-                    selectedJob.status === 'Open'
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-slate-100 text-slate-700'
-                  }`}
+
+                <div className="space-y-2.5">
+                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Role Overview</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">{selectedJob.description}</p>
+                </div>
+
+                {selectedJob.responsibilities && selectedJob.responsibilities.length > 0 && (
+                  <div className="space-y-2.5">
+                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Key Responsibilities</h4>
+                    <ul className="space-y-2">
+                      {selectedJob.responsibilities.map((resp, idx) => (
+                        <li key={idx} className="text-xs sm:text-sm text-slate-700 flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-[#0b7337] flex-shrink-0 mt-0.5" />
+                          <span>{resp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {selectedJob.requirements && selectedJob.requirements.length > 0 && (
+                  <div className="space-y-2.5">
+                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Qualifications & Skills</h4>
+                    <ul className="space-y-2">
+                      {selectedJob.requirements.map((req, idx) => (
+                        <li key={idx} className="text-xs sm:text-sm text-slate-700 flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-[#e51a24] flex-shrink-0 mt-0.5" />
+                          <span>{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons Footer */}
+              <div className="p-4 sm:p-6 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 flex-shrink-0">
+                <button
+                  onClick={() => setSelectedJob(null)}
+                  className="order-2 sm:order-1 px-5 py-3 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer text-center"
                 >
-                  {selectedJob.status === 'Open' ? '● Open (Actively Hiring)' : '○ Closed'}
-                </span>
+                  Close
+                </button>
+                <a
+                  href={`mailto:${pageSettings.applicationEmail || 'Info@ggautomation.tech'}?subject=Application for ${encodeURIComponent(selectedJob.title)} - GG Automation Careers`}
+                  className="order-1 sm:order-2 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-md transition-all cursor-pointer"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Send Resume via Email</span>
+                </a>
               </div>
-
-              {selectedJob.preference && (
-                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-semibold flex items-center gap-2.5">
-                  <Sparkles className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                  <span>{selectedJob.preference}</span>
-                </div>
-              )}
-
-              <div className="space-y-2.5">
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Role Overview</h4>
-                <p className="text-sm text-slate-600 leading-relaxed">{selectedJob.description}</p>
-              </div>
-
-              {selectedJob.responsibilities && selectedJob.responsibilities.length > 0 && (
-                <div className="space-y-2.5">
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Key Responsibilities</h4>
-                  <ul className="space-y-2">
-                    {selectedJob.responsibilities.map((resp, idx) => (
-                      <li key={idx} className="text-xs sm:text-sm text-slate-700 flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-[#0b7337] flex-shrink-0 mt-0.5" />
-                        <span>{resp}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {selectedJob.requirements && selectedJob.requirements.length > 0 && (
-                <div className="space-y-2.5">
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Qualifications & Skills</h4>
-                  <ul className="space-y-2">
-                    {selectedJob.requirements.map((req, idx) => (
-                      <li key={idx} className="text-xs sm:text-sm text-slate-700 flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-[#e51a24] flex-shrink-0 mt-0.5" />
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="p-5 sm:p-6 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-4 flex-shrink-0">
-              <button
-                onClick={() => setSelectedJob(null)}
-                className="px-5 py-3 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer"
-              >
-                Close
-              </button>
-              <a
-                href={`mailto:${pageSettings.applicationEmail || 'Info@ggautomation.tech'}?subject=Application for ${encodeURIComponent(selectedJob.title)} - GG Automation Careers`}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-md transition-all cursor-pointer"
-              >
-                <Send className="w-4 h-4" />
-                <span>Send Resume via Email</span>
-              </a>
             </div>
           </div>
         </div>
