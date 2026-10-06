@@ -47,7 +47,7 @@ import {
 } from 'lucide-react';
 import AdminCareersManager from '@/components/admin/AdminCareersManager';
 import AdminHomeCategoriesManager from '@/components/admin/AdminHomeCategoriesManager';
-import { isVideoUrl } from '@/data/projectsData';
+import { isVideoUrl, generateProjectDetailsFromTitle } from '@/data/projectsData';
 
 /* -------------------------------------------------------------------------- */
 /* Type Definitions                                                           */
@@ -599,6 +599,33 @@ function AdminDashboardContent() {
       ...prev,
       tags: (prev.tags || []).filter((_, i) => i !== index),
     }));
+  };
+
+  const handleAutoGenerateProjectDetails = (titleToUse?: string) => {
+    const currentTitle = (titleToUse !== undefined ? titleToUse : formData.title) || '';
+    if (!currentTitle.trim()) {
+      showToast('error', 'Please enter a project title first');
+      return;
+    }
+    const generated = generateProjectDetailsFromTitle(
+      currentTitle,
+      formData.category,
+      formData.location,
+      formData.client
+    );
+
+    setFormData((prev) => ({
+      ...prev,
+      title: currentTitle,
+      capacity: generated.capacity || prev.capacity,
+      client: generated.client && (!prev.client || prev.client === 'Valued Client') ? generated.client : prev.client,
+      systemType: generated.systemType || prev.systemType,
+      description: generated.description,
+      highlights: generated.highlights,
+      tags: generated.tags,
+    }));
+
+    showToast('success', '✨ Auto-generated tailored description & engineering checklist!');
   };
 
   /* -------------------------------------------------------------------------- */
@@ -2780,17 +2807,58 @@ function AdminDashboardContent() {
               {activeTabInModal === 'general' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Project Title <span className="text-red-400">*</span>
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                        Project Title <span className="text-red-400">*</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => handleAutoGenerateProjectDetails()}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-[#ffc000]/20 to-[#ffc000]/10 hover:from-[#ffc000]/30 hover:to-[#ffc000]/20 text-[#ffc000] text-[11px] font-black border border-[#ffc000]/30 transition-all cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                        title="Auto-generates tailored description, system specs, and checklists based on title keywords"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-[#ffc000]" />
+                        <span>✨ Auto-Generate Description & Checklists</span>
+                      </button>
+                    </div>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Super Metro - Toledo City, Cebu"
+                      placeholder="e.g. DR. JONATHAN “BONG” PLAZA, 8.0 kWp HYBRID with 200AH Lithium LIFEPO4 Battery"
                       value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      onChange={(e) => {
+                        const newTitle = e.target.value;
+                        setFormData((prev) => {
+                          // If description is empty or default, auto-generate specs & checklist on the fly
+                          const highlightsCount = (prev.highlights || []).length;
+                          if (!prev.description || prev.description.trim() === '' || highlightsCount <= 2) {
+                            const gen = generateProjectDetailsFromTitle(newTitle, prev.category, prev.location, prev.client);
+                            return {
+                              ...prev,
+                              title: newTitle,
+                              description: gen.description,
+                              highlights: gen.highlights,
+                              capacity: prev.capacity || gen.capacity || '',
+                              client: prev.client || gen.client || '',
+                              systemType: prev.systemType || gen.systemType || '',
+                              tags: gen.tags,
+                            };
+                          }
+                          return { ...prev, title: newTitle };
+                        });
+                      }}
+                      onBlur={() => {
+                        const highlightsCount = (formData.highlights || []).length;
+                        if (formData.title && (!formData.description || formData.description.trim() === '' || highlightsCount <= 2)) {
+                          handleAutoGenerateProjectDetails(formData.title);
+                        }
+                      }}
                       className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors"
                     />
+                    <div className="mt-1 text-[11px] text-slate-400 flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-[#ffc000]" />
+                      <span>Entering capacity or battery specs in title (e.g. 8.0 kWp Hybrid, 20kWp On-Grid) automatically generates custom descriptions and checklist items.</span>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -3039,6 +3107,28 @@ function AdminDashboardContent() {
 
               {activeTabInModal === 'content' && (
                 <div className="space-y-5">
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#061021] to-[#091833] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-[#ffc000]/15 flex items-center justify-center text-[#ffc000] shrink-0">
+                        <Sparkles className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-white">Smart Description & Checklist Assistant</div>
+                        <div className="text-[11px] text-slate-400">
+                          Click to automatically analyze the project title and generate professional copy and checklist items.
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleAutoGenerateProjectDetails()}
+                      className="px-3.5 py-1.5 rounded-xl bg-[#ffc000] hover:bg-[#e5ac00] text-[#091833] text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md hover:scale-105 shrink-0"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>✨ Auto-Generate Now</span>
+                    </button>
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                       Full Project Description
@@ -3048,7 +3138,7 @@ function AdminDashboardContent() {
                       placeholder="Comprehensive engineering overview..."
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-[#ffc000] transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-[#ffc000] transition-colors leading-relaxed"
                     />
                   </div>
 

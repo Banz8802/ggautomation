@@ -1,5 +1,74 @@
 [
   {
+    "id": "project-1791313069580",
+    "title": "DR. JONATHAN “BONG” PLAZA, 8.0 kWp HYBRID with 200AH Lithium LIFEPO4 Battery)",
+    "category": "Residential",
+    "location": "Borbajo St., Talamban, Cebu City",
+    "capacity": "8.0 kWp HYBRID with 200AH Lithium LIFEPO4 Battery",
+    "client": "DR. JONATHAN “BONG” PLAZA",
+    "folder": "",
+    "images": "/images/projects/uploads/1791313129957_bong.webp",
+    "systemType": "HYBRID with 200AH Lithium LIFEPO4 Battery",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791313026678",
+    "title": "MR. R. CHUA, 20kWp On-Grid (5kWp per roof side)",
+    "category": "Residential",
+    "location": "9th Street Doña Rosario Subdivision Mandaue City, Cebu",
+    "capacity": "20kWp On-Grid (5kWp per roof side)",
+    "client": "MR. R. CHUA",
+    "folder": "",
+    "images": "/images/projects/uploads/1791313064740_chua.webp",
+    "systemType": "On-Grid ",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791312970215",
+    "title": "MR. FRANCIS MANLAPUS, 5kWp plus 5kWp On-Grid",
+    "category": "Residential",
+    "location": "All Batteries Main office Subangdako, Mandaue City, Cebu",
+    "capacity": "5kWp plus 5kWp On-Grid",
+    "client": "MR. FRANCIS MANLAPUS",
+    "folder": "",
+    "images": "/images/projects/uploads/1791313015723_all.webp",
+    "systemType": "On-Grid",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
     "id": "project-1791312844870",
     "title": "ARCHT. EDWIN SANICOLAS, 5kWp On-Grid & 3kW  Hybrid Additional",
     "category": "Residential",
