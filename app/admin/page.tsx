@@ -1440,7 +1440,7 @@ function AdminDashboardContent() {
                 <span className="truncate text-left">Form Inquiries</span>
               </div>
               <span className="shrink-0 text-[10px] px-2 py-0.5 rounded-full bg-[#e51a24] text-white font-bold">
-                jr@
+                info@
               </span>
             </button>
           </nav>
@@ -2742,7 +2742,7 @@ function AdminDashboardContent() {
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Configured Target Mailbox</span>
                 </div>
-                <div className="text-2xl font-black text-white tracking-tight">jr@ggautomation.tech</div>
+                <div className="text-2xl font-black text-white tracking-tight">info@ggautomation.tech</div>
                 <p className="text-xs text-slate-400">
                   All customer submissions from the Contact Page, Solar Quote Calculator, Training Requests, and Emergency Inquiries are dispatched directly to this email address.
                 </p>

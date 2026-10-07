@@ -18,7 +18,7 @@ interface ContactPayload {
   formType?: 'contact_page' | 'quote_calculator';
 }
 
-const TARGET_EMAIL = 'jr@ggautomation.tech';
+const TARGET_EMAIL = 'info@ggautomation.tech';
 
 export async function POST(request: Request) {
   try {

@@ -117,8 +117,8 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#e51a24] flex-shrink-0" />
-                <a href="mailto:jr@ggautomation.tech" className="hover:text-[#ffc000]">
-                  jr@ggautomation.tech
+                <a href="mailto:info@ggautomation.tech" className="hover:text-[#ffc000]">
+                  info@ggautomation.tech
                 </a>
               </li>
             </ul>

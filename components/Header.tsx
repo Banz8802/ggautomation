@@ -123,7 +123,7 @@ export default function Header() {
 
               <div className="text-center text-xs text-slate-500 pt-2">
                 <p>Call Us: (0922) 240-1919</p>
-                <p>Email: jr@ggautomation.tech</p>
+                <p>Email: info@ggautomation.tech</p>
               </div>
             </div>
           </div>

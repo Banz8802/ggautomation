@@ -27,7 +27,7 @@ const locations = [
     coverage: 'Central Visayas, Leyte, Samar & Nationwide Solar EPC',
     phone: '(0922) 240-1919',
     phoneLink: 'tel:+639222401919',
-    email: 'jr@ggautomation.tech',
+    email: 'info@ggautomation.tech',
     hours: 'Mon – Sat: 8:00 AM – 5:00 PM',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.4746271966035!2d123.8778!3d10.3015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a9994c65db9dc7%3A0xb36f7344e1e82ef4!2sCasa%20Mira%20Labangon!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph',
     mapLink: 'https://maps.google.com/?q=Casa+Mira+Labangon+Salvador+St+Cebu+City',
@@ -42,7 +42,7 @@ const locations = [
     coverage: 'Bohol Province, Panglao Resorts & Island Micro-grids',
     phone: '(0968) 388-2510',
     phoneLink: 'tel:+639683882510',
-    email: 'jr@ggautomation.tech',
+    email: 'info@ggautomation.tech',
     hours: 'Mon – Sat: 8:30 AM – 5:00 PM',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.567!2d123.856!3d9.672!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33aa4c7b88!2sUbujan%2C%20Tagbilaran%20City%2C%20Bohol!5e0!3m2!1sen!2sph!4v1700000000001!5m2!1sen!2sph',
     mapLink: 'https://maps.google.com/?q=Salazar+St+Ubujan+Tagbilaran+City+Bohol',
@@ -295,7 +295,7 @@ export default function VicinityContactSection() {
                   </div>
                   <h4 className="text-xl font-bold text-[#0b7337]">Thank You! Inquiry Received</h4>
                   <p className="text-xs sm:text-sm text-slate-700 max-w-sm mx-auto">
-                    We have received your project details. Your inquiry has been forwarded to our engineering team at <span className="font-bold text-[#091833]">jr@ggautomation.tech</span>. A solar engineer from {formData.preferredBranch} will contact you shortly via phone/email.
+                    We have received your project details. Your inquiry has been forwarded to our engineering team at <span className="font-bold text-[#091833]">info@ggautomation.tech</span>. A solar engineer from {formData.preferredBranch} will contact you shortly via phone/email.
                   </p>
                   <button
                     onClick={() => setFormSubmitted(false)}

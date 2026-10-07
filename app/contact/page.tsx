@@ -49,11 +49,11 @@ export default function ContactPage() {
               <span>(0922) 240-1919</span>
             </a>
             <a
-              href="mailto:jr@ggautomation.tech"
+              href="mailto:info@ggautomation.tech"
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all text-white"
             >
               <Mail className="w-3.5 h-3.5 text-[#ffc000]" />
-              <span>jr@ggautomation.tech</span>
+              <span>info@ggautomation.tech</span>
             </a>
             <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-emerald-400">
               <Sparkles className="w-3.5 h-3.5" />

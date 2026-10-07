@@ -179,7 +179,7 @@ export default function ChatBot() {
           '• **Cebu Office Hotline**: (0922) 240-1919\n' +
           '• **Bohol Office Hotline**: (0968) 388-2510\n' +
           '• **Davao Satellite**: (082) 224-2785\n' +
-          '• **Official Email**: jr@ggautomation.tech\n\n' +
+          '• **Official Email**: info@ggautomation.tech\n\n' +
           'Click the button below to start a live chat on Facebook Messenger:';
         
         quickActions = [
@@ -252,7 +252,7 @@ export default function ChatBot() {
           '• **Bohol Showroom**:\n  Salazar St., Ubujan, Tagbilaran City, Bohol (20m Before Nissan Car Display)\n  📞 Phone: (0968) 388-2510\n\n' +
           '• **Davao City Satellite Office**:\n  V. Guzman St. corner 5th Avenue (Back of Cyber Tech Trading Corp) Barangay 27-C, Davao City\n  📞 Phone: (082) 224-2785\n\n' +
           '💬 **Facebook Messenger**: facebook.com/messages/t/GGAutomation.1\n' +
-          '✉️ **Email**: jr@ggautomation.tech';
+          '✉️ **Email**: info@ggautomation.tech';
         
         quickActions = [
           { label: '💬 Chat on Facebook Messenger', action: 'fb', href: FB_MESSENGER_URL, isExternal: true },

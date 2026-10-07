@@ -193,7 +193,7 @@ export default function QuoteContactSection({ showLocations = true }: QuoteConta
                   <div className="space-y-1">
                     <h4 className="text-xl font-bold text-[#091833]">Proposal Request Received!</h4>
                     <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                      Thank you! Your solar proposal request for <span className="font-bold text-[#091833]">~{estimatedKwp} kWp (~₱{monthlyBill.toLocaleString('en-US')}/mo bill)</span> has been forwarded to our engineering team at <span className="font-bold text-[#0b7337]">jr@ggautomation.tech</span>.
+                      Thank you! Your solar proposal request for <span className="font-bold text-[#091833]">~{estimatedKwp} kWp (~₱{monthlyBill.toLocaleString('en-US')}/mo bill)</span> has been forwarded to our engineering team at <span className="font-bold text-[#0b7337]">info@ggautomation.tech</span>.
                     </p>
                     <p className="text-xs text-slate-500 pt-1">
                       Our PRC-licensed engineers will prepare your preliminary 3D simulation and contact you within 24 hours.
@@ -358,7 +358,7 @@ export default function QuoteContactSection({ showLocations = true }: QuoteConta
                 </p>
                 <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
                   <p>Phone: <a href="tel:+639222401919" className="text-[#e51a24] hover:underline">(0922) 240-1919</a></p>
-                  <p>Email: <a href="mailto:jr@ggautomation.tech" className="hover:text-[#e51a24]">jr@ggautomation.tech</a></p>
+                  <p>Email: <a href="mailto:info@ggautomation.tech" className="hover:text-[#e51a24]">info@ggautomation.tech</a></p>
                 </div>
               </div>
 
@@ -377,7 +377,7 @@ export default function QuoteContactSection({ showLocations = true }: QuoteConta
                 </p>
                 <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
                   <p>Phone: <a href="tel:+639683882510" className="text-[#e51a24] hover:underline">(0968) 388-2510</a></p>
-                  <p>Email: <a href="mailto:jr@ggautomation.tech" className="hover:text-[#e51a24]">jr@ggautomation.tech</a></p>
+                  <p>Email: <a href="mailto:info@ggautomation.tech" className="hover:text-[#e51a24]">info@ggautomation.tech</a></p>
                 </div>
               </div>
 
