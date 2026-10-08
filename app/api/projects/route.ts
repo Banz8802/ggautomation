@@ -115,6 +115,35 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
+
+    // Support bulk reordering of projects
+    if (body.reorder) {
+      const projects = await readProjectsData();
+      let reordered: any[] = [];
+
+      if (Array.isArray(body.projectIds)) {
+        const projectMap = new Map(projects.map((p: { id: string }) => [p.id, p]));
+        for (const id of body.projectIds) {
+          const item = projectMap.get(id);
+          if (item) {
+            reordered.push(item);
+            projectMap.delete(id);
+          }
+        }
+        // Append any omitted projects to ensure no data loss
+        for (const remaining of projectMap.values()) {
+          reordered.push(remaining);
+        }
+      } else if (Array.isArray(body.projects)) {
+        reordered = body.projects;
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid reorder data' }, { status: 400 });
+      }
+
+      await writeProjectsData(reordered);
+      return NextResponse.json({ success: true, projects: reordered });
+    }
+
     if (!body.id) {
       return NextResponse.json({ success: false, error: 'Project ID is required' }, { status: 400 });
     }

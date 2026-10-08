@@ -43,7 +43,14 @@ import {
   Newspaper,
   Phone,
   Lock,
-  Briefcase
+  Briefcase,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpToLine,
+  GripVertical,
+  ChevronLeft,
+  Star,
+  Hospital
 } from 'lucide-react';
 import AdminCareersManager from '@/components/admin/AdminCareersManager';
 import AdminHomeCategoriesManager from '@/components/admin/AdminHomeCategoriesManager';
@@ -55,7 +62,7 @@ import { isVideoUrl, generateProjectDetailsFromTitle } from '@/data/projectsData
 interface ProjectRecord {
   id: string;
   title: string;
-  category: 'Residential' | 'Commercial' | 'School' | 'Industrial';
+  category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
   location: string;
   capacity: string;
   client: string;
@@ -505,6 +512,239 @@ function AdminDashboardContent() {
     } catch {
       showToast('error', 'Server error while deleting project');
     }
+  };
+
+  /* -------------------------------------------------------------------------- */
+  /* Projects Reordering Handlers                                               */
+  /* -------------------------------------------------------------------------- */
+  const [isReordering, setIsReordering] = useState(false);
+  const [draggedProjectId, setDraggedProjectId] = useState<string | null>(null);
+  const [dragOverProjectId, setDragOverProjectId] = useState<string | null>(null);
+
+  const saveCategoryProjectsOrder = async (
+    category: string,
+    reorderedCategoryProjects: ProjectRecord[]
+  ) => {
+    // Replace projects of this category in-place within the master projects list
+    const updatedCategoryQueue = [...reorderedCategoryProjects];
+    const updatedAllProjects = projects.map((p) => {
+      if (p.category === category && updatedCategoryQueue.length > 0) {
+        return updatedCategoryQueue.shift()!;
+      }
+      return p;
+    });
+
+    setProjects(updatedAllProjects);
+    setIsReordering(true);
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reorder: true,
+          projectIds: updatedAllProjects.map((p) => p.id),
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showToast('success', `${category} display order saved successfully!`);
+      } else {
+        showToast('error', data.error || 'Failed to save project order');
+        fetchProjects();
+      }
+    } catch {
+      showToast('error', 'Server error while saving project order');
+      fetchProjects();
+    } finally {
+      setIsReordering(false);
+    }
+  };
+
+  const handleMoveProjectToTop = (project: ProjectRecord) => {
+    const cat = project.category;
+    const catProjects = projects.filter((p) => p.category === cat);
+    const remaining = catProjects.filter((p) => p.id !== project.id);
+    const updatedCat = [project, ...remaining];
+    saveCategoryProjectsOrder(cat, updatedCat);
+    showToast('success', `Moved "${project.title}" to Top of ${cat} (#1)!`);
+  };
+
+  const handleMoveProjectUp = (project: ProjectRecord) => {
+    const cat = project.category;
+    const catProjects = projects.filter((p) => p.category === cat);
+    const idx = catProjects.findIndex((p) => p.id === project.id);
+    if (idx <= 0) return;
+    const updatedCat = [...catProjects];
+    const temp = updatedCat[idx - 1];
+    updatedCat[idx - 1] = updatedCat[idx];
+    updatedCat[idx] = temp;
+    saveCategoryProjectsOrder(cat, updatedCat);
+  };
+
+  const handleMoveProjectDown = (project: ProjectRecord) => {
+    const cat = project.category;
+    const catProjects = projects.filter((p) => p.category === cat);
+    const idx = catProjects.findIndex((p) => p.id === project.id);
+    if (idx === -1 || idx >= catProjects.length - 1) return;
+    const updatedCat = [...catProjects];
+    const temp = updatedCat[idx + 1];
+    updatedCat[idx + 1] = updatedCat[idx];
+    updatedCat[idx] = temp;
+    saveCategoryProjectsOrder(cat, updatedCat);
+  };
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedProjectId(id);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', id);
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverProjectId !== id) {
+      setDragOverProjectId(id);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    setDragOverProjectId(null);
+    if (!draggedProjectId || draggedProjectId === targetId) {
+      setDraggedProjectId(null);
+      return;
+    }
+
+    const draggedItem = projects.find((p) => p.id === draggedProjectId);
+    const targetItem = projects.find((p) => p.id === targetId);
+    if (!draggedItem || !targetItem) {
+      setDraggedProjectId(null);
+      return;
+    }
+
+    const cat = draggedItem.category;
+    if (targetItem.category !== cat) {
+      showToast('error', `Cannot drag between different categories (${cat} vs ${targetItem.category}).`);
+      setDraggedProjectId(null);
+      return;
+    }
+
+    const catProjects = projects.filter((p) => p.category === cat);
+    const draggedIdx = catProjects.findIndex((p) => p.id === draggedProjectId);
+    const targetIdx = catProjects.findIndex((p) => p.id === targetId);
+    if (draggedIdx === -1 || targetIdx === -1) {
+      setDraggedProjectId(null);
+      return;
+    }
+
+    const updatedCat = [...catProjects];
+    const [moved] = updatedCat.splice(draggedIdx, 1);
+    updatedCat.splice(targetIdx, 0, moved);
+
+    setDraggedProjectId(null);
+    saveCategoryProjectsOrder(cat, updatedCat);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedProjectId(null);
+    setDragOverProjectId(null);
+  };
+
+  /* -------------------------------------------------------------------------- */
+  /* Attached Media Drag & Rearrange Handlers                                   */
+  /* -------------------------------------------------------------------------- */
+  const [draggedMediaIdx, setDraggedMediaIdx] = useState<number | null>(null);
+  const [dragOverMediaIdx, setDragOverMediaIdx] = useState<number | null>(null);
+
+  const getRawMediaList = () => {
+    if (!formData.images) return [];
+    return formData.images
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+  };
+
+  const setRawMediaList = (list: string[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: list.join(', '),
+    }));
+  };
+
+  const handleMoveMediaToFirst = (index: number) => {
+    const list = getRawMediaList();
+    if (index <= 0 || index >= list.length) return;
+    const item = list[index];
+    const remaining = list.filter((_, i) => i !== index);
+    setRawMediaList([item, ...remaining]);
+    showToast('success', 'Set as primary project cover media!');
+  };
+
+  const handleMoveMediaLeft = (index: number) => {
+    const list = getRawMediaList();
+    if (index <= 0) return;
+    const updated = [...list];
+    const temp = updated[index - 1];
+    updated[index - 1] = updated[index];
+    updated[index] = temp;
+    setRawMediaList(updated);
+  };
+
+  const handleMoveMediaRight = (index: number) => {
+    const list = getRawMediaList();
+    if (index >= list.length - 1) return;
+    const updated = [...list];
+    const temp = updated[index + 1];
+    updated[index + 1] = updated[index];
+    updated[index] = temp;
+    setRawMediaList(updated);
+  };
+
+  const handleDeleteMedia = (index: number) => {
+    const list = getRawMediaList();
+    const updated = list.filter((_, i) => i !== index);
+    setRawMediaList(updated);
+  };
+
+  const handleMediaDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedMediaIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(index));
+  };
+
+  const handleMediaDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverMediaIdx !== index) {
+      setDragOverMediaIdx(index);
+    }
+  };
+
+  const handleMediaDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    setDragOverMediaIdx(null);
+    if (draggedMediaIdx === null || draggedMediaIdx === targetIndex) {
+      setDraggedMediaIdx(null);
+      return;
+    }
+
+    const list = getRawMediaList();
+    if (draggedMediaIdx < 0 || draggedMediaIdx >= list.length || targetIndex < 0 || targetIndex >= list.length) {
+      setDraggedMediaIdx(null);
+      return;
+    }
+
+    const updated = [...list];
+    const [moved] = updated.splice(draggedMediaIdx, 1);
+    updated.splice(targetIndex, 0, moved);
+
+    setDraggedMediaIdx(null);
+    setRawMediaList(updated);
+  };
+
+  const handleMediaDragEnd = () => {
+    setDraggedMediaIdx(null);
+    setDragOverMediaIdx(null);
   };
 
   const readFileAsDataUrl = (file: File): Promise<string> => {
@@ -1081,7 +1321,8 @@ function AdminDashboardContent() {
     const industrial = projects.filter((p) => p.category === 'Industrial').length;
     const schools = projects.filter((p) => p.category === 'School').length;
     const residential = projects.filter((p) => p.category === 'Residential').length;
-    return { total, commercial, industrial, schools, residential };
+    const hospitals = projects.filter((p) => p.category === 'Hospitals').length;
+    return { total, commercial, industrial, schools, residential, hospitals };
   }, [projects]);
 
   const trainingMetrics = useMemo(() => {
@@ -1704,7 +1945,7 @@ function AdminDashboardContent() {
         {activeMenu === 'projects' && (
           <div className="p-6 space-y-6 max-w-7xl w-full mx-auto">
             {/* KPI Metric Summary Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
               <div className="p-4 rounded-2xl bg-[#091833] border border-white/10 shadow-lg flex items-center gap-3.5">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
                   <Layers className="w-5 h-5" />
@@ -1744,13 +1985,23 @@ function AdminDashboardContent() {
                   <div className="text-[11px] text-slate-400 font-semibold">Schools & Residential</div>
                 </div>
               </div>
+
+              <div className="p-4 rounded-2xl bg-[#091833] border border-white/10 shadow-lg flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+                  <Hospital className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-white">{metrics.hospitals}</div>
+                  <div className="text-[11px] text-slate-400 font-semibold">Hospitals</div>
+                </div>
+              </div>
             </div>
 
             {/* Filter, Search & View Switcher Bar */}
             <div className="p-4 rounded-2xl bg-[#091833] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
               {/* Category Pills */}
               <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
-                {['All', 'Commercial', 'School', 'Industrial', 'Residential'].map((cat) => (
+                {['All', 'Commercial', 'School', 'Industrial', 'Residential', 'Hospitals'].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
@@ -1810,6 +2061,32 @@ function AdminDashboardContent() {
               </div>
             </div>
 
+            {/* Rearrange & Priority Helper Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-slate-300">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#ffc000]/20 text-[#ffc000] font-black text-[11px] flex-shrink-0">
+                  ★
+                </span>
+                <span>
+                  {selectedCategory !== 'All' ? (
+                    <>
+                      <strong>Rearrange {selectedCategory} Order:</strong> Click <span className="text-[#ffc000] font-bold">⬆ To Top</span> to put any project first as #1 latest in {selectedCategory}, use arrows to adjust priority, or drag rows.
+                    </>
+                  ) : (
+                    <>
+                      <strong>Category-Based Display Order:</strong> Rankings are organized per category. Click any category tab above to focus and rearrange that category.
+                    </>
+                  )}
+                </span>
+              </div>
+              {isReordering && (
+                <div className="flex items-center gap-1.5 text-[#ffc000] font-bold flex-shrink-0">
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Saving new order...</span>
+                </div>
+              )}
+            </div>
+
             {/* Projects Table View */}
             {viewMode === 'table' ? (
               <div className="bg-[#091833] rounded-2xl border border-white/10 overflow-hidden shadow-xl">
@@ -1817,6 +2094,7 @@ function AdminDashboardContent() {
                   <table className="w-full text-left text-xs">
                     <thead className="bg-[#061021] text-slate-400 uppercase tracking-wider font-bold border-b border-white/10 text-[10px]">
                       <tr>
+                        <th className="py-3.5 px-3 text-center w-24">Order</th>
                         <th className="py-3.5 px-4">Project</th>
                         <th className="py-3.5 px-4">Category</th>
                         <th className="py-3.5 px-4">Capacity</th>
@@ -1829,17 +2107,56 @@ function AdminDashboardContent() {
                     <tbody className="divide-y divide-white/5">
                       {filteredProjects.length === 0 ? (
                         <tr>
-                          <td colSpan={7} className="py-12 text-center text-slate-400">
+                          <td colSpan={8} className="py-12 text-center text-slate-400">
                             No projects match your current filter.
                           </td>
                         </tr>
                       ) : (
                         filteredProjects.map((p) => {
+                          const categoryProjects = projects.filter((item) => item.category === p.category);
+                          const catRank = categoryProjects.findIndex((item) => item.id === p.id) + 1;
+                          const isTop = catRank === 1;
+                          const isBottom = catRank === categoryProjects.length;
                           const imgUrl = getFirstProjectImage(p);
                           const isVid = isVideoUrl(imgUrl);
                           const imgCount = p.images ? p.images.split(',').length : 0;
+                          const isDragged = draggedProjectId === p.id;
+                          const isDragOver = dragOverProjectId === p.id;
+
                           return (
-                            <tr key={p.id} className="hover:bg-white/5 transition-colors group">
+                            <tr
+                              key={p.id}
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, p.id)}
+                              onDragOver={(e) => handleDragOver(e, p.id)}
+                              onDrop={(e) => handleDrop(e, p.id)}
+                              onDragEnd={handleDragEnd}
+                              className={`transition-all group ${
+                                isDragged ? 'opacity-40 bg-white/5' : ''
+                              } ${
+                                isDragOver ? 'border-t-2 border-[#ffc000] bg-white/10' : 'hover:bg-white/5'
+                              }`}
+                            >
+                              <td className="py-3 px-3 text-center whitespace-nowrap">
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <span
+                                    className="text-slate-500 hover:text-slate-300 cursor-grab active:cursor-grabbing p-1 rounded hover:bg-white/5 transition-colors"
+                                    title={`Drag to rearrange ${p.category} order`}
+                                  >
+                                    <GripVertical className="w-3.5 h-3.5" />
+                                  </span>
+                                  {isTop ? (
+                                    <span className="px-2 py-0.5 rounded-full bg-[#ffc000] text-slate-950 text-[10px] font-black shadow-sm flex items-center gap-1">
+                                      <span>#1</span>
+                                      <span className="text-[9px] uppercase tracking-wider">TOP</span>
+                                    </span>
+                                  ) : (
+                                    <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-300 text-[10px] font-bold">
+                                      #{catRank}
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
                               <td className="py-3 px-4">
                                 <div className="flex items-center gap-3">
                                   <div className="relative w-12 h-12 rounded-xl bg-slate-800 overflow-hidden flex-shrink-0 border border-white/10">
@@ -1871,6 +2188,8 @@ function AdminDashboardContent() {
                                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                                       : p.category === 'School'
                                       ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                      : p.category === 'Hospitals'
+                                      ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                                       : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                                   }`}
                                 >
@@ -1898,7 +2217,37 @@ function AdminDashboardContent() {
                                 </span>
                               </td>
                               <td className="py-3 px-4 text-right whitespace-nowrap">
-                                <div className="inline-flex items-center gap-1.5">
+                                <div className="inline-flex items-center gap-1">
+                                  {/* Reorder: Move to Top (Featured / Latest) */}
+                                  <button
+                                    onClick={() => handleMoveProjectToTop(p)}
+                                    disabled={isTop}
+                                    title={isTop ? `Already #1 in ${p.category}` : `Move to Top of ${p.category} (#1)`}
+                                    className="p-1.5 rounded-lg bg-white/5 hover:bg-[#ffc000]/20 text-slate-300 hover:text-[#ffc000] transition-colors cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
+                                  >
+                                    <ArrowUpToLine className="w-3.5 h-3.5" />
+                                  </button>
+                                  {/* Reorder: Move Up */}
+                                  <button
+                                    onClick={() => handleMoveProjectUp(p)}
+                                    disabled={isTop}
+                                    title={isTop ? `Already top of ${p.category}` : `Move Up in ${p.category}`}
+                                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-colors cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
+                                  >
+                                    <ArrowUp className="w-3.5 h-3.5" />
+                                  </button>
+                                  {/* Reorder: Move Down */}
+                                  <button
+                                    onClick={() => handleMoveProjectDown(p)}
+                                    disabled={isBottom}
+                                    title={isBottom ? `Already bottom of ${p.category}` : `Move Down in ${p.category}`}
+                                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-colors cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
+                                  >
+                                    <ArrowDown className="w-3.5 h-3.5" />
+                                  </button>
+
+                                  <span className="w-px h-4 bg-white/10 mx-0.5" />
+
                                   <button
                                     onClick={() => handleOpenEditProject(p)}
                                     title="Edit Project"
@@ -1934,6 +2283,10 @@ function AdminDashboardContent() {
               /* Projects Grid View */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProjects.map((p) => {
+                  const categoryProjects = projects.filter((item) => item.category === p.category);
+                  const catRank = categoryProjects.findIndex((item) => item.id === p.id) + 1;
+                  const isTop = catRank === 1;
+                  const isBottom = catRank === categoryProjects.length;
                   const imgUrl = getFirstProjectImage(p);
                   const isVid = isVideoUrl(imgUrl);
                   return (
@@ -1946,7 +2299,7 @@ function AdminDashboardContent() {
                           {isVid ? (
                             <div className="w-full h-full relative bg-slate-900">
                               <video src={imgUrl} autoPlay muted loop playsInline className="w-full h-full object-cover" />
-                              <div className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-md text-[#ffc000] text-[9px] font-bold flex items-center gap-1">
+                              <div className="absolute top-3 right-16 z-10 px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-md text-[#ffc000] text-[9px] font-bold flex items-center gap-1">
                                 <Play className="w-2.5 h-2.5 fill-current" />
                                 <span>Video</span>
                               </div>
@@ -1961,7 +2314,9 @@ function AdminDashboardContent() {
                             />
                           )}
                           <div className="absolute inset-0 bg-gradient-to-t from-[#091833] via-transparent to-transparent pointer-events-none"></div>
-                          <div className="absolute top-3 left-3 flex items-center gap-2 pointer-events-none">
+
+                          {/* Top Left Badges */}
+                          <div className="absolute top-3 left-3 flex items-center gap-2 pointer-events-none z-10">
                             <span className="px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-black border border-white/10">
                               {p.category}
                             </span>
@@ -1969,6 +2324,30 @@ function AdminDashboardContent() {
                               <Zap className="w-3 h-3 fill-current text-[#ffc000]" />
                               <span>{p.capacity}</span>
                             </div>
+                          </div>
+
+                          {/* Top Right Rank & Move to Top Button */}
+                          <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveProjectToTop(p);
+                              }}
+                              disabled={isTop}
+                              title={isTop ? `Already #1 in ${p.category}` : `Move to Top of ${p.category} (#1)`}
+                              className="p-1 rounded-full bg-black/80 hover:bg-[#ffc000] text-[#ffc000] hover:text-black transition-colors shadow-md disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                              <ArrowUpToLine className="w-3 h-3" />
+                            </button>
+                            {isTop ? (
+                              <span className="px-2 py-0.5 rounded-full bg-[#ffc000] text-slate-950 text-[10px] font-black shadow-md">
+                                ★ TOP #1
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full bg-black/80 text-white text-[10px] font-bold border border-white/20">
+                                #{catRank}
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -2002,22 +2381,53 @@ function AdminDashboardContent() {
                       </div>
 
                       <div className="px-5 py-3.5 bg-[#061021] border-t border-white/10 flex items-center justify-between">
-                        <span className="text-[10px] text-slate-400 font-mono">{p.id}</span>
-                        <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] text-slate-400 font-mono">#{catRank}</span>
+                        <div className="flex items-center gap-1">
+                          {/* Quick Reorder Controls */}
+                          <button
+                            onClick={() => handleMoveProjectToTop(p)}
+                            disabled={isTop}
+                            title={isTop ? `Already #1 in ${p.category}` : `Move to Top of ${p.category} (#1)`}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-[#ffc000]/20 text-slate-300 hover:text-[#ffc000] transition-colors cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
+                          >
+                            <ArrowUpToLine className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleMoveProjectUp(p)}
+                            disabled={isTop}
+                            title={isTop ? `Already top of ${p.category}` : `Move Up in ${p.category}`}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-colors cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleMoveProjectDown(p)}
+                            disabled={isBottom}
+                            title={isBottom ? `Already bottom of ${p.category}` : `Move Down in ${p.category}`}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-colors cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+
+                          <span className="w-px h-4 bg-white/10 mx-0.5" />
+
                           <button
                             onClick={() => handleOpenEditProject(p)}
+                            title="Edit Project"
                             className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-colors cursor-pointer"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleDuplicateProject(p)}
+                            title="Clone / Duplicate"
                             className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 hover:text-[#ffc000] transition-colors cursor-pointer"
                           >
                             <Copy className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeleteConfirmId(p.id)}
+                            title="Delete Project"
                             className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-slate-300 hover:text-red-400 transition-colors cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -2880,6 +3290,7 @@ function AdminDashboardContent() {
                         <option value="Industrial">Industrial</option>
                         <option value="School">School & University</option>
                         <option value="Residential">Residential</option>
+                        <option value="Hospitals">Hospitals</option>
                       </select>
                     </div>
 
@@ -3061,39 +3472,153 @@ function AdminDashboardContent() {
                   </div>
 
                   {parsedImageList.length > 0 && (
-                    <div className="space-y-2 pt-2">
-                      <div className="text-xs font-bold text-slate-300">
-                        Current Attached Photos & Videos ({parsedImageList.length})
+                    <div className="space-y-3 pt-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                        <div className="font-bold text-slate-300 flex items-center gap-2">
+                          <span>Current Attached Photos & Videos ({parsedImageList.length})</span>
+                          <span className="text-[10px] text-slate-400 font-normal">
+                            (First media is the main portfolio cover)
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-[#ffc000] font-semibold flex items-center gap-1.5">
+                          <GripVertical className="w-3.5 h-3.5" />
+                          <span>Drag cards or use arrows to rearrange</span>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                         {parsedImageList.map((url, idx) => {
                           const isVid = isVideoUrl(url);
+                          const isCover = idx === 0;
+                          const isDragged = draggedMediaIdx === idx;
+                          const isDragOver = dragOverMediaIdx === idx;
+
                           return (
                             <div
                               key={idx}
-                              className="relative h-20 rounded-xl overflow-hidden bg-slate-800 border border-white/15 group"
+                              draggable
+                              onDragStart={(e) => handleMediaDragStart(e, idx)}
+                              onDragOver={(e) => handleMediaDragOver(e, idx)}
+                              onDrop={(e) => handleMediaDrop(e, idx)}
+                              onDragEnd={handleMediaDragEnd}
+                              className={`relative h-28 rounded-2xl overflow-hidden bg-slate-900 border transition-all cursor-grab active:cursor-grabbing group select-none ${
+                                isDragged ? 'opacity-30 scale-95 border-dashed border-white/40' : ''
+                              } ${
+                                isDragOver
+                                  ? 'border-2 border-[#ffc000] scale-105 shadow-2xl ring-2 ring-[#ffc000]/40 z-20'
+                                  : isCover
+                                  ? 'border-[#ffc000] ring-1 ring-[#ffc000]/50 shadow-lg'
+                                  : 'border-white/15 hover:border-white/40'
+                              }`}
                             >
+                              {/* Media Element */}
                               {isVid ? (
-                                <div className="w-full h-full relative bg-slate-900">
+                                <div className="w-full h-full relative bg-black flex items-center justify-center">
                                   <video src={url} className="w-full h-full object-cover" muted playsInline />
-                                  <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-black/80 text-[8px] font-black text-white flex items-center gap-1">
-                                    <Play className="w-2 h-2 fill-current text-[#ffc000]" />
-                                    <span>VIDEO</span>
+                                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                    <Play className="w-4 h-4 text-[#ffc000] fill-current" />
                                   </div>
                                 </div>
                               ) : (
-                                <Image src={url} alt={`Photo ${idx + 1}`} fill className="object-cover" />
+                                <Image
+                                  src={url}
+                                  alt={`Photo ${idx + 1}`}
+                                  fill
+                                  className="object-cover pointer-events-none"
+                                  sizes="160px"
+                                />
                               )}
-                              <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+
+                              {/* Gradient Overlay for badge contrast */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/60 pointer-events-none" />
+
+                              {/* Top Left: Rank / Cover Badge */}
+                              <div className="absolute top-1.5 left-1.5 z-10 pointer-events-none">
+                                {isCover ? (
+                                  <span className="px-1.5 py-0.5 rounded-md bg-[#ffc000] text-slate-950 text-[9px] font-black shadow-md flex items-center gap-0.5">
+                                    <Star className="w-2.5 h-2.5 fill-current" />
+                                    <span>COVER</span>
+                                  </span>
+                                ) : (
+                                  <span className="px-1.5 py-0.5 rounded-md bg-black/80 backdrop-blur-sm text-white text-[9px] font-black border border-white/20">
+                                    #{idx + 1}
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Top Right: Drag Handle & Video Pill */}
+                              <div className="absolute top-1.5 right-1.5 z-10 flex items-center gap-1">
+                                {isVid && (
+                                  <span className="px-1 py-0.5 rounded bg-black/80 text-[8px] font-black text-[#ffc000] border border-white/10">
+                                    VID
+                                  </span>
+                                )}
+                                <span
+                                  className="p-1 rounded bg-black/70 text-slate-300 group-hover:text-white transition-colors"
+                                  title="Drag to rearrange"
+                                >
+                                  <GripVertical className="w-3 h-3" />
+                                </span>
+                              </div>
+
+                              {/* Action Controls Bar on Hover */}
+                              <div className="absolute bottom-1.5 inset-x-1.5 z-10 flex items-center justify-between gap-1 bg-black/85 backdrop-blur-md p-1 rounded-xl border border-white/15 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="flex items-center gap-0.5">
+                                  {/* Move Left */}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleMoveMediaLeft(idx);
+                                    }}
+                                    disabled={idx === 0}
+                                    title="Move Left"
+                                    className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
+                                  >
+                                    <ChevronLeft className="w-3 h-3" />
+                                  </button>
+
+                                  {/* Set as Cover */}
+                                  {!isCover && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleMoveMediaToFirst(idx);
+                                      }}
+                                      title="Make this the Cover Photo / Video"
+                                      className="p-1 rounded-lg bg-white/10 hover:bg-[#ffc000] text-[#ffc000] hover:text-black transition-colors cursor-pointer"
+                                    >
+                                      <Star className="w-3 h-3" />
+                                    </button>
+                                  )}
+
+                                  {/* Move Right */}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleMoveMediaRight(idx);
+                                    }}
+                                    disabled={idx === parsedImageList.length - 1}
+                                    title="Move Right"
+                                    className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
+                                  >
+                                    <ChevronRight className="w-3 h-3" />
+                                  </button>
+                                </div>
+
+                                {/* Delete button */}
                                 <button
                                   type="button"
-                                  onClick={() => {
-                                    const updated = parsedImageList.filter((_, i) => i !== idx).join(', ');
-                                    setFormData({ ...formData, images: updated });
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteMedia(idx);
                                   }}
-                                  className="p-1 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+                                  title="Remove media"
+                                  className="p-1 rounded-lg bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white transition-colors cursor-pointer"
                                 >
-                                  <X className="w-3.5 h-3.5" />
+                                  <Trash2 className="w-3 h-3" />
                                 </button>
                               </div>
                             </div>

@@ -1,11 +1,11 @@
 import rawProjectsData from './projects.json';
 
-export type ProjectCategory = 'All' | 'Residential' | 'Commercial' | 'School' | 'Industrial';
+export type ProjectCategory = 'All' | 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
 
 export interface ProjectRawInput {
   id: string;
   title: string;
-  category: 'Residential' | 'Commercial' | 'School' | 'Industrial';
+  category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
   location?: string;
   capacity?: string;
   client?: string;
@@ -23,7 +23,7 @@ export interface ProjectRawInput {
 export interface ProjectItem {
   id: string;
   title: string;
-  category: 'Residential' | 'Commercial' | 'School' | 'Industrial';
+  category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
   location: string;
   capacity: string;
   client: string;
@@ -144,6 +144,8 @@ export function generateProjectDetailsFromTitle(
     description = `Institutional ${extractedCapacity ? `${extractedCapacity} ` : ''}campus solar installation providing sustainable clean energy generation, drastically reducing daytime operating overhead while showcasing eco-friendly educational infrastructure${locText}.`;
   } else if (cat === 'Industrial') {
     description = `Heavy-duty industrial ${extractedCapacity ? `${extractedCapacity} ` : ''}solar power plant engineered for high continuous manufacturing load offset, utility net-metering synchronization, and long-term operating resilience${locText}.`;
+  } else if (cat === 'Hospitals' || /hospital|medical|clinic|healthcare/i.test(lower)) {
+    description = `Healthcare-grade ${extractedCapacity ? `${extractedCapacity} ` : ''}turnkey solar PV and backup system engineered for critical 24/7 hospital power stability, operational cost reduction, and clean medical facility energy resilience${locText}.`;
   } else {
     description = `Premium residential ${extractedCapacity ? `${extractedCapacity} ` : ''}rooftop solar PV system designed for high daily clean energy harvest, seamless net-metering utility synchronization, and long-term durability${locText}.`;
   }
@@ -181,6 +183,11 @@ export function generateProjectDetailsFromTitle(
     highlights.push('Heavy-Duty Inverter Station with Surge & Arc Protection');
     highlights.push('Continuous Factory Daytime Power Demand Offset');
     highlights.push('Real-Time Industrial SCADA Energy Analytics');
+  } else if (cat === 'Hospitals' || /hospital|medical|clinic|healthcare/i.test(lower)) {
+    highlights.push('Hospital-Grade High-Reliability Solar PV Array');
+    highlights.push('Critical Medical Load Protection & Clean Power Quality');
+    highlights.push('Dual Grid & Emergency Genset Seamless Synchronization');
+    highlights.push('24/7 Redundant Telemetry & Smart Power Monitoring');
   } else {
     highlights.push('Tier-1 High-Yield Monocrystalline Solar Modules');
     highlights.push('High-Efficiency Smart Grid-Tied Inverter System');

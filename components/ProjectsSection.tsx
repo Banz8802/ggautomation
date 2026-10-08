@@ -23,7 +23,8 @@ import {
   X,
   Camera,
   Check,
-  Play
+  Play,
+  Hospital
 } from 'lucide-react';
 
 import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectCategory, ProjectRawInput, isVideoUrl } from '@/data/projectsData';
@@ -35,6 +36,7 @@ const categoryTabs: { label: ProjectCategory; icon: React.ReactNode }[] = [
   { label: 'Commercial', icon: <Building2 className="w-4 h-4" /> },
   { label: 'School', icon: <GraduationCap className="w-4 h-4" /> },
   { label: 'Industrial', icon: <Factory className="w-4 h-4" /> },
+  { label: 'Hospitals', icon: <Hospital className="w-4 h-4" /> },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -43,11 +45,35 @@ const categoryTabs: { label: ProjectCategory; icon: React.ReactNode }[] = [
 function ProjectCard({
   project,
   onOpenModal,
+  cardIndex = 0,
 }: {
   project: ProjectItem;
   onOpenModal: (project: ProjectItem, initialIndex: number) => void;
+  cardIndex?: number;
 }) {
   const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Auto-play slideshow looping with staggered starting offsets & pause on hover
+  useEffect(() => {
+    if (project.images.length <= 1 || isHovered) return;
+
+    let intervalId: NodeJS.Timeout;
+    const initialDelay = ((cardIndex || 0) * 800) % 3200;
+
+    const timeoutId = setTimeout(() => {
+      setActiveImageIdx((prev) => (prev + 1) % project.images.length);
+
+      intervalId = setInterval(() => {
+        setActiveImageIdx((prev) => (prev + 1) % project.images.length);
+      }, 4000);
+    }, 2400 + initialDelay);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [project.images.length, isHovered, cardIndex]);
 
   const prevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -60,7 +86,11 @@ function ProjectCard({
   };
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-[#0b7337]/50 shadow-sm hover:shadow-2xl hover:shadow-emerald-950/10 transition-all duration-300 group flex flex-col justify-between hover:-translate-y-1.5">
+    <div 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-[#0b7337]/50 shadow-sm hover:shadow-2xl hover:shadow-emerald-950/10 transition-all duration-300 group flex flex-col justify-between hover:-translate-y-1.5"
+    >
       <div>
         {/* Multi-Image Interactive Card Header */}
         <div 
@@ -70,6 +100,7 @@ function ProjectCard({
           {isVideoUrl(project.images[activeImageIdx]) ? (
             <div className="w-full h-full relative">
               <video
+                key={project.images[activeImageIdx]}
                 src={project.images[activeImageIdx]}
                 autoPlay
                 muted
@@ -84,6 +115,7 @@ function ProjectCard({
             </div>
           ) : (
             <Image
+              key={activeImageIdx}
               src={project.images[activeImageIdx]}
               alt={`${project.title} - Photo ${activeImageIdx + 1}`}
               fill
@@ -188,6 +220,17 @@ function ProjectCard({
               </div>
             ))}
           </div>
+
+          {/* Details Action Button - Positioned Below Checklists */}
+          <div className="pt-2">
+            <button
+              onClick={() => onOpenModal(project, activeImageIdx)}
+              className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-[#091833] text-slate-700 hover:text-white text-xs font-bold transition-all border border-slate-200 hover:border-[#091833] shadow-xs hover:shadow group/btn cursor-pointer"
+            >
+              <Maximize2 className="w-3.5 h-3.5 text-[#ffc000] group-hover/btn:scale-110 transition-transform" />
+              <span>Details</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -195,42 +238,44 @@ function ProjectCard({
       <div className="px-6 pb-6 pt-2 border-t border-slate-100 space-y-3">
         {/* Interactive Mini Thumbnail Strip */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-          {project.images.slice(0, 5).map((imgSrc, imgIdx) => (
-            <button
-              key={imgIdx}
-              onClick={() => setActiveImageIdx(imgIdx)}
-              className={`relative h-10 w-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
-                imgIdx === activeImageIdx
-                  ? 'border-[#0b7337] ring-1 ring-[#0b7337] scale-105'
-                  : 'border-transparent opacity-70 hover:opacity-100'
-              }`}
-            >
-              <Image
-                src={imgSrc}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="48px"
-              />
-            </button>
-          ))}
+          {project.images.slice(0, 5).map((imgSrc, imgIdx) => {
+            const isThumbVid = isVideoUrl(imgSrc);
+            return (
+              <button
+                key={imgIdx}
+                onClick={() => setActiveImageIdx(imgIdx)}
+                aria-label={isThumbVid ? `Video ${imgIdx + 1}` : `Photo ${imgIdx + 1}`}
+                className={`relative h-10 w-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
+                  imgIdx === activeImageIdx
+                    ? 'border-[#0b7337] ring-1 ring-[#0b7337] scale-105'
+                    : 'border-transparent opacity-70 hover:opacity-100'
+                }`}
+              >
+                {isThumbVid ? (
+                  <div className="w-full h-full bg-black flex items-center justify-center">
+                    <Play className="w-3.5 h-3.5 text-[#ffc000] fill-current ml-0.5" />
+                  </div>
+                ) : (
+                  <Image
+                    src={imgSrc}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="48px"
+                  />
+                )}
+              </button>
+            );
+          })}
 
           {project.images.length > 5 && (
             <button
               onClick={() => onOpenModal(project, 5)}
-              className="h-10 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center flex-shrink-0"
+              className="h-10 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-black flex items-center justify-center flex-shrink-0 cursor-pointer transition-colors"
             >
               +{project.images.length - 5}
             </button>
           )}
-
-          <button
-            onClick={() => onOpenModal(project, activeImageIdx)}
-            className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-[#091833] text-slate-700 hover:text-white text-xs font-bold transition-all border border-slate-200 flex-shrink-0"
-          >
-            <Maximize2 className="w-3.5 h-3.5 text-[#ffc000]" />
-            <span>Details</span>
-          </button>
         </div>
 
         {/* Tags & Inquire Link */}
@@ -400,11 +445,8 @@ function ProjectModal({
                     }`}
                   >
                     {isThumbVid ? (
-                      <div className="w-full h-full relative bg-slate-900">
-                        <video src={imgSrc} className="w-full h-full object-cover" muted />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                          <Play className="w-3.5 h-3.5 text-[#ffc000] fill-current" />
-                        </div>
+                      <div className="w-full h-full relative bg-black flex items-center justify-center">
+                        <Play className="w-4 h-4 text-[#ffc000] fill-current ml-0.5" />
                       </div>
                     ) : (
                       <Image src={imgSrc} alt="" fill className="object-cover" sizes="96px" />
@@ -576,7 +618,7 @@ export default function ProjectsSection() {
         <SectionHeading
           badge="PORTFOLIO & TRACK RECORD"
           title="Featured Engineering Projects"
-          subtitle="Explore our certified turnkey installations across Residential rooftops, Commercial centers, Schools & Universities, and Industrial facilities in the Philippines."
+          subtitle="Explore our certified turnkey installations across Residential rooftops, Commercial centers, Schools & Universities, Industrial facilities, and Hospitals in the Philippines."
         />
 
         {/* Category Tabs & Search Bar Row */}
@@ -641,11 +683,12 @@ export default function ProjectsSection() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project, idx) => (
               <ProjectCard
                 key={project.id}
                 project={project}
                 onOpenModal={openModal}
+                cardIndex={idx}
               />
             ))}
           </div>

@@ -2,12 +2,12 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ProjectsSection from '@/components/ProjectsSection';
-import { ChevronRight, Award, ShieldCheck, Zap, Sparkles, Building2, Factory, Home, GraduationCap } from 'lucide-react';
+import { ChevronRight, Award, ShieldCheck, Zap, Sparkles, Building2, Factory, Home, GraduationCap, Hospital } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Solar & Engineering Projects Portfolio | GG Automation Construction Services',
   description:
-    'Explore GG Automation Construction Services portfolio of turnkey solar PV and electrical engineering projects across Residential, Commercial, School, and Industrial categories in the Philippines.',
+    'Explore GG Automation Construction Services portfolio of turnkey solar PV and electrical engineering projects across Residential, Commercial, School, Industrial, and Hospital categories in the Philippines.',
 };
 
 const categoryBadges = [
@@ -15,6 +15,7 @@ const categoryBadges = [
   { icon: <Building2 className="w-3.5 h-3.5 text-[#e51a24]" />, label: 'Commercial' },
   { icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, label: 'Schools & Universities' },
   { icon: <Factory className="w-3.5 h-3.5 text-[#ffc000]" />, label: 'Industrial & Floating PV' },
+  { icon: <Hospital className="w-3.5 h-3.5 text-rose-400" />, label: 'Hospitals & Healthcare' },
 ];
 
 export default function ProjectsPage() {
