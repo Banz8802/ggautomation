@@ -96,6 +96,7 @@ export async function POST(request: Request) {
       description: body.description || '',
       highlights: Array.isArray(body.highlights) ? body.highlights.filter(Boolean) : [],
       tags: Array.isArray(body.tags) ? body.tags.filter(Boolean) : [body.category || 'Solar'],
+      satelliteCategory: body.satelliteCategory || 'None',
     };
 
     // Prepend to list so newest project appears first
@@ -160,6 +161,10 @@ export async function PUT(request: Request) {
       ...existing,
       title: body.title !== undefined ? body.title : existing.title,
       category: body.category !== undefined ? body.category : existing.category,
+      satelliteCategory:
+        body.satelliteCategory !== undefined
+          ? body.satelliteCategory
+          : (existing.satelliteCategory || 'None'),
       location: body.location !== undefined ? body.location : existing.location,
       capacity: body.capacity !== undefined ? body.capacity : existing.capacity,
       client: body.client !== undefined ? body.client : existing.client,

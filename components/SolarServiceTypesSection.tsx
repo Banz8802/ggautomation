@@ -64,6 +64,29 @@ function ServiceCard({
     setCurrentIdx((prev) => (prev + 1) % projectImages.length);
   };
 
+  const getTargetCategory = (cat: HomeCategoryItem): string => {
+    if (cat.category) return cat.category;
+    if (cat.id === 'schools') return 'School';
+    if (cat.id === 'residential') return 'Residential';
+    if (cat.id === 'commercial') return 'Commercial';
+    if (cat.id === 'industrial') return 'Industrial';
+    return 'All';
+  };
+
+  const targetCategory = getTargetCategory(item);
+  const targetLink = (() => {
+    if (item.link && item.link.trim() !== '') {
+      if (item.link.includes('category=')) {
+        return item.link.includes('#projects') ? item.link : `${item.link}#projects`;
+      }
+      if (item.link === '/projects' || item.link === '/projects/') {
+        return `/projects?category=${encodeURIComponent(targetCategory)}#projects`;
+      }
+      return item.link;
+    }
+    return `/projects?category=${encodeURIComponent(targetCategory)}#projects`;
+  })();
+
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
@@ -73,7 +96,7 @@ function ServiceCard({
       <div className="space-y-4">
         {/* Card Top Image Carousel with Rounded Corners */}
         <Link
-          href={item.link || '/projects'}
+          href={targetLink}
           className="block relative h-48 sm:h-52 w-full rounded-2xl overflow-hidden bg-slate-900 shadow-inner group/img cursor-pointer"
         >
           {/* Sliding Track for Images & Videos */}
@@ -175,27 +198,27 @@ function ServiceCard({
         </Link>
 
         {/* Card Title */}
-        <Link href={item.link || '/projects'} className="block">
+        <Link href={targetLink} className="block">
           <h3 className="text-xl sm:text-2xl font-black text-[#091833] tracking-tight group-hover:text-[#e51a24] transition-colors">
             {item.title}
           </h3>
         </Link>
 
         {/* Headline & Body Copy */}
-        <div className="space-y-2">
-          <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+        <Link href={targetLink} className="block space-y-2 group/copy">
+          <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug group-hover/copy:text-[#e51a24] transition-colors">
             {item.headline}
           </h4>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal line-clamp-5">
             {item.description}
           </p>
-        </div>
+        </Link>
       </div>
 
       {/* Action Button */}
       <div className="pt-6 mt-4 border-t border-slate-100">
         <Link
-          href={item.link || '/projects'}
+          href={targetLink}
           className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-xs sm:text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-md hover:shadow-red-600/30 transition-all duration-200 group/btn"
         >
           <span>Learn more</span>

@@ -1,14 +1,41 @@
 [
   {
-    "id": "project-1791312475449",
-    "title": "Gaisano Grand Mall Toledo 780kwp ON-GRID",
-    "category": "Commercial",
-    "location": "Toledo City, Cebu",
-    "capacity": "780kWp",
-    "client": "Gaisano Grand Mall ",
+    "id": "project-1791563516692",
+    "title": "BOLINAWAN, CARCAR CITY - TOTAL : 505.7 kw ON-GRID",
+    "category": "Industrial",
+    "location": "CARCAR CITY",
+    "capacity": "505.7 kw",
+    "client": "BOLINAWAN",
     "folder": "",
-    "images": "/images/projects/uploads/1791312586676_abefb770-b025-466e-aed0-5b3da9e776b4.mp4, /images/projects/uploads/1791312586679_dd7a4a4e-4a2b-4ded-b6ff-dc6ca3152990.jpg, /images/projects/uploads/1791312586681_28d0743e-c1bc-4d0e-865b-82b4fade245a.jpg, /images/projects/uploads/1791312586683_461826f0-726e-4432-affb-66fbb7966991.jpg, /images/projects/uploads/1791312586687_644ee452-6719-41ab-be58-bbf475d1b5ed.jpg, /images/projects/uploads/1791312586690_cda7ee38-fc47-4622-989f-30f9f34528b0.jpg, /images/projects/uploads/1791312586692_4d3239a3-8aa2-430f-87a5-866c32a2e295.jpg, /images/projects/uploads/1791312586694_04152f69-6e9e-49d4-824c-688ac59e995b.jpg, /images/projects/uploads/1791312586696_c90d869e-3ea4-4770-aa55-e4774bc476c4.jpg, /images/projects/uploads/1791312586698_a1c39aba-609e-4f3d-ab67-500ba93cb857.jpg, /images/projects/uploads/1791312586702_566fbb38-7c0d-478d-af78-4469fbd3a9e6.jpg, /images/projects/uploads/1791312586704_6839932c-02e5-46a2-bbd1-346a7f576c1d.jpg, /images/projects/uploads/1791312586705_8aa629c1-e2ae-41e3-b824-f017975d9bdf.jpg, /images/projects/uploads/1791312586707_18ec48d7-f565-419d-9959-7cc601d98903.jpg",
-    "systemType": "On-Grid Commercial Solar System",
+    "images": "/images/projects/uploads/1791563710212_image127.webp, /images/projects/uploads/1791563710215_image124.webp, /images/projects/uploads/1791563710210_image128.webp, /images/projects/uploads/1791563710209_image126.webp, /images/projects/uploads/1791563710207_image125.webp, /images/projects/uploads/1791563710205_image129.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Commercial-grade 505.7 kw turnkey solar rooftop system engineered for high daytime load offset, operational expense reduction, and intelligent real-time energy analytics.",
+    "highlights": [
+      "Commercial High-Yield Monocrystalline PV Array",
+      "Industrial-Grade Multi-MPPT String Inverters",
+      "Peak Daytime Load Shaving & Net-Metering Synchronized",
+      "Cloud SCADA Telemetry & Performance Analytics"
+    ],
+    "tags": [
+      "Commercial",
+      "On-Grid",
+      "Solar PV"
+    ],
+    "satelliteCategory": "None"
+  },
+  {
+    "id": "project-1791313069580",
+    "title": "DR. JONATHAN “BONG” PLAZA, 8.0 kWp HYBRID with 200AH Lithium LIFEPO4 Battery)",
+    "category": "Residential",
+    "location": "Borbajo St., Talamban, Cebu City",
+    "capacity": "8.0 kWp HYBRID with 200AH Lithium LIFEPO4 Battery",
+    "client": "DR. JONATHAN “BONG” PLAZA",
+    "folder": "",
+    "images": "/images/projects/uploads/1791313129957_bong.webp",
+    "systemType": "HYBRID with 200AH Lithium LIFEPO4 Battery",
     "completionDate": "Completed & Fully Operational",
     "annualYield": "",
     "co2Offset": "",
@@ -21,6 +48,30 @@
       "Commercial",
       "Solar PV"
     ]
+  },
+  {
+    "id": "project-1791307990397",
+    "title": "ATENEO de CEBU, (Sacred Heart School) 106kWp ON-GRID & HYBRID SYSTEM",
+    "category": "School",
+    "location": "Mandaue City, Cebu",
+    "capacity": "106kWp",
+    "client": "ATENEO de CEBU, (Sacred Heart School)",
+    "folder": "",
+    "images": "/images/projects/uploads/1791308986788_e8daf55a-3eee-440e-86d7-32be0cea6e53.jpg, /images/projects/uploads/1791308990520_aa791c43-1fc4-470a-8329-7739d305ca44.jpg, /images/projects/uploads/1791308993782_753e00e2-f95e-4e52-a34f-5e3bfd37365b.jpg, /images/projects/uploads/1791308996524_753e00e2-f95e-4e52-a34f-5e3bfd37365b.jpg, /images/projects/uploads/1791308999592_f2e4af84-ba03-4e58-8849-4c35721786eb.jpg, /images/projects/uploads/1791309002190_3d683d6d-2c97-4ad6-8d98-c20e3aea533c.jpg, /images/projects/uploads/1791309004694_b373b3df-68e9-4169-a9d1-b007780af011.jpg, /images/projects/uploads/1791564072728_fcc5e9a4-c228-4890-81fd-1a6f74918360.webp, /images/projects/uploads/1791564072731_image144.webp, /images/projects/uploads/1791564072733_image143.webp, /images/projects/uploads/1791564072735_image142.webp, /images/projects/uploads/1791564072738_image140.webp",
+    "systemType": "ON-GRID & HYBRID SYSTEM",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ],
+    "satelliteCategory": "None"
   },
   {
     "id": "project-1791462659791",
@@ -49,30 +100,28 @@
     ]
   },
   {
-    "id": "project-1791464127737",
-    "title": "HERAMIL HOSPITAL– 30 kWp SOLAR ON-GRID SET-UP",
-    "category": "Hospitals",
-    "location": "Koronadal So. Cotabato",
-    "capacity": "30 kWp",
-    "client": "HERAMIL HOSPITAL",
+    "id": "project-1791312475449",
+    "title": "Gaisano Grand Mall Toledo 780kwp ON-GRID",
+    "category": "Commercial",
+    "location": "Toledo City, Cebu",
+    "capacity": "780kWp",
+    "client": "Gaisano Grand Mall ",
     "folder": "",
-    "images": "/images/projects/uploads/1791464208229_heramil.webp",
-    "systemType": "On-Grid Zeversolar",
+    "images": "/images/projects/uploads/1791312586676_abefb770-b025-466e-aed0-5b3da9e776b4.mp4, /images/projects/uploads/1791312586679_dd7a4a4e-4a2b-4ded-b6ff-dc6ca3152990.jpg, /images/projects/uploads/1791312586681_28d0743e-c1bc-4d0e-865b-82b4fade245a.jpg, /images/projects/uploads/1791312586683_461826f0-726e-4432-affb-66fbb7966991.jpg, /images/projects/uploads/1791312586687_644ee452-6719-41ab-be58-bbf475d1b5ed.jpg, /images/projects/uploads/1791312586690_cda7ee38-fc47-4622-989f-30f9f34528b0.jpg, /images/projects/uploads/1791312586692_4d3239a3-8aa2-430f-87a5-866c32a2e295.jpg, /images/projects/uploads/1791312586694_04152f69-6e9e-49d4-824c-688ac59e995b.jpg, /images/projects/uploads/1791312586696_c90d869e-3ea4-4770-aa55-e4774bc476c4.jpg, /images/projects/uploads/1791312586698_a1c39aba-609e-4f3d-ab67-500ba93cb857.jpg, /images/projects/uploads/1791312586702_566fbb38-7c0d-478d-af78-4469fbd3a9e6.jpg, /images/projects/uploads/1791312586704_6839932c-02e5-46a2-bbd1-346a7f576c1d.jpg, /images/projects/uploads/1791312586705_8aa629c1-e2ae-41e3-b824-f017975d9bdf.jpg, /images/projects/uploads/1791312586707_18ec48d7-f565-419d-9959-7cc601d98903.jpg, /images/projects/uploads/1791563989433_image135.webp, /images/projects/uploads/1791563989435_image136.webp, /images/projects/uploads/1791563989438_image137.webp",
+    "systemType": "On-Grid Commercial Solar System",
     "completionDate": "Completed & Fully Operational",
     "annualYield": "",
     "co2Offset": "",
-    "description": "Commercial-grade 30 kWp turnkey solar rooftop system engineered for high daytime load offset, operational expense reduction, and intelligent real-time energy analytics.",
+    "description": "",
     "highlights": [
-      "Commercial High-Yield Monocrystalline PV Array",
-      "Industrial-Grade Multi-MPPT String Inverters",
-      "Peak Daytime Load Shaving & Net-Metering Synchronized",
-      "Cloud SCADA Telemetry & Performance Analytics"
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
     ],
     "tags": [
       "Commercial",
-      "On-Grid",
       "Solar PV"
-    ]
+    ],
+    "satelliteCategory": "None"
   },
   {
     "id": "super-metro-toledo",
@@ -100,6 +149,55 @@
       "On-Grid",
       "Toledo City",
       "Cebu"
+    ]
+  },
+  {
+    "id": "project-1791311771958",
+    "title": "Sean Agro Bolinawan, CarCar City, Cebu",
+    "category": "Industrial",
+    "location": "Bolinawan, CarCar City, Cebu",
+    "capacity": "505kWp",
+    "client": "Sean Agro",
+    "folder": "",
+    "images": "/images/projects/uploads/1791311915199_6ba66714-2de0-4fd2-8154-6594fb61f684.jpg, /images/projects/uploads/1791311958284_ccd3cfa0-3452-4183-a11a-f63c806ea044.jpg, /images/projects/uploads/1791311964078_fab5f355-7e77-4cda-ac32-27be2d156672.jpg, /images/projects/uploads/1791311967580_705cc34f-e923-4926-bac7-74e624afa226.jpg, /images/projects/uploads/1791311971750_5408c43d-3594-429b-8b70-050eba9234da.jpg, /images/projects/uploads/1791311974980_82410816-c901-4c87-953d-2d8f4408d099.jpg, /images/projects/uploads/1791312311088_e2e21cc7-c724-4791-82d9-efa0c4983ce9.mp4",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Sean Agro (505kwp total) Rooftop using SMA & Glass pv module (made in Germany)",
+    "highlights": [
+      "Tier-1 High-Yield Monocrystalline Modules",
+      "Real-Time SCADA Cloud Telemetry Dashboard"
+    ],
+    "tags": [
+      "Commercial",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791464127737",
+    "title": "HERAMIL HOSPITAL– 30 kWp SOLAR ON-GRID SET-UP",
+    "category": "Hospitals",
+    "location": "Koronadal So. Cotabato",
+    "capacity": "30 kWp",
+    "client": "HERAMIL HOSPITAL",
+    "folder": "",
+    "images": "/images/projects/uploads/1791464208229_heramil.webp",
+    "systemType": "On-Grid Zeversolar",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Commercial-grade 30 kWp turnkey solar rooftop system engineered for high daytime load offset, operational expense reduction, and intelligent real-time energy analytics.",
+    "highlights": [
+      "Commercial High-Yield Monocrystalline PV Array",
+      "Industrial-Grade Multi-MPPT String Inverters",
+      "Peak Daytime Load Shaving & Net-Metering Synchronized",
+      "Cloud SCADA Telemetry & Performance Analytics"
+    ],
+    "tags": [
+      "Commercial",
+      "On-Grid",
+      "Solar PV"
     ]
   },
   {
@@ -131,19 +229,19 @@
     ]
   },
   {
-    "id": "project-1791311771958",
-    "title": "Sean Agro Bolinawan, CarCar City, Cebu",
-    "category": "Industrial",
-    "location": "Bolinawan, CarCar City, Cebu",
-    "capacity": "505kWp",
-    "client": "Sean Agro",
+    "id": "project-1791219286209",
+    "title": "GAISANO CAPITAL – SURIGAO CITY - 713kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "category": "Commercial",
+    "location": "SURIGAO CITY",
+    "capacity": "713kWp",
+    "client": "GAISANO CAPITAL",
     "folder": "",
-    "images": "/images/projects/uploads/1791311915199_6ba66714-2de0-4fd2-8154-6594fb61f684.jpg, /images/projects/uploads/1791311958284_ccd3cfa0-3452-4183-a11a-f63c806ea044.jpg, /images/projects/uploads/1791311964078_fab5f355-7e77-4cda-ac32-27be2d156672.jpg, /images/projects/uploads/1791311967580_705cc34f-e923-4926-bac7-74e624afa226.jpg, /images/projects/uploads/1791311971750_5408c43d-3594-429b-8b70-050eba9234da.jpg, /images/projects/uploads/1791311974980_82410816-c901-4c87-953d-2d8f4408d099.jpg, /images/projects/uploads/1791312311088_e2e21cc7-c724-4791-82d9-efa0c4983ce9.mp4",
-    "systemType": "On-Grid Commercial Solar PV System",
+    "images": "/images/projects/uploads/1791219687475_gc-sur-01.webp, /images/projects/uploads/1791219696690_gc-sur-07.webp, /images/projects/uploads/1791219696694_gc-sur-06.webp, /images/projects/uploads/1791219696696_gc-sur-05.webp, /images/projects/uploads/1791219696697_gc-sur-04.webp, /images/projects/uploads/1791219696699_gc-sur-03.webp, /images/projects/uploads/1791219696700_gc-sur-02.webp",
+    "systemType": "SOLAR ON-GRID SYSTEM SET-UP",
     "completionDate": "Completed & Fully Operational",
     "annualYield": "",
     "co2Offset": "",
-    "description": "Sean Agro (505kwp total) Rooftop using SMA & Glass pv module (made in Germany)",
+    "description": "",
     "highlights": [
       "Tier-1 High-Yield Monocrystalline Modules",
       "Real-Time SCADA Cloud Telemetry Dashboard"
@@ -154,15 +252,41 @@
     ]
   },
   {
-    "id": "project-1791219286209",
-    "title": "GAISANO CAPITAL – SURIGAO CITY - 713kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "id": "project-1791561035048",
+    "title": "SEAN AGRO FLOATING SOLAR PV 125 kWp ON-GRID SYSTEM",
+    "category": "Industrial",
+    "location": "Carcar City, Cebu",
+    "capacity": "125 kWp",
+    "client": "SEAN AGRO FLOATING SOLAR",
+    "folder": "",
+    "images": "/images/projects/uploads/1791561300962_image120.webp, /images/projects/uploads/1791561300960_image121.webp, /images/projects/uploads/1791561300958_image123.webp, /images/projects/uploads/1791561300954_image122.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Commercial-grade 125 kWp turnkey solar rooftop system engineered for high daytime load offset, operational expense reduction, and intelligent real-time energy analytics.",
+    "highlights": [
+      "Commercial High-Yield Monocrystalline PV Array",
+      "Industrial-Grade Multi-MPPT String Inverters",
+      "Peak Daytime Load Shaving & Net-Metering Synchronized",
+      "Cloud SCADA Telemetry & Performance Analytics"
+    ],
+    "tags": [
+      "Commercial",
+      "On-Grid",
+      "Solar PV"
+    ]
+  },
+  {
+    "id": "project-1791220013113",
+    "title": "GAISANO CAPITAL – OZAMIS CITY - 834kWp SOLAR ON-GRID SYSTEM SET-UP",
     "category": "Commercial",
-    "location": "SURIGAO CITY",
-    "capacity": "713kWp",
+    "location": "OZAMIS CITY",
+    "capacity": "834kWp",
     "client": "GAISANO CAPITAL",
     "folder": "",
-    "images": "/images/projects/uploads/1791219687475_gc-sur-01.webp, /images/projects/uploads/1791219696690_gc-sur-07.webp, /images/projects/uploads/1791219696694_gc-sur-06.webp, /images/projects/uploads/1791219696696_gc-sur-05.webp, /images/projects/uploads/1791219696697_gc-sur-04.webp, /images/projects/uploads/1791219696699_gc-sur-03.webp, /images/projects/uploads/1791219696700_gc-sur-02.webp",
-    "systemType": "SOLAR ON-GRID SYSTEM SET-UP",
+    "images": "/images/projects/uploads/1791220134394_Screenshot_6.webp, /images/projects/uploads/1791220137338_Screenshot_5.webp",
+    "systemType": "ON-GRID SYSTEM SET-UP",
     "completionDate": "Completed & Fully Operational",
     "annualYield": "",
     "co2Offset": "",
@@ -202,29 +326,6 @@
       "Floating Solar",
       "242 kWp",
       "Negros Oriental"
-    ]
-  },
-  {
-    "id": "project-1791313069580",
-    "title": "DR. JONATHAN “BONG” PLAZA, 8.0 kWp HYBRID with 200AH Lithium LIFEPO4 Battery)",
-    "category": "Residential",
-    "location": "Borbajo St., Talamban, Cebu City",
-    "capacity": "8.0 kWp HYBRID with 200AH Lithium LIFEPO4 Battery",
-    "client": "DR. JONATHAN “BONG” PLAZA",
-    "folder": "",
-    "images": "/images/projects/uploads/1791313129957_bong.webp",
-    "systemType": "HYBRID with 200AH Lithium LIFEPO4 Battery",
-    "completionDate": "Completed & Fully Operational",
-    "annualYield": "",
-    "co2Offset": "",
-    "description": "",
-    "highlights": [
-      "Tier-1 High-Yield Monocrystalline Modules",
-      "Real-Time SCADA Cloud Telemetry Dashboard"
-    ],
-    "tags": [
-      "Commercial",
-      "Solar PV"
     ]
   },
   {
@@ -320,15 +421,44 @@
     ]
   },
   {
-    "id": "project-1791220013113",
-    "title": "GAISANO CAPITAL – OZAMIS CITY - 834kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "id": "mr-june-lim-monterassas",
+    "title": "Mr. LUCIO “June” LIM, JR (LITE FERRIES OWNER) MONTERASSAS SUBDIVISION – GUADALUPE, CEBU CITY 13kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "category": "Residential",
+    "location": "Monterassas Subdivision, Guadalupe, Cebu City",
+    "capacity": "13 kWp",
+    "client": "Mr. Lucio 'June' Lim, Jr. (Lite Ferries Owner)",
+    "folder": "/images/projects/residential/Mr. LUCIO “June” LIM, JR (LITE FERRIES OWNER) MONTERASSAS SUBDIVISION – GUADALUPE, CEBU CITY 13kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "images": "mont1.webp, mont2.webp",
+    "systemType": "13kWp Residential Solar On-Grid System",
+    "completionDate": "Completed & Operational",
+    "annualYield": "18,800+ kWh / Year",
+    "co2Offset": "13.2 Tons / Year",
+    "description": "High-end 13kWp residential rooftop on-grid solar installation in Monterassas Subdivision, Guadalupe, Cebu City, custom engineered for luxury estate energy autonomy, premium aesthetics, and silent smart inverter management.",
+    "highlights": [
+      "13 kWp High-Efficiency Sleek Black Monocrystalline Setup",
+      "Smart Cloud Smartphone Mobile Telemetry App",
+      "Seamless Net-Metering with Cebu Distribution Utility",
+      "Premium Hidden Conduit & Architectural Roof Integration"
+    ],
+    "tags": [
+      "Residential",
+      "Monterassas",
+      "13 kWp",
+      "Guadalupe",
+      "Cebu City",
+      "Lite Ferries"
+    ]
+  },
+  {
+    "id": "project-1791220289848",
+    "title": "CANGS SHOPPING COMPLEX - 140.4 kW SOLAR ON-GRID SET-UP (PANASONIC HYBRID PV)",
     "category": "Commercial",
-    "location": "OZAMIS CITY",
-    "capacity": "834kWp",
-    "client": "GAISANO CAPITAL",
+    "location": "National Highway, Dumaguete City, 6200 Negros Oriental",
+    "capacity": "140.4 kw",
+    "client": "CANGS SHOPPING COMPLEX",
     "folder": "",
-    "images": "/images/projects/uploads/1791220134394_Screenshot_6.webp, /images/projects/uploads/1791220137338_Screenshot_5.webp",
-    "systemType": "ON-GRID SYSTEM SET-UP",
+    "images": "/images/projects/uploads/1791220541455_image65.webp, /images/projects/uploads/1791220548459_image66.webp, /images/projects/uploads/1791220551285_image62.webp, /images/projects/uploads/1791220562291_image63.webp, /images/projects/uploads/1791220566291_image64.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
     "completionDate": "Completed & Fully Operational",
     "annualYield": "",
     "co2Offset": "",
@@ -369,49 +499,32 @@
     ]
   },
   {
-    "id": "project-1791307990397",
-    "title": "ATENEO de CEBU, (Sacred Heart School) 106kWp ON-GRID & HYBRID SYSTEM",
+    "id": "uclm-campus-ongoing",
+    "title": "UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project",
     "category": "School",
-    "location": "Mandaue City, Cebu",
-    "capacity": "106kWp",
-    "client": "ATENEO de CEBU, (Sacred Heart School)",
-    "folder": "",
-    "images": "/images/projects/uploads/1791308986788_e8daf55a-3eee-440e-86d7-32be0cea6e53.jpg, /images/projects/uploads/1791308990520_aa791c43-1fc4-470a-8329-7739d305ca44.jpg, /images/projects/uploads/1791308993782_753e00e2-f95e-4e52-a34f-5e3bfd37365b.jpg, /images/projects/uploads/1791308996524_753e00e2-f95e-4e52-a34f-5e3bfd37365b.jpg, /images/projects/uploads/1791308999592_f2e4af84-ba03-4e58-8849-4c35721786eb.jpg, /images/projects/uploads/1791309002190_3d683d6d-2c97-4ad6-8d98-c20e3aea533c.jpg, /images/projects/uploads/1791309004694_b373b3df-68e9-4169-a9d1-b007780af011.jpg",
-    "systemType": "ON-GRID & HYBRID SYSTEM",
-    "completionDate": "Completed & Fully Operational",
-    "annualYield": "",
-    "co2Offset": "",
-    "description": "",
+    "location": "Lapu-Lapu & Mandaue City, Cebu",
+    "capacity": "433 kWp",
+    "client": "University of Cebu (UCLM Campus)",
+    "folder": "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project",
+    "images": "uclm-roof.webp, Curved-Building.webp, Maritime-Bldg2-1.webp, Maritime-Inverter-Rack1.webp, Annex-Inverter-Rack-2.webp, MDP-EPM-2.webp, EPM-2.webp, EPM-3.webp, uclm-roof2.webp, uclm-roof3.webp, uclm-roof4.webp, viber_image_2025-10-28_06-46-54-442.webp",
+    "systemType": "433kW On-Grid Campus Solar EPC",
+    "completionDate": "Turnkey Solar Installation Project",
+    "annualYield": "620,000+ kWh / Year",
+    "co2Offset": "435 Tons / Year",
+    "description": "Massive 433kW educational campus rooftop solar energy installation spanning the Curved Building, Maritime Academy, and Academic Annexes, featuring industrial inverter rack setups, main distribution panels (MDP/EPM), and live student research telemetry.",
     "highlights": [
-      "Tier-1 High-Yield Monocrystalline Modules",
-      "Real-Time SCADA Cloud Telemetry Dashboard"
+      "433 kWp Large-Scale Campus-Wide Generation",
+      "Custom Maritime Building & Annex Inverter Racks",
+      "Advanced MDP & EPM Synchronized Power Distribution",
+      "Over 45% Campus Daytime Utility Bill Offset"
     ],
     "tags": [
-      "Commercial",
-      "Solar PV"
-    ]
-  },
-  {
-    "id": "project-1791220289848",
-    "title": "CANGS SHOPPING COMPLEX - 140.4 kW SOLAR ON-GRID SET-UP (PANASONIC HYBRID PV)",
-    "category": "Commercial",
-    "location": "National Highway, Dumaguete City, 6200 Negros Oriental",
-    "capacity": "140.4 kw",
-    "client": "CANGS SHOPPING COMPLEX",
-    "folder": "",
-    "images": "/images/projects/uploads/1791220541455_image65.webp, /images/projects/uploads/1791220548459_image66.webp, /images/projects/uploads/1791220551285_image62.webp, /images/projects/uploads/1791220562291_image63.webp, /images/projects/uploads/1791220566291_image64.webp",
-    "systemType": "On-Grid Commercial Solar PV System",
-    "completionDate": "Completed & Fully Operational",
-    "annualYield": "",
-    "co2Offset": "",
-    "description": "",
-    "highlights": [
-      "Tier-1 High-Yield Monocrystalline Modules",
-      "Real-Time SCADA Cloud Telemetry Dashboard"
-    ],
-    "tags": [
-      "Commercial",
-      "Solar PV"
+      "School",
+      "UCLM",
+      "University of Cebu",
+      "433 kWp",
+      "Mandaue",
+      "Lapu-Lapu"
     ]
   },
   {
@@ -542,33 +655,57 @@
     ]
   },
   {
-    "id": "uclm-campus-ongoing",
-    "title": "UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project",
-    "category": "School",
-    "location": "Lapu-Lapu & Mandaue City, Cebu",
-    "capacity": "433 kWp",
-    "client": "University of Cebu (UCLM Campus)",
-    "folder": "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project",
-    "images": "uclm-roof.webp, Curved-Building.webp, Maritime-Bldg2-1.webp, Maritime-Inverter-Rack1.webp, Annex-Inverter-Rack-2.webp, MDP-EPM-2.webp, EPM-2.webp, EPM-3.webp, uclm-roof2.webp, uclm-roof3.webp, uclm-roof4.webp, viber_image_2025-10-28_06-46-54-442.webp",
-    "systemType": "433kW On-Grid Campus Solar EPC",
-    "completionDate": "Turnkey Solar Installation Project",
-    "annualYield": "620,000+ kWh / Year",
-    "co2Offset": "435 Tons / Year",
-    "description": "Massive 433kW educational campus rooftop solar energy installation spanning the Curved Building, Maritime Academy, and Academic Annexes, featuring industrial inverter rack setups, main distribution panels (MDP/EPM), and live student research telemetry.",
+    "id": "project-1791560458903",
+    "title": "ALTA VISTA CLUBHOUSE – 90 kWP SOLAR ON-GRID SET-UP",
+    "category": "Commercial",
+    "location": "Cebu City",
+    "capacity": "90 kWP",
+    "client": "ALTA VISTA CLUBHOUSE ",
+    "folder": "",
+    "images": "/images/projects/uploads/1791560650623_image116.webp, /images/projects/uploads/1791560650621_image119.webp, /images/projects/uploads/1791560650619_image118.webp, /images/projects/uploads/1791560650617_image117.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Commercial-grade 90 kWP turnkey solar rooftop system engineered for high daytime load offset, operational expense reduction, and intelligent real-time energy analytics.",
     "highlights": [
-      "433 kWp Large-Scale Campus-Wide Generation",
-      "Custom Maritime Building & Annex Inverter Racks",
-      "Advanced MDP & EPM Synchronized Power Distribution",
-      "Over 45% Campus Daytime Utility Bill Offset"
+      "Commercial High-Yield Monocrystalline PV Array",
+      "Industrial-Grade Multi-MPPT String Inverters",
+      "Peak Daytime Load Shaving & Net-Metering Synchronized",
+      "Cloud SCADA Telemetry & Performance Analytics"
     ],
     "tags": [
-      "School",
-      "UCLM",
-      "University of Cebu",
-      "433 kWp",
-      "Mandaue",
-      "Lapu-Lapu"
+      "Commercial",
+      "On-Grid",
+      "Solar PV"
     ]
+  },
+  {
+    "id": "project-1791561363392",
+    "title": "Philippines Science High School Southern Mindanao Campus Foundation – Davao",
+    "category": "School",
+    "location": "Davao City",
+    "capacity": "Custom kWp",
+    "client": "Philippines Science High School Southern Mindanao Campus Foundation",
+    "folder": "",
+    "images": "/images/projects/uploads/1791561485068_2d4fb743-0ead-4d4c-9dec-e3f1e485ebd4.webp, /images/projects/uploads/1791561485071_29d023a8-25dd-485e-9c5f-02638b15ce00.webp, /images/projects/uploads/1791561485073_85c7cc57-e031-4043-bc67-6b93dc2fb9ad.webp, /images/projects/uploads/1791561485074_2e90a01d-5a50-4703-886d-e43b55d1940d-1.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Commercial-grade turnkey solar rooftop system engineered for high daytime load offset, operational expense reduction, and intelligent real-time energy analytics.",
+    "highlights": [
+      "Commercial High-Yield Monocrystalline PV Array",
+      "Industrial-Grade Multi-MPPT String Inverters",
+      "Peak Daytime Load Shaving & Net-Metering Synchronized",
+      "Cloud SCADA Telemetry & Performance Analytics"
+    ],
+    "tags": [
+      "Commercial",
+      "On-Grid",
+      "Solar PV"
+    ],
+    "satelliteCategory": "Davao Satellite Projects"
   },
   {
     "id": "project-1791465130745",
@@ -597,32 +734,30 @@
     ]
   },
   {
-    "id": "mr-june-lim-monterassas",
-    "title": "Mr. LUCIO “June” LIM, JR (LITE FERRIES OWNER) MONTERASSAS SUBDIVISION – GUADALUPE, CEBU CITY 13kWp SOLAR ON-GRID SYSTEM SET-UP",
+    "id": "project-1791562638255",
+    "title": "Alcordo Residence – Deca Homes Talomo Davao City",
     "category": "Residential",
-    "location": "Monterassas Subdivision, Guadalupe, Cebu City",
-    "capacity": "13 kWp",
-    "client": "Mr. Lucio 'June' Lim, Jr. (Lite Ferries Owner)",
-    "folder": "/images/projects/residential/Mr. LUCIO “June” LIM, JR (LITE FERRIES OWNER) MONTERASSAS SUBDIVISION – GUADALUPE, CEBU CITY 13kWp SOLAR ON-GRID SYSTEM SET-UP",
-    "images": "mont1.webp, mont2.webp",
-    "systemType": "13kWp Residential Solar On-Grid System",
-    "completionDate": "Completed & Operational",
-    "annualYield": "18,800+ kWh / Year",
-    "co2Offset": "13.2 Tons / Year",
-    "description": "High-end 13kWp residential rooftop on-grid solar installation in Monterassas Subdivision, Guadalupe, Cebu City, custom engineered for luxury estate energy autonomy, premium aesthetics, and silent smart inverter management.",
+    "location": "Davao City",
+    "capacity": "Custom kWp",
+    "client": "Alcordo Residence",
+    "folder": "",
+    "images": "/images/projects/uploads/1791562910915_06bb38cc-8bdb-4b11-bb8f-f124a29d29cf.webp, /images/projects/uploads/1791562910911_b38dad04-222b-472f-9600-24acd1156c59.webp, /images/projects/uploads/1791562910908_22afe0a2-4663-419f-a720-3d486eb03a6c.webp, /images/projects/uploads/1791562910904_dc96aef7-dc9d-4724-8b3f-b4460b8c2ca4.webp, /images/projects/uploads/1791562910899_14534d1d-f2d2-4e16-bb75-125d0733b15e.webp, /images/projects/uploads/1791562910897_2ae2b990-bb33-4766-9b61-9b23c436c2c3.webp, /images/projects/uploads/1791562910894_86a63a61-ee56-45bb-a4e4-96c6ec187ba7.webp",
+    "systemType": "On-Grid Commercial Solar PV System",
+    "completionDate": "Completed & Fully Operational",
+    "annualYield": "",
+    "co2Offset": "",
+    "description": "Commercial-grade turnkey solar rooftop system engineered for high daytime load offset, operational expense reduction, and intelligent real-time energy analytics.",
     "highlights": [
-      "13 kWp High-Efficiency Sleek Black Monocrystalline Setup",
-      "Smart Cloud Smartphone Mobile Telemetry App",
-      "Seamless Net-Metering with Cebu Distribution Utility",
-      "Premium Hidden Conduit & Architectural Roof Integration"
+      "Commercial High-Yield Monocrystalline PV Array",
+      "Industrial-Grade Multi-MPPT String Inverters",
+      "Peak Daytime Load Shaving & Net-Metering Synchronized",
+      "Cloud SCADA Telemetry & Performance Analytics"
     ],
     "tags": [
-      "Residential",
-      "Monterassas",
-      "13 kWp",
-      "Guadalupe",
-      "Cebu City",
-      "Lite Ferries"
-    ]
+      "Commercial",
+      "On-Grid",
+      "Solar PV"
+    ],
+    "satelliteCategory": "Davao Satellite Projects"
   }
 ]

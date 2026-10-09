@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeading from './SectionHeading';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { 
   MapPin, 
   Zap, 
@@ -27,7 +28,7 @@ import {
   Hospital
 } from 'lucide-react';
 
-import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectCategory, ProjectRawInput, isVideoUrl } from '@/data/projectsData';
+import { projects as initialProjects, parseRawProjects, ProjectItem, ProjectCategory, ProjectRawInput, isVideoUrl, isDavaoProject } from '@/data/projectsData';
 export type { ProjectItem, ProjectCategory };
 
 const categoryTabs: { label: ProjectCategory; icon: React.ReactNode }[] = [
@@ -37,6 +38,7 @@ const categoryTabs: { label: ProjectCategory; icon: React.ReactNode }[] = [
   { label: 'School', icon: <GraduationCap className="w-4 h-4" /> },
   { label: 'Industrial', icon: <Factory className="w-4 h-4" /> },
   { label: 'Hospitals', icon: <Hospital className="w-4 h-4" /> },
+  { label: 'Davao Satellite Projects', icon: <MapPin className="w-4 h-4" /> },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -551,18 +553,75 @@ function ProjectModal({
   );
 }
 
+function parseCategoryParam(param: string | null): ProjectCategory | null {
+  if (!param) return null;
+  const normalized = param.trim().toLowerCase();
+  if (normalized === 'all') return 'All';
+  if (normalized.includes('davao') || normalized.includes('satellite')) return 'Davao Satellite Projects';
+  if (normalized.startsWith('residen')) return 'Residential';
+  if (normalized.startsWith('commerc')) return 'Commercial';
+  if (normalized.startsWith('industr')) return 'Industrial';
+  if (
+    normalized.startsWith('school') ||
+    normalized.includes('campus') ||
+    normalized.includes('universit') ||
+    normalized.startsWith('acad')
+  ) {
+    return 'School';
+  }
+  if (normalized.startsWith('hospit')) return 'Hospitals';
+  return null;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Main ProjectsSection Component                                             */
 /* -------------------------------------------------------------------------- */
 export default function ProjectsSection() {
+  const searchParams = useSearchParams();
+  const categoryQuery = searchParams.get('category');
+
   const [projectList, setProjectList] = useState<ProjectItem[]>(initialProjects);
-  const [activeTab, setActiveTab] = useState<ProjectCategory>('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<ProjectCategory>(() => {
+    return parseCategoryParam(categoryQuery) || 'All';
+  });
   const [modalState, setModalState] = useState<{ isOpen: boolean; project: ProjectItem | null; index: number }>({
     isOpen: false,
     project: null,
     index: 0,
   });
+
+  // Sync activeTab when category search param changes in URL
+  useEffect(() => {
+    const matchedCategory = parseCategoryParam(categoryQuery);
+    if (matchedCategory) {
+      setActiveTab(matchedCategory);
+
+      // Smooth scroll to projects section if navigating directly to a category
+      const section = document.getElementById('projects');
+      if (section) {
+        const timer = setTimeout(() => {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [categoryQuery]);
+
+  // Tab switch handler that keeps activeTab and URL query in sync
+  const handleTabChange = (newTab: ProjectCategory) => {
+    setActiveTab(newTab);
+    try {
+      const url = new URL(window.location.href);
+      if (newTab === 'All') {
+        url.searchParams.delete('category');
+      } else {
+        url.searchParams.set('category', newTab);
+      }
+      window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+    } catch {
+      // In case window or URL isn't available
+    }
+  };
 
   // Sync latest projects from API route if available
   useEffect(() => {
@@ -596,15 +655,11 @@ export default function ProjectsSection() {
   };
 
   const filteredProjects = projectList.filter((project) => {
-    const matchesCategory = activeTab === 'All' ? true : project.category === activeTab;
-    const matchesSearch =
-      searchQuery.trim() === '' ||
-      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.systemType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
+    if (activeTab === 'All') return true;
+    if (activeTab === 'Davao Satellite Projects') {
+      return isDavaoProject(project);
+    }
+    return project.category === activeTab;
   });
 
   return (
@@ -621,17 +676,22 @@ export default function ProjectsSection() {
           subtitle="Explore our certified turnkey installations across Residential rooftops, Commercial centers, Schools & Universities, Industrial facilities, and Hospitals in the Philippines."
         />
 
-        {/* Category Tabs & Search Bar Row */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-2">
+        {/* Category Tabs Row (Search bar removed) */}
+        <div className="flex items-center justify-center pt-2">
           {/* Category Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200">
+          <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200 shadow-xs">
             {categoryTabs.map((tab) => {
               const isActive = activeTab === tab.label;
-              const count = tab.label === 'All' ? projectList.length : projectList.filter((p) => p.category === tab.label).length;
+              const count =
+                tab.label === 'All'
+                  ? projectList.length
+                  : tab.label === 'Davao Satellite Projects'
+                  ? projectList.filter((p) => isDavaoProject(p)).length
+                  : projectList.filter((p) => p.category === tab.label).length;
               return (
                 <button
                   key={tab.label}
-                  onClick={() => setActiveTab(tab.label)}
+                  onClick={() => handleTabChange(tab.label)}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                     isActive
                       ? 'bg-[#091833] text-white shadow-md'
@@ -651,18 +711,6 @@ export default function ProjectsSection() {
               );
             })}
           </div>
-
-          {/* Quick Search */}
-          <div className="relative w-full md:w-72">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search by city, client, tag..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#e51a24] focus:bg-white text-xs text-slate-800 outline-none transition-all"
-            />
-          </div>
         </div>
 
         {/* Projects Cards Grid */}
@@ -670,15 +718,12 @@ export default function ProjectsSection() {
           <div className="text-center py-16 bg-slate-50 rounded-3xl border border-slate-200 space-y-3">
             <Sparkles className="w-8 h-8 text-slate-400 mx-auto" />
             <h4 className="text-lg font-bold text-slate-700">No projects found</h4>
-            <p className="text-xs text-slate-500">Try adjusting your category filter or search terms.</p>
+            <p className="text-xs text-slate-500">No installations found under this category yet.</p>
             <button
-              onClick={() => {
-                setActiveTab('All');
-                setSearchQuery('');
-              }}
-              className="px-4 py-2 rounded-xl bg-[#091833] text-white text-xs font-bold"
+              onClick={() => setActiveTab('All')}
+              className="px-4 py-2 rounded-xl bg-[#091833] text-white text-xs font-bold hover:bg-[#0b7337] transition-colors cursor-pointer"
             >
-              Reset Filters
+              View All Projects
             </button>
           </div>
         ) : (

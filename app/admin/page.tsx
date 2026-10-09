@@ -63,6 +63,7 @@ interface ProjectRecord {
   id: string;
   title: string;
   category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
+  satelliteCategory?: string;
   location: string;
   capacity: string;
   client: string;
@@ -231,6 +232,7 @@ function AdminDashboardContent() {
     id: '',
     title: '',
     category: 'Commercial',
+    satelliteCategory: 'None',
     location: '',
     capacity: '',
     client: '',
@@ -433,6 +435,7 @@ function AdminDashboardContent() {
     setModalMode('create');
     setFormData({
       ...initialProjectFormState,
+      satelliteCategory: 'None',
       id: `project-${Date.now()}`,
     });
     setActiveTabInModal('general');
@@ -443,6 +446,9 @@ function AdminDashboardContent() {
     setModalMode('edit');
     setFormData({
       ...project,
+      satelliteCategory:
+        project.satelliteCategory ||
+        (project.tags?.some((t) => t.toLowerCase().includes('davao satellite')) ? 'Davao Satellite Projects' : 'None'),
       highlights: project.highlights || [],
       tags: project.tags || [],
     });
@@ -454,6 +460,7 @@ function AdminDashboardContent() {
     setModalMode('create');
     setFormData({
       ...project,
+      satelliteCategory: project.satelliteCategory || 'None',
       id: `${project.id}-copy-${Date.now()}`,
       title: `${project.title} (Copy)`,
       highlights: project.highlights || [],
@@ -1241,7 +1248,13 @@ function AdminDashboardContent() {
   /* -------------------------------------------------------------------------- */
   const filteredProjects = useMemo(() => {
     return projects.filter((p) => {
-      const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+      const matchesCategory =
+        selectedCategory === 'All' ||
+        (selectedCategory === 'Davao Satellite Projects'
+          ? p.satelliteCategory === 'Davao Satellite Projects' ||
+            (p.category as string) === 'Davao Satellite Projects' ||
+            p.tags?.some((t) => t.toLowerCase().includes('davao satellite'))
+          : p.category === selectedCategory);
       const q = searchQuery.toLowerCase();
       const matchesSearch =
         q === '' ||
@@ -1249,7 +1262,8 @@ function AdminDashboardContent() {
         p.client.toLowerCase().includes(q) ||
         p.location.toLowerCase().includes(q) ||
         p.capacity.toLowerCase().includes(q) ||
-        p.systemType.toLowerCase().includes(q);
+        p.systemType.toLowerCase().includes(q) ||
+        (p.satelliteCategory && p.satelliteCategory.toLowerCase().includes(q));
       return matchesCategory && matchesSearch;
     });
   }, [projects, selectedCategory, searchQuery]);
@@ -2001,7 +2015,7 @@ function AdminDashboardContent() {
             <div className="p-4 rounded-2xl bg-[#091833] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
               {/* Category Pills */}
               <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
-                {['All', 'Commercial', 'School', 'Industrial', 'Residential', 'Hospitals'].map((cat) => (
+                {['All', 'Commercial', 'School', 'Industrial', 'Residential', 'Hospitals', 'Davao Satellite Projects'].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
@@ -2195,6 +2209,11 @@ function AdminDashboardContent() {
                                 >
                                   {p.category}
                                 </span>
+                                {p.satelliteCategory === 'Davao Satellite Projects' && (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ffc000]/20 text-[#ffc000] border border-[#ffc000]/30 ml-1.5">
+                                    Davao
+                                  </span>
+                                )}
                               </td>
                               <td className="py-3 px-4 whitespace-nowrap">
                                 <div className="flex items-center gap-1 font-extrabold text-[#ffc000]">
@@ -2320,6 +2339,11 @@ function AdminDashboardContent() {
                             <span className="px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-black border border-white/10">
                               {p.category}
                             </span>
+                            {p.satelliteCategory === 'Davao Satellite Projects' && (
+                              <span className="px-2 py-0.5 rounded-full bg-[#ffc000]/30 backdrop-blur-md text-[#ffc000] text-[9px] font-black border border-[#ffc000]/40">
+                                Davao
+                              </span>
+                            )}
                             <div className="px-2.5 py-1 rounded-full bg-[#e51a24] text-white text-[10px] font-black flex items-center gap-1 shadow-md">
                               <Zap className="w-3 h-3 fill-current text-[#ffc000]" />
                               <span>{p.capacity}</span>
@@ -3296,6 +3320,30 @@ function AdminDashboardContent() {
 
                     <div>
                       <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Satellite Branch Category
+                      </label>
+                      <select
+                        value={formData.satelliteCategory || 'None'}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            satelliteCategory: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 rounded-xl bg-[#091833] border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors cursor-pointer"
+                      >
+                        <option value="None">None (Default)</option>
+                        <option value="Davao Satellite Projects">Davao Satellite Projects</option>
+                      </select>
+                      <div className="mt-1 text-[11px] text-slate-400">
+                        Default &quot;None&quot;. Set to &quot;Davao Satellite Projects&quot; for satellite branch installations.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                         Client / Organization Name
                       </label>
                       <input
@@ -3306,9 +3354,7 @@ function AdminDashboardContent() {
                         className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors"
                       />
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                         Location / City
@@ -3321,19 +3367,19 @@ function AdminDashboardContent() {
                         className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors"
                       />
                     </div>
+                  </div>
 
-                    <div>
-                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                        Unique Slug ID (Auto-generated if empty)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. super-metro-toledo"
-                        value={formData.id}
-                        onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors font-mono text-xs"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                      Unique Slug ID (Auto-generated if empty)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. super-metro-toledo"
+                      value={formData.id}
+                      onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors font-mono text-xs"
+                    />
                   </div>
                 </div>
               )}

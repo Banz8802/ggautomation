@@ -1,11 +1,12 @@
 import rawProjectsData from './projects.json';
 
-export type ProjectCategory = 'All' | 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
+export type ProjectCategory = 'All' | 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals' | 'Davao Satellite Projects';
 
 export interface ProjectRawInput {
   id: string;
   title: string;
-  category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
+  category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals' | 'Davao Satellite Projects';
+  satelliteCategory?: string;
   location?: string;
   capacity?: string;
   client?: string;
@@ -23,7 +24,8 @@ export interface ProjectRawInput {
 export interface ProjectItem {
   id: string;
   title: string;
-  category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals';
+  category: 'Residential' | 'Commercial' | 'School' | 'Industrial' | 'Hospitals' | 'Davao Satellite Projects';
+  satelliteCategory?: string;
   location: string;
   capacity: string;
   client: string;
@@ -36,6 +38,19 @@ export interface ProjectItem {
   description: string;
   highlights: string[];
   tags: string[];
+}
+
+export function isDavaoProject(project: {
+  satelliteCategory?: string;
+  category?: string;
+  tags?: string[];
+  location?: string;
+  title?: string;
+}): boolean {
+  if (project.satelliteCategory === 'Davao Satellite Projects') return true;
+  if (project.category === 'Davao Satellite Projects') return true;
+  if (project.tags?.some((t) => t.toLowerCase().includes('davao satellite'))) return true;
+  return false;
 }
 
 /**
@@ -307,6 +322,9 @@ export function parseRawProjects(rawList: ProjectRawInput[]): ProjectItem[] {
       id: raw.id,
       title: raw.title,
       category: raw.category,
+      satelliteCategory:
+        raw.satelliteCategory ||
+        (raw.tags?.some((t) => t.toLowerCase().includes('davao satellite')) ? 'Davao Satellite Projects' : 'None'),
       location: raw.location || 'Philippines',
       capacity: finalCapacity,
       client: finalClient,

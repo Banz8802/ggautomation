@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import ProjectsSection from '@/components/ProjectsSection';
-import { ChevronRight, Award, ShieldCheck, Zap, Sparkles, Building2, Factory, Home, GraduationCap, Hospital } from 'lucide-react';
+import ProjectsSection, { ProjectCategory } from '@/components/ProjectsSection';
+import { ChevronRight, Award, ShieldCheck, Zap, Sparkles, Building2, Factory, Home, GraduationCap, Hospital, MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Solar & Engineering Projects Portfolio | GG Automation Construction Services',
@@ -10,12 +10,13 @@ export const metadata: Metadata = {
     'Explore GG Automation Construction Services portfolio of turnkey solar PV and electrical engineering projects across Residential, Commercial, School, Industrial, and Hospital categories in the Philippines.',
 };
 
-const categoryBadges = [
-  { icon: <Home className="w-3.5 h-3.5 text-[#0b7337]" />, label: 'Residential' },
-  { icon: <Building2 className="w-3.5 h-3.5 text-[#e51a24]" />, label: 'Commercial' },
-  { icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, label: 'Schools & Universities' },
-  { icon: <Factory className="w-3.5 h-3.5 text-[#ffc000]" />, label: 'Industrial & Floating PV' },
-  { icon: <Hospital className="w-3.5 h-3.5 text-rose-400" />, label: 'Hospitals & Healthcare' },
+const categoryBadges: { icon: React.ReactNode; label: string; category: ProjectCategory }[] = [
+  { icon: <Home className="w-3.5 h-3.5 text-[#0b7337]" />, label: 'Residential', category: 'Residential' },
+  { icon: <Building2 className="w-3.5 h-3.5 text-[#e51a24]" />, label: 'Commercial', category: 'Commercial' },
+  { icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, label: 'Schools & Universities', category: 'School' },
+  { icon: <Factory className="w-3.5 h-3.5 text-[#ffc000]" />, label: 'Industrial & Floating PV', category: 'Industrial' },
+  { icon: <Hospital className="w-3.5 h-3.5 text-rose-400" />, label: 'Hospitals & Healthcare', category: 'Hospitals' },
+  { icon: <MapPin className="w-3.5 h-3.5 text-amber-400" />, label: 'Davao Satellite Projects', category: 'Davao Satellite Projects' },
 ];
 
 export default function ProjectsPage() {
@@ -49,20 +50,30 @@ export default function ProjectsPage() {
           {/* Quick Category Badges */}
           <div className="pt-3 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-300">
             {categoryBadges.map((badge, idx) => (
-              <div
+              <Link
                 key={idx}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-200"
+                href={`/projects?category=${badge.category}#projects`}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/25 text-slate-200 transition-all cursor-pointer"
               >
                 {badge.icon}
                 <span>{badge.label}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
       {/* Main Filterable Projects Section */}
-      <ProjectsSection />
+      <Suspense
+        fallback={
+          <div className="py-24 text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#0b7337] border-r-transparent"></div>
+            <p className="mt-2 text-sm text-slate-500 font-semibold">Loading projects...</p>
+          </div>
+        }
+      >
+        <ProjectsSection />
+      </Suspense>
     </div>
   );
 }

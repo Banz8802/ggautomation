@@ -170,7 +170,9 @@
     "customImages": [
       "/images/projects/uploads/1791308986788_e8daf55a-3eee-440e-86d7-32be0cea6e53.jpg",
       "/images/projects/uploads/1791308990520_aa791c43-1fc4-470a-8329-7739d305ca44.jpg",
-      "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project/uclm-roof.webp"
+      "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project/uclm-roof.webp",
+      "/images/projects/uploads/1791561485068_2d4fb743-0ead-4d4c-9dec-e3f1e485ebd4.webp",
+      "/images/projects/uploads/1791561485071_29d023a8-25dd-485e-9c5f-02638b15ce00.webp"
     ],
     "defaultImage": "/images/uclm-roof2.webp",
     "enabled": true,
@@ -192,6 +194,16 @@
         "photoCount": 1,
         "selectedImages": [
           "/images/projects/schools/UCLM University of Cebu Lapu-Lapu & Mandaue Campus - On-going UCLM 433kw ON-GRID project/uclm-roof.webp"
+        ],
+        "enabled": true
+      },
+      {
+        "projectId": "project-1791561363392",
+        "projectTitle": "Philippines Science High School Southern Mindanao Campus Foundation – Davao",
+        "photoCount": 2,
+        "selectedImages": [
+          "/images/projects/uploads/1791561485068_2d4fb743-0ead-4d4c-9dec-e3f1e485ebd4.webp",
+          "/images/projects/uploads/1791561485071_29d023a8-25dd-485e-9c5f-02638b15ce00.webp"
         ],
         "enabled": true
       }
