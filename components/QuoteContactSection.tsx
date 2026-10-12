@@ -357,7 +357,8 @@ export default function QuoteContactSection({ showLocations = true }: QuoteConta
                   T1-1614 Casa Mira Condominium, Salvador St., Labangon, Cebu City
                 </p>
                 <div className="pt-2 text-xs font-semibold text-[#091833] space-y-1">
-                  <p>Phone: <a href="tel:+639222401919" className="text-[#e51a24] hover:underline">(0922) 240-1919</a></p>
+                  <p>Technical: <a href="tel:+639222401919" className="text-[#e51a24] hover:underline">+63 922-240-1919</a></p>
+                  <p>Sales &amp; Marketing: <a href="tel:+639681761919" className="text-[#e51a24] hover:underline">+63 968-176-1919</a></p>
                   <p>Email: <a href="mailto:info@ggautomation.tech" className="hover:text-[#e51a24]">info@ggautomation.tech</a></p>
                 </div>
               </div>

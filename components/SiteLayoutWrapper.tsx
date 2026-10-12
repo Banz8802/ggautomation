@@ -6,6 +6,7 @@ import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
+import ScrollToTop from '@/components/ScrollToTop';
 
 export default function SiteLayoutWrapper({
   children,
@@ -30,6 +31,7 @@ export default function SiteLayoutWrapper({
       <main className="flex-grow">{children}</main>
       <Footer />
       <ChatBot />
+      <ScrollToTop />
     </>
   );
 }

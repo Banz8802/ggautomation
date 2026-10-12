@@ -17,7 +17,30 @@ import {
   Check
 } from 'lucide-react';
 
-const locations = [
+interface PhoneContact {
+  label?: string;
+  number: string;
+  link: string;
+}
+
+interface LocationItem {
+  id: string;
+  name: string;
+  badge: string;
+  address: string;
+  city: string;
+  coverage: string;
+  phone: string;
+  phoneLink: string;
+  phones: PhoneContact[];
+  email: string;
+  hours: string;
+  mapSrc: string;
+  mapLink: string;
+  theme: string;
+}
+
+const locations: LocationItem[] = [
   {
     id: 'cebu',
     name: 'Cebu Head Office',
@@ -25,8 +48,12 @@ const locations = [
     address: 'T1-1614 Casa Mira Condominium, Salvador St., Labangon, Cebu City',
     city: 'Labangon, Cebu City',
     coverage: 'Central Visayas, Leyte, Samar & Nationwide Solar EPC',
-    phone: '(0922) 240-1919',
+    phone: 'Technical: +63 922-240-1919',
     phoneLink: 'tel:+639222401919',
+    phones: [
+      { label: 'Technical', number: '+63 922-240-1919', link: 'tel:+639222401919' },
+      { label: 'Sales & Marketing', number: '+63 968-176-1919', link: 'tel:+639681761919' },
+    ],
     email: 'info@ggautomation.tech',
     hours: 'Mon – Sat: 8:00 AM – 5:00 PM',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.4746271966035!2d123.8778!3d10.3015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a9994c65db9dc7%3A0xb36f7344e1e82ef4!2sCasa%20Mira%20Labangon!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph',
@@ -42,6 +69,9 @@ const locations = [
     coverage: 'Bohol Province, Panglao Resorts & Island Micro-grids',
     phone: '(0968) 388-2510',
     phoneLink: 'tel:+639683882510',
+    phones: [
+      { number: '(0968) 388-2510', link: 'tel:+639683882510' },
+    ],
     email: 'info@ggautomation.tech',
     hours: 'Mon – Sat: 8:30 AM – 5:00 PM',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.567!2d123.856!3d9.672!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33aa4c7b88!2sUbujan%2C%20Tagbilaran%20City%2C%20Bohol!5e0!3m2!1sen!2sph!4v1700000000001!5m2!1sen!2sph',
@@ -57,6 +87,9 @@ const locations = [
     coverage: 'Davao Region, General Santos & Mindanao Commercial EPC',
     phone: '(082) 224-2785',
     phoneLink: 'tel:+63822242785',
+    phones: [
+      { number: '(082) 224-2785', link: 'tel:+63822242785' },
+    ],
     email: 'sales@ggautomation.tech',
     hours: 'Mon – Sat: 8:00 AM – 5:00 PM',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.397!2d125.617!3d7.078!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f96d7b!2sBarangay%2027-C%2C%20Davao%20City!5e0!3m2!1sen!2sph!4v1700000000002!5m2!1sen!2sph',
@@ -221,13 +254,16 @@ export default function VicinityContactSection() {
                 <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
                   <div className="flex items-center gap-2 text-xs font-bold text-[#091833]">
                     <Phone className="w-4 h-4 text-[#e51a24]" />
-                    <span>Direct Hotline</span>
+                    <span>Contact Numbers</span>
                   </div>
-                  <p className="text-xs font-semibold text-slate-800">
-                    <a href={selectedLocation.phoneLink} className="hover:text-[#e51a24] block">
-                      {selectedLocation.phone}
-                    </a>
-                  </p>
+                  <div className="text-xs font-semibold text-slate-800 space-y-1">
+                    {selectedLocation.phones.map((p, idx) => (
+                      <a key={idx} href={p.link} className="hover:text-[#e51a24] block leading-snug">
+                        {p.label && <span className="text-slate-500 font-medium">{p.label}: </span>}
+                        <span>{p.number}</span>
+                      </a>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
@@ -253,18 +289,27 @@ export default function VicinityContactSection() {
                   <div
                     key={loc.id}
                     onClick={() => setSelectedLocation(loc)}
-                    className={`cursor-pointer p-3.5 rounded-2xl border transition-all ${
+                    className={`cursor-pointer p-3.5 rounded-2xl border transition-all flex flex-col justify-between ${
                       isActive
                         ? 'bg-white border-[#091833] ring-2 ring-[#091833]/20 shadow-md'
                         : 'bg-white/80 border-slate-200 hover:border-slate-300 shadow-xs'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className="text-xs font-black text-[#091833]">{loc.name.split(' ')[0]}</span>
-                      {isActive && <Check className="w-3.5 h-3.5 text-[#0b7337] stroke-[3]" />}
+                    <div>
+                      <div className="flex items-center justify-between gap-1 mb-1">
+                        <span className="text-xs font-black text-[#091833]">{loc.name.split(' ')[0]}</span>
+                        {isActive && <Check className="w-3.5 h-3.5 text-[#0b7337] stroke-[3]" />}
+                      </div>
+                      <p className="text-[11px] text-slate-500 line-clamp-1">{loc.city}</p>
                     </div>
-                    <p className="text-[11px] text-slate-500 line-clamp-1">{loc.city}</p>
-                    <p className="text-[10px] font-semibold text-slate-700 mt-1">{loc.phone.split('/')[0]}</p>
+                    <div className="mt-2 space-y-0.5 text-[10px] font-semibold text-slate-700">
+                      {loc.phones.map((p, idx) => (
+                        <div key={idx} className="truncate">
+                          {p.label && <span className="text-slate-500 font-normal">{p.label}: </span>}
+                          <span>{p.number}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 );
               })}

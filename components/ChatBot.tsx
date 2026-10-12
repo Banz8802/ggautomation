@@ -176,15 +176,15 @@ export default function ChatBot() {
         replyText = '👨‍💼 **Connect with our Live Engineering Team**:\n\n' +
           'Our PRC-licensed engineers and technical consultants are ready to assist you right now!\n\n' +
           '• **Facebook Messenger**: Chat live with our engineering desk.\n' +
-          '• **Cebu Office Hotline**: (0922) 240-1919\n' +
-          '• **Bohol Office Hotline**: (0968) 388-2510\n' +
-          '• **Davao Satellite**: (082) 224-2785\n' +
+          '• **Technical**: +63922-240-1919\n' +
+          '• **Sales & Marketing**: +63968-176-1919\n' +
           '• **Official Email**: info@ggautomation.tech\n\n' +
-          'Click the button below to start a live chat on Facebook Messenger:';
+          'Click the buttons below to call or chat live on Facebook Messenger:';
         
         quickActions = [
           { label: '💬 Chat on Facebook Messenger', action: 'fb', href: FB_MESSENGER_URL, isExternal: true },
-          { label: '📞 Call Cebu: (0922) 240-1919', action: 'tel', href: 'tel:+639222401919' },
+          { label: '📞 Technical: +63922-240-1919', action: 'tel', href: 'tel:+639222401919' },
+          { label: '📞 Sales & Marketing: +63968-176-1919', action: 'tel', href: 'tel:+639681761919' },
           { label: '📅 Book Free Site Survey', action: 'go_contact', href: '/contact' },
         ];
       } else if (lower.includes('calc') || lower.includes('estimate') || lower.includes('saving') || lower.includes('roi') || lower.includes('how much')) {
@@ -248,18 +248,19 @@ export default function ChatBot() {
         ];
       } else if (lower.includes('contact') || lower.includes('address') || lower.includes('location') || lower.includes('phone') || lower.includes('office') || lower.includes('branch')) {
         replyText = '📍 **GG Automation Offices & Contact Details**:\n\n' +
-          '• **Cebu EPC Company (Head Office)**:\n  T1-1614 Casa Mira Condominium, Salvador St., Labangon, Cebu City\n  📞 Phone: (0922) 240-1919\n\n' +
-          '• **Bohol Showroom**:\n  Salazar St., Ubujan, Tagbilaran City, Bohol (20m Before Nissan Car Display)\n  📞 Phone: (0968) 388-2510\n\n' +
-          '• **Davao City Satellite Office**:\n  V. Guzman St. corner 5th Avenue (Back of Cyber Tech Trading Corp) Barangay 27-C, Davao City\n  📞 Phone: (082) 224-2785\n\n' +
+          '• **Technical**: +63922-240-1919\n' +
+          '• **Sales & Marketing**: +63968-176-1919\n\n' +
+          '• **Cebu Head Office**:\n  T1-1614 Casa Mira Condominium, Salvador St., Labangon, Cebu City\n\n' +
+          '• **Bohol Showroom**:\n  Salazar St., Ubujan, Tagbilaran City, Bohol (20m Before Nissan Car Display)\n\n' +
+          '• **Davao Satellite Office**:\n  V. Guzman St. corner 5th Avenue, Davao City\n\n' +
           '💬 **Facebook Messenger**: facebook.com/messages/t/GGAutomation.1\n' +
           '✉️ **Email**: info@ggautomation.tech';
         
         quickActions = [
           { label: '💬 Chat on Facebook Messenger', action: 'fb', href: FB_MESSENGER_URL, isExternal: true },
+          { label: '📞 Technical: +63922-240-1919', action: 'tel', href: 'tel:+639222401919' },
+          { label: '📞 Sales & Marketing: +63968-176-1919', action: 'tel', href: 'tel:+639681761919' },
           { label: 'Open Contact & Map Page', action: 'go_contact', href: '/contact' },
-          { label: 'Call Cebu (0922) 240-1919', action: 'tel', href: 'tel:+639222401919' },
-          { label: 'Call Bohol (0968) 388-2510', action: 'tel', href: 'tel:+639683882510' },
-          { label: 'Call Davao (082) 224-2785', action: 'tel', href: 'tel:+63822242785' },
         ];
       } else {
         replyText = 'Thank you for your message! Our PRC-licensed solar engineers are ready to assist you with customized site inspections, electrical audits, and turnkey EPC proposals.\n\nWould you like to chat with a live engineer on Messenger, book a free site survey, calculate your solar ROI, or view our completed projects?';
@@ -475,7 +476,7 @@ export default function ChatBot() {
           className={`fixed right-4 sm:right-6 z-50 transition-all duration-300 flex flex-col bg-[#091833] border border-white/15 rounded-3xl shadow-2xl overflow-hidden backdrop-blur-2xl ${
             isMinimized 
               ? 'bottom-20 sm:bottom-24 w-[320px] sm:w-[360px] h-16' 
-              : 'bottom-20 sm:bottom-24 w-[calc(100vw-2rem)] sm:w-[420px] h-[580px] max-h-[75vh]'
+              : 'bottom-20 sm:bottom-24 w-[calc(100vw-2rem)] sm:w-[420px] h-[600px] max-h-[82vh]'
           }`}
         >
           {/* Header */}
@@ -660,12 +661,12 @@ export default function ChatBot() {
                 </form>
 
                 {/* Enhanced Contact & Human Handoff Action Bar */}
-                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/5">
+                <div className="space-y-1.5 pt-1 border-t border-white/5">
                   <a 
                     href={FB_MESSENGER_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-gradient-to-r from-[#0084ff]/25 via-[#0084ff]/35 to-[#00c6ff]/25 hover:from-[#0084ff] hover:to-[#0070d6] text-[#78c5ff] hover:text-white border border-[#0084ff]/50 hover:border-[#0084ff] transition-all text-[11px] font-bold group shadow-md hover:shadow-[#0084ff]/40"
+                    className="flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-xl bg-gradient-to-r from-[#0084ff]/25 via-[#0084ff]/35 to-[#00c6ff]/25 hover:from-[#0084ff] hover:to-[#0070d6] text-[#78c5ff] hover:text-white border border-[#0084ff]/50 hover:border-[#0084ff] transition-all text-[11px] font-bold group shadow-md hover:shadow-[#0084ff]/40"
                   >
                     <div className="relative flex items-center justify-center flex-shrink-0">
                       <span className="animate-ping absolute inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400 opacity-75"></span>
@@ -673,16 +674,34 @@ export default function ChatBot() {
                         <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.518 3.735 7.207v3.535l3.39-1.862c.907.251 1.875.388 2.875.388 5.523 0 10-4.145 10-9.268C22 6.145 17.523 2 12 2zm1.066 12.443l-2.612-2.784-5.099 2.784 5.61-5.955 2.678 2.784 5.033-2.784-5.61 5.955z" />
                       </svg>
                     </div>
-                    <span className="truncate">Talk to Human (FB)</span>
+                    <span className="truncate">Talk to Human (FB Messenger)</span>
                   </a>
 
-                  <a 
-                    href="tel:+639222401919" 
-                    className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 hover:border-emerald-400 transition-all text-[11px] font-bold group shadow-md hover:shadow-emerald-500/30"
-                  >
-                    <PhoneCall className="w-3.5 h-3.5 text-emerald-400 group-hover:text-white group-hover:scale-110 transition-transform flex-shrink-0" />
-                    <span className="truncate">Call Hotline</span>
-                  </a>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a 
+                      href="tel:+639222401919" 
+                      className="flex items-center gap-1.5 py-1.5 px-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/35 hover:border-emerald-400 transition-all group shadow-sm overflow-hidden"
+                      title="Call Technical: +63922-240-1919"
+                    >
+                      <PhoneCall className="w-3.5 h-3.5 text-emerald-400 group-hover:text-white flex-shrink-0" />
+                      <div className="truncate text-left leading-tight">
+                        <div className="text-[9px] uppercase tracking-wider text-emerald-400/90 font-bold group-hover:text-white/90">Technical</div>
+                        <div className="font-semibold text-white truncate text-[10.5px]">+63922-240-1919</div>
+                      </div>
+                    </a>
+
+                    <a 
+                      href="tel:+639681761919" 
+                      className="flex items-center gap-1.5 py-1.5 px-2 rounded-xl bg-amber-500/15 hover:bg-[#e51a24] text-amber-300 hover:text-white border border-amber-500/35 hover:border-[#e51a24] transition-all group shadow-sm overflow-hidden"
+                      title="Call Sales & Marketing: +63968-176-1919"
+                    >
+                      <PhoneCall className="w-3.5 h-3.5 text-amber-400 group-hover:text-white flex-shrink-0" />
+                      <div className="truncate text-left leading-tight">
+                        <div className="text-[9px] uppercase tracking-wider text-amber-400/90 font-bold group-hover:text-white/90">Sales &amp; Mktg</div>
+                        <div className="font-semibold text-white truncate text-[10.5px]">+63968-176-1919</div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
             </>

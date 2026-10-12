@@ -34,17 +34,6 @@ export default function Footer() {
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
               </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#e51a24] text-white flex items-center justify-center transition-colors"
-                aria-label="YouTube Channel"
-              >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </a>
             </div>
           </div>
 
@@ -109,8 +98,9 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2.5">
                 <Phone className="w-4 h-4 text-[#e51a24] flex-shrink-0 mt-0.5" />
-                <div className="space-y-0.5">
-                  <div><span className="text-slate-400">Cebu:</span> <a href="tel:+639222401919" className="hover:text-[#ffc000] font-medium text-white">(0922) 240-1919</a></div>
+                <div className="space-y-1">
+                  <div><span className="text-slate-400">Technical:</span> <a href="tel:+639222401919" className="hover:text-[#ffc000] font-medium text-white">+63 922-240-1919</a></div>
+                  <div><span className="text-slate-400">Sales &amp; Marketing:</span> <a href="tel:+639681761919" className="hover:text-[#ffc000] font-medium text-white">+63 968-176-1919</a></div>
                   <div><span className="text-slate-400">Bohol:</span> <a href="tel:+639683882510" className="hover:text-[#ffc000] font-medium text-white">(0968) 388-2510</a></div>
                   <div><span className="text-slate-400">Davao:</span> <a href="tel:+63822242785" className="hover:text-[#ffc000] font-medium text-white">(082) 224-2785</a></div>
                 </div>
