@@ -1,7 +1,14 @@
 export interface NewsArticle {
   id: string;
   title: string;
-  category: 'Scholarship' | 'Global Tour' | 'Exhibition' | 'Technical Seminar';
+  category:
+    | 'Scholarship'
+    | 'Global Tour'
+    | 'Exhibition'
+    | 'Technical Seminar'
+    | 'Company Milestone'
+    | 'General Update'
+    | string;
   date: string;
   formattedDate: string;
   authorOrHost: string;

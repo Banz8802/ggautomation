@@ -50,17 +50,26 @@ export default function NewsUpdatesPage() {
     loadNews();
   }, []);
 
-  const categories = ['All', 'Scholarship', 'Global Tour', 'Exhibition', 'Technical Seminar'];
+  const categories = [
+    'All',
+    'Scholarship',
+    'Global Tour',
+    'Exhibition',
+    'Technical Seminar',
+    'Company Milestone',
+    'General Update',
+  ];
 
   const filteredArticles = articles.filter((article) => {
     const matchesCategory = activeCategory === 'All' ? true : article.category === activeCategory;
+    const q = searchQuery.trim().toLowerCase();
     const matchesSearch =
-      searchQuery.trim() === '' ||
-      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.authorOrHost.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      q === '' ||
+      (article.title && article.title.toLowerCase().includes(q)) ||
+      (article.summary && article.summary.toLowerCase().includes(q)) ||
+      (article.location && article.location.toLowerCase().includes(q)) ||
+      (article.authorOrHost && article.authorOrHost.toLowerCase().includes(q)) ||
+      (Array.isArray(article.tags) && article.tags.some((t) => t && t.toLowerCase().includes(q)));
     return matchesCategory && matchesSearch;
   });
 
@@ -120,7 +129,7 @@ export default function NewsUpdatesPage() {
             <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200 w-full md:w-auto">
               {categories.map((cat) => {
                 const isActive = activeCategory === cat;
-                const count = cat === 'All' ? newsArticles.length : newsArticles.filter((n) => n.category === cat).length;
+                const count = cat === 'All' ? articles.length : articles.filter((n) => n.category === cat).length;
                 return (
                   <button
                     key={cat}

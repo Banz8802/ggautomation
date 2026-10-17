@@ -175,6 +175,17 @@ function AdminDashboardContent() {
     }
   }, [searchParams]);
 
+  const handleTabChange = (
+    tab: 'projects' | 'trainings' | 'news' | 'careers' | 'home-categories' | 'overview' | 'inquiries'
+  ) => {
+    setActiveMenu(tab);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', tab);
+      window.history.replaceState(null, '', url.toString());
+    }
+  };
+
   // Projects state
   const [projects, setProjects] = useState<ProjectRecord[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(false);
@@ -283,17 +294,18 @@ function AdminDashboardContent() {
     formattedDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
     authorOrHost: 'GG Automation Team',
     location: 'Cebu City, Philippines',
-    image: '/images/news/tesda-scholarship.png',
+    image: '/images/hero-solar-engineering.webp',
     summary: '',
-    fullContent: [''],
-    highlights: ['Comprehensive Technical Program', 'Hands-on Solar Installation Modules'],
+    fullContent: [],
+    highlights: [],
     contactInfo: {
-      phone: '0922-8129374',
-      email: 'ceaapi2024@gmail.com',
+      phone: '',
+      email: '',
     },
-    tags: ['Solar Energy', 'Clean Tech', 'Philippines'],
+    tags: [],
   };
   const [newsFormData, setNewsFormData] = useState<NewsRecord>(initialNewsFormState);
+  const [originalNewsId, setOriginalNewsId] = useState<string>('');
   const [newsHighlightInput, setNewsHighlightInput] = useState('');
   const [newsTagInput, setNewsTagInput] = useState('');
   const [newsParagraphInput, setNewsParagraphInput] = useState('');
@@ -1058,9 +1070,10 @@ function AdminDashboardContent() {
   /* -------------------------------------------------------------------------- */
   const handleOpenCreateNews = () => {
     setNewsModalMode('create');
+    setOriginalNewsId('');
     setNewsFormData({
       ...initialNewsFormState,
-      id: `news-${Date.now()}`,
+      id: '',
       date: new Date().toISOString().split('T')[0],
       formattedDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
     });
@@ -1070,6 +1083,7 @@ function AdminDashboardContent() {
 
   const handleOpenEditNews = (item: NewsRecord) => {
     setNewsModalMode('edit');
+    setOriginalNewsId(item.id);
     setNewsFormData({
       ...item,
       fullContent: item.fullContent || [],
@@ -1082,6 +1096,7 @@ function AdminDashboardContent() {
 
   const handleDuplicateNews = (item: NewsRecord) => {
     setNewsModalMode('create');
+    setOriginalNewsId('');
     setNewsFormData({
       ...item,
       id: `${item.id}-copy-${Date.now()}`,
@@ -1095,10 +1110,12 @@ function AdminDashboardContent() {
     showToast('success', 'Article cloned. Make adjustments and click Save.');
   };
 
-  const handleSaveNews = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newsFormData.title.trim()) {
-      showToast('error', 'Article Title is required.');
+  const handleSaveNews = async (e?: React.FormEvent) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+    }
+    if (!newsFormData.title || !newsFormData.title.trim()) {
+      showToast('error', 'Article Headline / Title is required.');
       setActiveNewsTabInModal('general');
       return;
     }
@@ -1106,10 +1123,15 @@ function AdminDashboardContent() {
     setIsSavingNews(true);
     try {
       const method = newsModalMode === 'create' ? 'POST' : 'PUT';
+      const payload = {
+        ...newsFormData,
+        originalId: newsModalMode === 'edit' ? (originalNewsId || newsFormData.id) : undefined,
+      };
+
       const res = await fetch('/api/news', {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newsFormData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -1292,14 +1314,14 @@ function AdminDashboardContent() {
   const filteredNews = useMemo(() => {
     return newsList.filter((n) => {
       const matchesCategory = selectedNewsCategory === 'All' || n.category === selectedNewsCategory;
-      const q = newsSearchQuery.toLowerCase();
+      const q = (newsSearchQuery || '').toLowerCase();
       const matchesSearch =
         q === '' ||
-        n.title.toLowerCase().includes(q) ||
-        n.location.toLowerCase().includes(q) ||
-        n.authorOrHost.toLowerCase().includes(q) ||
-        n.summary.toLowerCase().includes(q) ||
-        n.tags.some((tg) => tg.toLowerCase().includes(q));
+        (n.title || '').toLowerCase().includes(q) ||
+        (n.location || '').toLowerCase().includes(q) ||
+        (n.authorOrHost || '').toLowerCase().includes(q) ||
+        (n.summary || '').toLowerCase().includes(q) ||
+        (Array.isArray(n.tags) && n.tags.some((tg) => (tg || '').toLowerCase().includes(q)));
       return matchesCategory && matchesSearch;
     });
   }, [newsList, selectedNewsCategory, newsSearchQuery]);
@@ -1558,7 +1580,7 @@ function AdminDashboardContent() {
 
             {/* Projects Menu Item */}
             <button
-              onClick={() => setActiveMenu('projects')}
+              onClick={() => handleTabChange('projects')}
               className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'projects'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
@@ -1580,7 +1602,7 @@ function AdminDashboardContent() {
 
             {/* Trainings & Seminars Menu Item */}
             <button
-              onClick={() => setActiveMenu('trainings')}
+              onClick={() => handleTabChange('trainings')}
               className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'trainings'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
@@ -1602,7 +1624,7 @@ function AdminDashboardContent() {
 
             {/* News & Updates Menu Item */}
             <button
-              onClick={() => setActiveMenu('news')}
+              onClick={() => handleTabChange('news')}
               className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'news'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
@@ -1624,7 +1646,7 @@ function AdminDashboardContent() {
 
             {/* Careers & Hiring Menu Item */}
             <button
-              onClick={() => setActiveMenu('careers')}
+              onClick={() => handleTabChange('careers')}
               className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'careers'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
@@ -1646,7 +1668,7 @@ function AdminDashboardContent() {
 
             {/* Home Project Categories Menu Item */}
             <button
-              onClick={() => setActiveMenu('home-categories')}
+              onClick={() => handleTabChange('home-categories')}
               className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'home-categories'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg shadow-emerald-950/30'
@@ -1668,7 +1690,7 @@ function AdminDashboardContent() {
 
             {/* Overview / Analytics */}
             <button
-              onClick={() => setActiveMenu('overview')}
+              onClick={() => handleTabChange('overview')}
               className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'overview'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg'
@@ -1683,7 +1705,7 @@ function AdminDashboardContent() {
 
             {/* Inquiries & Form Routing */}
             <button
-              onClick={() => setActiveMenu('inquiries')}
+              onClick={() => handleTabChange('inquiries')}
               className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-left cursor-pointer ${
                 activeMenu === 'inquiries'
                   ? 'bg-gradient-to-r from-[#0b7337] to-[#0e9447] text-white shadow-lg'
@@ -2838,7 +2860,7 @@ function AdminDashboardContent() {
             {/* Filter, Search & View Switcher Bar */}
             <div className="p-4 rounded-2xl bg-[#091833] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
-                {['All', 'Scholarship', 'Global Tour', 'Exhibition', 'Technical Seminar'].map((cat) => (
+                {['All', 'Scholarship', 'Global Tour', 'Exhibition', 'Technical Seminar', 'Company Milestone', 'General Update'].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSelectedNewsCategory(cat)}
@@ -2853,7 +2875,7 @@ function AdminDashboardContent() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                 <div className="relative flex-1 md:w-64">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -2893,6 +2915,14 @@ function AdminDashboardContent() {
                     <LayoutGrid className="w-4 h-4" />
                   </button>
                 </div>
+
+                <button
+                  onClick={handleOpenCreateNews}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#0b7337] via-[#0e9447] to-[#0b7337] text-white text-xs font-bold shadow-lg shadow-emerald-950/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border border-emerald-400/30 whitespace-nowrap"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add News Article</span>
+                </button>
               </div>
             </div>
 
@@ -2916,7 +2946,35 @@ function AdminDashboardContent() {
                       {filteredNews.length === 0 ? (
                         <tr>
                           <td colSpan={7} className="py-12 text-center text-slate-400">
-                            No news articles match your filter.
+                            <div className="flex flex-col items-center justify-center gap-3">
+                              <Newspaper className="w-8 h-8 text-slate-500" />
+                              <div className="text-sm font-bold text-white">No news articles found</div>
+                              <p className="text-xs text-slate-400">
+                                {newsSearchQuery || selectedNewsCategory !== 'All'
+                                  ? 'Try adjusting your search query or category filter.'
+                                  : 'Start publishing your first news update or announcement.'}
+                              </p>
+                              <div className="flex items-center gap-2 pt-1">
+                                {(newsSearchQuery || selectedNewsCategory !== 'All') && (
+                                  <button
+                                    onClick={() => {
+                                      setNewsSearchQuery('');
+                                      setSelectedNewsCategory('All');
+                                    }}
+                                    className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all cursor-pointer"
+                                  >
+                                    Reset Filters
+                                  </button>
+                                )}
+                                <button
+                                  onClick={handleOpenCreateNews}
+                                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#0b7337] via-[#0e9447] to-[#0b7337] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-md"
+                                >
+                                  <Plus className="w-4 h-4" />
+                                  <span>Add News Article</span>
+                                </button>
+                              </div>
+                            </div>
                           </td>
                         </tr>
                       ) : (
@@ -3006,6 +3064,36 @@ function AdminDashboardContent() {
                       )}
                     </tbody>
                   </table>
+                </div>
+              </div>
+            ) : filteredNews.length === 0 ? (
+              <div className="bg-[#091833] rounded-3xl border border-white/10 p-12 text-center shadow-xl space-y-3">
+                <Newspaper className="w-10 h-10 text-slate-500 mx-auto" />
+                <div className="text-base font-bold text-white">No news articles match your filter</div>
+                <p className="text-xs text-slate-400 max-w-md mx-auto">
+                  {newsSearchQuery || selectedNewsCategory !== 'All'
+                    ? 'Try clearing the search query or category filter to see all updates.'
+                    : 'Click "Add News Article" to publish your first announcement or press release.'}
+                </p>
+                <div className="pt-2 flex items-center justify-center gap-2">
+                  {(newsSearchQuery || selectedNewsCategory !== 'All') && (
+                    <button
+                      onClick={() => {
+                        setNewsSearchQuery('');
+                        setSelectedNewsCategory('All');
+                      }}
+                      className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all cursor-pointer"
+                    >
+                      Reset Filters
+                    </button>
+                  )}
+                  <button
+                    onClick={handleOpenCreateNews}
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#0b7337] via-[#0e9447] to-[#0b7337] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add News Article</span>
+                  </button>
                 </div>
               </div>
             ) : (
@@ -4499,14 +4587,31 @@ function AdminDashboardContent() {
 
                   <div>
                     <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Slug ID (Auto-generated if empty)
+                      Short Summary / Lead Abstract <span className="text-red-400">*</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      placeholder="Concise overview featured on cards and hero slider..."
+                      value={newsFormData.summary}
+                      onChange={(e) => setNewsFormData({ ...newsFormData, summary: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-[#ffc000] transition-colors"
+                    />
+                    <div className="text-[10px] text-slate-400 mt-1">
+                      Featured on card previews and hero banner. You can also add multi-paragraph content in Step 2.
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                      Slug ID {newsModalMode === 'create' ? '(Auto-generated from title if blank)' : '(Permanent ID)'}
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. tesda-scholarship-solar-pv"
+                      disabled={newsModalMode === 'edit'}
+                      placeholder={newsModalMode === 'edit' ? newsFormData.id : 'e.g. solar-power-expansion-cebu (leave empty to auto-slug)'}
                       value={newsFormData.id}
                       onChange={(e) => setNewsFormData({ ...newsFormData, id: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-[#ffc000] transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-[#ffc000] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -4521,7 +4626,6 @@ function AdminDashboardContent() {
                     </label>
                     <textarea
                       rows={3}
-                      required
                       placeholder="Concise overview featured on cards and hero slider..."
                       value={newsFormData.summary}
                       onChange={(e) => setNewsFormData({ ...newsFormData, summary: e.target.value })}
@@ -4765,7 +4869,7 @@ function AdminDashboardContent() {
                     <div className="relative h-48 w-full rounded-2xl overflow-hidden bg-slate-950">
                       <Image
                         src={newsFormData.image || '/images/hero-solar-engineering.webp'}
-                        alt={newsFormData.title}
+                        alt={newsFormData.title || 'Preview'}
                         fill
                         className="object-cover"
                       />
@@ -4789,7 +4893,7 @@ function AdminDashboardContent() {
               )}
             </form>
 
-            <div className="px-6 py-4 bg-[#061021] border-t border-white/10 flex items-center justify-between flex-shrink-0">
+            <div className="px-6 py-4 bg-[#061021] border-t border-white/10 flex items-center justify-between flex-shrink-0 gap-3">
               <button
                 type="button"
                 onClick={() => setIsNewsModalOpen(false)}
@@ -4798,24 +4902,56 @@ function AdminDashboardContent() {
                 Cancel
               </button>
 
-              <button
-                type="button"
-                onClick={handleSaveNews}
-                disabled={isSavingNews}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#0b7337] via-[#0e9447] to-[#0b7337] text-white text-xs font-bold shadow-lg shadow-emerald-950/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border border-emerald-400/30 disabled:opacity-50"
-              >
-                {isSavingNews ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Saving Article...</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>{newsModalMode === 'create' ? 'Publish Article' : 'Save Changes'}</span>
-                  </>
+              <div className="flex items-center gap-2">
+                {activeNewsTabInModal !== 'general' && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const tabs = ['general', 'body', 'highlights', 'media', 'preview'] as const;
+                      const idx = tabs.indexOf(activeNewsTabInModal);
+                      if (idx > 0) setActiveNewsTabInModal(tabs[idx - 1]);
+                    }}
+                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                    <span>Previous</span>
+                  </button>
                 )}
-              </button>
+
+                {activeNewsTabInModal !== 'preview' ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const tabs = ['general', 'body', 'highlights', 'media', 'preview'] as const;
+                      const idx = tabs.indexOf(activeNewsTabInModal);
+                      if (idx < tabs.length - 1) setActiveNewsTabInModal(tabs[idx + 1]);
+                    }}
+                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>Next</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={handleSaveNews}
+                  disabled={isSavingNews}
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#0b7337] via-[#0e9447] to-[#0b7337] text-white text-xs font-bold shadow-lg shadow-emerald-950/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border border-emerald-400/30 disabled:opacity-50"
+                >
+                  {isSavingNews ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Saving Article...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{newsModalMode === 'create' ? 'Publish Article' : 'Save Changes'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>

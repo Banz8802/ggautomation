@@ -19,6 +19,32 @@
   },
   "jobs": [
     {
+      "id": "job-1792252892413",
+      "title": "test2",
+      "department": "Sales & Business Development",
+      "location": "Cebu City, Philippines",
+      "type": "Full-Time",
+      "status": "Open",
+      "experience": "Entry Level / Fresh Graduates Welcome",
+      "preference": "Preferably female and resident of Cebu City",
+      "description": "",
+      "requirements": [
+        "Excellent communication and interpersonal skills",
+        "Responsible and organized",
+        "Willing to learn and grow",
+        "Team-oriented and hardworking",
+        "Preferably female and resident of Cebu City"
+      ],
+      "responsibilities": [
+        "Engage with potential clients and coordinate solar requirements"
+      ],
+      "tags": [
+        "Full-Time",
+        "Cebu City"
+      ],
+      "bannerImage": "/images/hero-career.webp"
+    },
+    {
       "id": "sales-representative",
       "title": "Sales Representative",
       "department": "Sales & Business Development",
