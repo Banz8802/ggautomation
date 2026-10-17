@@ -343,7 +343,7 @@ function AdminDashboardContent() {
   const fetchProjects = async () => {
     setIsLoadingProjects(true);
     try {
-      const res = await fetch('/api/projects');
+      const res = await fetch('/api/projects', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.projects)) {
@@ -361,7 +361,7 @@ function AdminDashboardContent() {
   const fetchTrainings = async () => {
     setIsLoadingTrainings(true);
     try {
-      const res = await fetch('/api/trainings');
+      const res = await fetch('/api/trainings', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.trainings)) {
@@ -379,7 +379,7 @@ function AdminDashboardContent() {
   const fetchNews = async () => {
     setIsLoadingNews(true);
     try {
-      const res = await fetch('/api/news');
+      const res = await fetch('/api/news', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.news)) {

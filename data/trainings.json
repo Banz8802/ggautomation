@@ -1,30 +1,5 @@
 [
   {
-    "id": "training-1792252870672",
-    "title": "test2",
-    "category": "Specialized Track",
-    "badge": "Specialized Track",
-    "date": "Scheduled Batches",
-    "location": "Cebu / Laguna, Philippines",
-    "organizer": "GG Automation Technical Academy",
-    "videoUrl": "",
-    "image": "/images/hero-floating-solar.jpg",
-    "gallery": "/images/hero-floating-solar.jpg",
-    "description": "",
-    "topics": [
-      "Water-surface pontoon assembly",
-      "Anchor cable tension calculations",
-      "Submersible IP68 electrical protection"
-    ],
-    "targetAudience": "Engineers, Developers & Electricians",
-    "registrationUrl": "/contact",
-    "tags": [
-      "Floating Solar",
-      "Training",
-      "Workshop"
-    ]
-  },
-  {
     "id": "training-1791218815529",
     "title": "PHLSOLAR Training Academy - OJT opportunity para sa ating graduates!",
     "category": "Hands-on Workshop",

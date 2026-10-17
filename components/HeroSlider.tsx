@@ -121,7 +121,7 @@ export default function HeroSlider() {
   useEffect(() => {
     async function loadLatestTraining() {
       try {
-        const res = await fetch('/api/trainings');
+        const res = await fetch('/api/trainings', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data.success && Array.isArray(data.trainings) && data.trainings.length > 0) {
@@ -140,7 +140,7 @@ export default function HeroSlider() {
   useEffect(() => {
     async function loadLatestNews() {
       try {
-        const res = await fetch('/api/news');
+        const res = await fetch('/api/news', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data.success && Array.isArray(data.news) && data.news.length > 0) {
@@ -154,19 +154,33 @@ export default function HeroSlider() {
     loadLatestNews();
   }, []);
 
-  // Construct dynamic slides array with latest training post and latest news post
+  // Construct dynamic slides array with latest news post and latest training post
   const slides: Slide[] = useMemo(() => {
-    const list: Slide[] = [];
+    const parseScore = (dateStr?: string) => {
+      if (!dateStr) return 0;
+      const parsed = Date.parse(dateStr);
+      if (!isNaN(parsed)) return parsed;
+      const match = dateStr.match(/\d{4}-\d{2}-\d{2}/);
+      if (match) {
+        const t = Date.parse(match[0]);
+        if (!isNaN(t)) return t;
+      }
+      return 0;
+    };
 
-    // 1. Latest Training Slide
+    let trainingSlide: Slide | null = null;
     if (latestTraining) {
-      list.push({
+      trainingSlide = {
         id: `training-${latestTraining.id}`,
         badge: latestTraining.badge ? latestTraining.badge.toUpperCase() : 'LATEST TECHNICAL TRAINING',
         badgeIcon: <GraduationCap className="w-4 h-4 text-[#ffc000]" />,
         badgeType: 'training',
         title: latestTraining.title,
-        highlightText: 'Live Technical Workshop',
+        highlightText:
+          latestTraining.title.toLowerCase().includes('workshop') ||
+          latestTraining.title.toLowerCase().includes('training')
+            ? ''
+            : 'Technical Workshop',
         subtitle:
           latestTraining.description ||
           'Hands-on technical capacity building, live floating solar demonstrations, and continuous engineering education.',
@@ -188,18 +202,18 @@ export default function HeroSlider() {
             value: latestTraining.organizer ? latestTraining.organizer.split('&')[0].trim() : 'GG Academy',
           },
         ],
-      });
+      };
     }
 
-    // 2. Latest News & Updates Slide
+    let newsSlide: Slide | null = null;
     if (latestNews) {
-      list.push({
+      newsSlide = {
         id: `news-${latestNews.id}`,
-        badge: `${latestNews.category.toUpperCase()} UPDATE`,
+        badge: `${(latestNews.category || 'News').toUpperCase()} UPDATE`,
         badgeIcon: <Newspaper className="w-4 h-4 text-cyan-400" />,
         badgeType: 'news',
         title: latestNews.title,
-        highlightText: 'Latest Announcement',
+        highlightText: '',
         subtitle:
           latestNews.summary ||
           'Stay informed with the latest renewable energy developments, international delegations, scholarship updates, and exhibitions.',
@@ -213,15 +227,37 @@ export default function HeroSlider() {
         slideLocation: latestNews.location,
         slideHost: latestNews.authorOrHost,
         stats: [
-          { label: 'Category', value: latestNews.category },
-          { label: 'Published Date', value: latestNews.formattedDate ? latestNews.formattedDate.split('(')[0].trim() : latestNews.date },
-          { label: 'Host / Partner', value: latestNews.authorOrHost ? latestNews.authorOrHost.split('&')[0].trim() : 'GG Automation' },
+          { label: 'Category', value: latestNews.category || 'General' },
+          {
+            label: 'Published Date',
+            value: latestNews.formattedDate ? latestNews.formattedDate.split('(')[0].trim() : (latestNews.date || 'Recent'),
+          },
+          {
+            label: 'Host / Partner',
+            value: latestNews.authorOrHost ? latestNews.authorOrHost.split('&')[0].trim() : 'GG Automation',
+          },
         ],
-      });
+      };
+    }
+
+    const dynamicSlides: Slide[] = [];
+    if (newsSlide && trainingSlide) {
+      const newsScore = parseScore(latestNews?.date || latestNews?.formattedDate);
+      const trainingScore = parseScore(latestTraining?.date);
+      // Prioritize news if equally or more recent (or training has no timestamp)
+      if (newsScore >= trainingScore) {
+        dynamicSlides.push(newsSlide, trainingSlide);
+      } else {
+        dynamicSlides.push(trainingSlide, newsSlide);
+      }
+    } else if (newsSlide) {
+      dynamicSlides.push(newsSlide);
+    } else if (trainingSlide) {
+      dynamicSlides.push(trainingSlide);
     }
 
     // Append core engineering slides
-    return [...list, ...defaultBaseSlides];
+    return [...dynamicSlides, ...defaultBaseSlides];
   }, [latestTraining, latestNews]);
 
   const nextSlide = useCallback(() => {
@@ -333,10 +369,15 @@ export default function HeroSlider() {
 
                 {/* Main Headline */}
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5.5xl font-black text-white leading-[1.15] tracking-tight line-clamp-3">
-                  {slide.title}{' '}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ffc000] via-amber-300 to-[#e51a24] block sm:inline">
-                    {slide.highlightText}
-                  </span>
+                  {slide.title}
+                  {slide.highlightText ? (
+                    <>
+                      {' '}
+                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ffc000] via-amber-300 to-[#e51a24] block sm:inline">
+                        {slide.highlightText}
+                      </span>
+                    </>
+                  ) : null}
                 </h1>
 
                 {/* Subtitle / Description */}

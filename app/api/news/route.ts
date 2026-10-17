@@ -71,10 +71,20 @@ async function writeNewsData(data: unknown[]) {
   }
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const news = await readNewsData();
-    return NextResponse.json({ success: true, news });
+    return NextResponse.json(
+      { success: true, news },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        },
+      }
+    );
   } catch (err: unknown) {
     return NextResponse.json(
       { success: false, error: err instanceof Error ? err.message : 'Failed to fetch news' },
