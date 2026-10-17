@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import RichText from '@/components/RichText';
 import {
   Calendar,
   MapPin,
@@ -494,9 +495,10 @@ export default function TrainingsSection() {
 
               <div className="space-y-2">
                 <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">About the Program</span>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-                  {selectedTrainingModal.description}
-                </p>
+                <RichText
+                  content={selectedTrainingModal.description}
+                  className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal"
+                />
               </div>
 
               {selectedTrainingModal.topics.length > 0 && (

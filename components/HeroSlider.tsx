@@ -109,7 +109,7 @@ const defaultBaseSlides: Slide[] = [
 
 export default function HeroSlider() {
   const [latestTraining, setLatestTraining] = useState<TrainingItem>(initialTrainings[0]);
-  const [latestNews, setLatestNews] = useState<NewsArticle>(fallbackNews[0]);
+  const [recentNews, setRecentNews] = useState<NewsArticle[]>(fallbackNews.slice(0, 2));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -136,7 +136,7 @@ export default function HeroSlider() {
     loadLatestTraining();
   }, []);
 
-  // Fetch latest news post dynamically from /api/news
+  // Fetch the 2 latest news posts dynamically from /api/news
   useEffect(() => {
     async function loadLatestNews() {
       try {
@@ -144,33 +144,64 @@ export default function HeroSlider() {
         if (res.ok) {
           const data = await res.json();
           if (data.success && Array.isArray(data.news) && data.news.length > 0) {
-            setLatestNews(data.news[0]);
+            setRecentNews(data.news.slice(0, 2));
           }
         }
       } catch {
-        // Fallback to fallbackNews[0]
+        // Fallback to fallbackNews.slice(0, 2)
       }
     }
     loadLatestNews();
   }, []);
 
-  // Construct dynamic slides array with latest news post and latest training post
+  // Construct dynamic slides array:
+  // Slider 1 & 2: Two Latest News & Announcements
+  // Slider 3: Latest Training & Workshop
+  // Slider 4, 5, 6: Three Core Engineering Slides
+  // Total: 6 sliders
   const slides: Slide[] = useMemo(() => {
-    const parseScore = (dateStr?: string) => {
-      if (!dateStr) return 0;
-      const parsed = Date.parse(dateStr);
-      if (!isNaN(parsed)) return parsed;
-      const match = dateStr.match(/\d{4}-\d{2}-\d{2}/);
-      if (match) {
-        const t = Date.parse(match[0]);
-        if (!isNaN(t)) return t;
-      }
-      return 0;
-    };
+    const list: Slide[] = [];
 
-    let trainingSlide: Slide | null = null;
+    // 1 & 2: Two Latest News Articles
+    recentNews.forEach((newsItem, index) => {
+      list.push({
+        id: `news-${newsItem.id}-${index}`,
+        badge: `${(newsItem.category || 'News').toUpperCase()} UPDATE`,
+        badgeIcon: <Newspaper className="w-4 h-4 text-cyan-400" />,
+        badgeType: 'news',
+        title: newsItem.title,
+        highlightText: '',
+        subtitle:
+          newsItem.summary ||
+          'Stay informed with the latest renewable energy developments, international delegations, scholarship updates, and exhibitions.',
+        primaryCtaText: 'Read Full News',
+        primaryCtaHref: '/news-updates',
+        secondaryCtaText: 'Inquire Details',
+        secondaryCtaHref: '/contact',
+        image: newsItem.image || '/images/news/tesda-scholarship.png',
+        isNews: true,
+        slideDate: newsItem.formattedDate || newsItem.date,
+        slideLocation: newsItem.location,
+        slideHost: newsItem.authorOrHost,
+        stats: [
+          { label: 'Category', value: newsItem.category || 'General' },
+          {
+            label: 'Published Date',
+            value: newsItem.formattedDate
+              ? newsItem.formattedDate.split('(')[0].trim()
+              : newsItem.date || 'Recent',
+          },
+          {
+            label: 'Host / Partner',
+            value: newsItem.authorOrHost ? newsItem.authorOrHost.split('&')[0].trim() : 'GG Automation',
+          },
+        ],
+      });
+    });
+
+    // 3: Latest Technical Training
     if (latestTraining) {
-      trainingSlide = {
+      list.push({
         id: `training-${latestTraining.id}`,
         badge: latestTraining.badge ? latestTraining.badge.toUpperCase() : 'LATEST TECHNICAL TRAINING',
         badgeIcon: <GraduationCap className="w-4 h-4 text-[#ffc000]" />,
@@ -202,63 +233,12 @@ export default function HeroSlider() {
             value: latestTraining.organizer ? latestTraining.organizer.split('&')[0].trim() : 'GG Academy',
           },
         ],
-      };
+      });
     }
 
-    let newsSlide: Slide | null = null;
-    if (latestNews) {
-      newsSlide = {
-        id: `news-${latestNews.id}`,
-        badge: `${(latestNews.category || 'News').toUpperCase()} UPDATE`,
-        badgeIcon: <Newspaper className="w-4 h-4 text-cyan-400" />,
-        badgeType: 'news',
-        title: latestNews.title,
-        highlightText: '',
-        subtitle:
-          latestNews.summary ||
-          'Stay informed with the latest renewable energy developments, international delegations, scholarship updates, and exhibitions.',
-        primaryCtaText: 'Read Full News',
-        primaryCtaHref: '/news-updates',
-        secondaryCtaText: 'Inquire Details',
-        secondaryCtaHref: '/contact',
-        image: latestNews.image || '/images/news/tesda-scholarship.png',
-        isNews: true,
-        slideDate: latestNews.formattedDate || latestNews.date,
-        slideLocation: latestNews.location,
-        slideHost: latestNews.authorOrHost,
-        stats: [
-          { label: 'Category', value: latestNews.category || 'General' },
-          {
-            label: 'Published Date',
-            value: latestNews.formattedDate ? latestNews.formattedDate.split('(')[0].trim() : (latestNews.date || 'Recent'),
-          },
-          {
-            label: 'Host / Partner',
-            value: latestNews.authorOrHost ? latestNews.authorOrHost.split('&')[0].trim() : 'GG Automation',
-          },
-        ],
-      };
-    }
-
-    const dynamicSlides: Slide[] = [];
-    if (newsSlide && trainingSlide) {
-      const newsScore = parseScore(latestNews?.date || latestNews?.formattedDate);
-      const trainingScore = parseScore(latestTraining?.date);
-      // Prioritize news if equally or more recent (or training has no timestamp)
-      if (newsScore >= trainingScore) {
-        dynamicSlides.push(newsSlide, trainingSlide);
-      } else {
-        dynamicSlides.push(trainingSlide, newsSlide);
-      }
-    } else if (newsSlide) {
-      dynamicSlides.push(newsSlide);
-    } else if (trainingSlide) {
-      dynamicSlides.push(trainingSlide);
-    }
-
-    // Append core engineering slides
-    return [...dynamicSlides, ...defaultBaseSlides];
-  }, [latestTraining, latestNews]);
+    // 4, 5, 6: Append core engineering slides (Total 6 sliders)
+    return [...list, ...defaultBaseSlides];
+  }, [recentNews, latestTraining]);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -368,7 +348,7 @@ export default function HeroSlider() {
                 </div>
 
                 {/* Main Headline */}
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5.5xl font-black text-white leading-[1.15] tracking-tight line-clamp-3">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5.5xl font-black text-white leading-[1.15] tracking-tight line-clamp-2">
                   {slide.title}
                   {slide.highlightText ? (
                     <>
@@ -407,7 +387,7 @@ export default function HeroSlider() {
                 <div className="pt-6 grid grid-cols-3 gap-3 md:gap-6 border-t border-white/15 max-w-xl">
                   {slide.stats.map((stat, sIdx) => (
                     <div key={sIdx} className="space-y-1">
-                      <div className="text-base sm:text-xl md:text-2xl font-black text-[#ffc000] truncate">
+                      <div className="text-sm sm:text-base md:text-lg lg:text-xl font-black text-[#ffc000] line-clamp-2 leading-snug break-words">
                         {stat.value}
                       </div>
                       <div className="text-[11px] sm:text-xs text-slate-300 font-medium truncate">
@@ -470,7 +450,7 @@ export default function HeroSlider() {
 
                     {/* Bottom Card Caption Details */}
                     <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-white/15 space-y-2">
-                      <div className="text-xs font-black text-white line-clamp-1">
+                      <div className="text-xs font-black text-white line-clamp-2 leading-snug">
                         {slide.title}
                       </div>
 

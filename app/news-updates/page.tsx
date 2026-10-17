@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProcessSection from '@/components/ProcessSection';
+import RichText from '@/components/RichText';
 import { newsArticles, NewsArticle } from '@/data/newsData';
 import { 
   ChevronRight, 
@@ -344,9 +345,9 @@ export default function NewsUpdatesPage() {
               </div>
 
               {/* Full Paragraphs */}
-              <div className="space-y-3.5 text-sm text-slate-700 leading-relaxed border-t border-slate-100 pt-4">
+              <div className="space-y-4 text-sm text-slate-700 leading-relaxed border-t border-slate-100 pt-4">
                 {selectedArticle.fullContent.map((paragraph, pIdx) => (
-                  <p key={pIdx}>{paragraph}</p>
+                  <RichText key={pIdx} content={paragraph} className="text-slate-700" />
                 ))}
               </div>
 

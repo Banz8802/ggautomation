@@ -54,6 +54,7 @@ import {
 } from 'lucide-react';
 import AdminCareersManager from '@/components/admin/AdminCareersManager';
 import AdminHomeCategoriesManager from '@/components/admin/AdminHomeCategoriesManager';
+import RichText from '@/components/RichText';
 import { isVideoUrl, generateProjectDetailsFromTitle } from '@/data/projectsData';
 
 /* -------------------------------------------------------------------------- */
@@ -4634,37 +4635,45 @@ function AdminDashboardContent() {
                   </div>
 
                   <div className="space-y-2 pt-2 border-t border-white/5">
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
-                      Article Paragraphs / Full Content
-                    </label>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                        Article Paragraphs / Full Content
+                      </label>
+                      <span className="text-[10px] text-emerald-400 font-medium">
+                        Supports Enter (next line), indents, and HTML tags (&lt;br&gt;, &lt;b&gt;, &lt;strong&gt;, &lt;a&gt;)
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-2">
                       <textarea
-                        rows={2}
-                        placeholder="Add a new paragraph..."
+                        rows={4}
+                        placeholder="Type or paste paragraph / detailed content here... Press Enter for line breaks or write HTML tags (<br>, <b>, <strong>, etc.)"
                         value={newsParagraphInput}
                         onChange={(e) => setNewsParagraphInput(e.target.value)}
-                        className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-emerald-400"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-emerald-400"
                       />
-                      <button
-                        type="button"
-                        onClick={handleAddNewsParagraph}
-                        className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer transition-colors self-end"
-                      >
-                        Add Paragraph
-                      </button>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={handleAddNewsParagraph}
+                          className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer transition-colors"
+                        >
+                          Add Paragraph
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-2 pt-2">
                       {(newsFormData.fullContent || []).map((p, idx) => (
                         <div
                           key={idx}
-                          className="flex items-start justify-between p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-200 gap-3"
+                          className="flex items-start justify-between p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-200 gap-3"
                         >
-                          <span className="flex-1 leading-relaxed">{p}</span>
+                          <RichText content={p} className="flex-1 text-slate-200 text-xs" />
                           <button
                             type="button"
                             onClick={() => handleRemoveNewsParagraph(idx)}
-                            className="text-slate-400 hover:text-red-400 p-1 cursor-pointer"
+                            className="text-slate-400 hover:text-red-400 p-1 cursor-pointer shrink-0"
+                            title="Remove paragraph"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
@@ -4888,6 +4897,18 @@ function AdminDashboardContent() {
                       <span>{newsFormData.authorOrHost}</span>
                       <span>{newsFormData.formattedDate || newsFormData.date}</span>
                     </div>
+
+                    {/* Formatted Content Preview */}
+                    {(newsFormData.fullContent || []).length > 0 && (
+                      <div className="space-y-2 pt-3 border-t border-white/10 text-xs text-slate-300 max-h-56 overflow-y-auto [scrollbar-width:thin]">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                          Article Content Preview
+                        </div>
+                        {(newsFormData.fullContent || []).map((p, idx) => (
+                          <RichText key={idx} content={p} className="text-slate-300 text-xs" />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
