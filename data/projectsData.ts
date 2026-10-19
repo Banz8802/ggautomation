@@ -229,27 +229,74 @@ export function generateProjectDetailsFromTitle(
 }
 
 /**
+ * Splits a comma-separated string of image/video URLs safely.
+ * Crucially respects base64 data URLs (e.g. data:image/jpeg;base64,...) which contain commas
+ * so that single data URLs are not split into multiple broken parts.
+ */
+export function splitMediaUrls(input: string | undefined | null): string[] {
+  if (!input || typeof input !== 'string') return [];
+  const text = input.trim();
+  if (!text) return [];
+
+  const results: string[] = [];
+  let current = '';
+  let inDataUrlHeader = false;
+
+  for (let i = 0; i < text.length; i++) {
+    // Check if starting a data: URL header
+    if (text.slice(i, i + 5).toLowerCase() === 'data:') {
+      inDataUrlHeader = true;
+    }
+
+    const char = text[i];
+    if (char === ',') {
+      if (inDataUrlHeader) {
+        // The first comma in a data URL belongs to "data:[mediatype];base64,"
+        inDataUrlHeader = false;
+        current += char;
+        continue;
+      } else {
+        // This comma separates distinct image items
+        const item = current.trim();
+        if (item) results.push(item);
+        current = '';
+        continue;
+      }
+    }
+    current += char;
+  }
+
+  const last = current.trim();
+  if (last) results.push(last);
+
+  return results;
+}
+
+/**
  * Normalizes project image paths:
- * 1. If images is a comma-separated string, it splits and trims each filename.
- * 2. If folder is provided and image doesn't start with / or http, it prepends the folder.
+ * 1. If images is a comma-separated string, it safely splits and trims each filename.
+ * 2. If folder is provided and image doesn't start with /, http, or data:, it prepends the folder.
  */
 export function normalizeProjectImages(imagesInput: string | string[], folder?: string): string[] {
   let list: string[] = [];
 
   if (typeof imagesInput === 'string') {
-    list = imagesInput
-      .split(',')
-      .map((img) => img.trim())
-      .filter((img) => img.length > 0);
+    list = splitMediaUrls(imagesInput);
   } else if (Array.isArray(imagesInput)) {
-    list = imagesInput.map((img) => img.trim()).filter((img) => img.length > 0);
+    list = imagesInput.flatMap((img) => (typeof img === 'string' ? splitMediaUrls(img) : []));
   }
 
   const cleanFolder = folder ? folder.trim().replace(/\/+$/, '') : '';
 
   return list.map((img) => {
-    // If it's already an absolute or web URL, leave it
-    if (img.startsWith('/') || img.startsWith('http://') || img.startsWith('https://')) {
+    // If it's already an absolute or web URL, or base64/blob URL, leave it untouched
+    if (
+      img.startsWith('/') ||
+      img.startsWith('http://') ||
+      img.startsWith('https://') ||
+      img.startsWith('data:') ||
+      img.startsWith('blob:')
+    ) {
       return img;
     }
     // If folder is provided, prepend it
@@ -260,6 +307,7 @@ export function normalizeProjectImages(imagesInput: string | string[], folder?: 
     return `/images/projects/${img}`;
   });
 }
+
 
 /**
  * Parses a raw list of projects with full defaults, resolved image arrays,

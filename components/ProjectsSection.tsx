@@ -123,6 +123,7 @@ function ProjectCard({
               fill
               className="object-cover group-hover/img:scale-105 transition-transform duration-700"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              unoptimized={project.images[activeImageIdx]?.startsWith('data:') || project.images[activeImageIdx]?.startsWith('blob:')}
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#091833]/90 via-[#091833]/15 to-transparent pointer-events-none"></div>
@@ -264,6 +265,7 @@ function ProjectCard({
                     fill
                     className="object-cover"
                     sizes="48px"
+                    unoptimized={imgSrc.startsWith('data:') || imgSrc.startsWith('blob:')}
                   />
                 )}
               </button>
@@ -396,6 +398,7 @@ function ProjectModal({
                   fill
                   className="object-cover"
                   priority
+                  unoptimized={project.images[activePhotoIdx]?.startsWith('data:') || project.images[activePhotoIdx]?.startsWith('blob:')}
                 />
               )}
 

@@ -1,65 +1,18 @@
 import { NextResponse } from 'next/server';
-import { readFile, writeFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
-import os from 'os';
+import { verifyAdminSession } from '@/lib/auth';
+import {
+  getProjects,
+  saveProject,
+  deleteProject,
+  reorderProjects,
+} from '@/lib/supabaseProjects';
 
-const localFilePath = path.join(process.cwd(), 'data', 'projects.json');
-const tmpFilePath = path.join(os.tmpdir(), 'ggautomation_projects.json');
-
-// In-memory cache for fast serverless persistence across executions in the same instance
-let projectsMemoryCache: unknown[] | null = null;
-
-async function readProjectsData(): Promise<any[]> {
-  if (projectsMemoryCache && Array.isArray(projectsMemoryCache) && projectsMemoryCache.length > 0) {
-    return [...projectsMemoryCache];
-  }
-
-  // 1. Try reading from writable /tmp
-  try {
-    if (existsSync(tmpFilePath)) {
-      const raw = await readFile(tmpFilePath, 'utf-8');
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        projectsMemoryCache = parsed;
-        return [...parsed];
-      }
-    }
-  } catch {}
-
-  // 2. Fall back to bundled data file
-  try {
-    const raw = await readFile(localFilePath, 'utf-8');
-    const parsed = JSON.parse(raw);
-    projectsMemoryCache = parsed;
-    return [...parsed];
-  } catch (err) {
-    console.error('Error reading projects.json:', err);
-    return [];
-  }
-}
-
-async function writeProjectsData(data: unknown[]) {
-  projectsMemoryCache = [...data];
-
-  // Try writing to local project directory (works in local dev)
-  try {
-    await writeFile(localFilePath, JSON.stringify(data, null, 2), 'utf-8');
-  } catch {
-    // Read-only filesystem on Vercel / Lambda - expected
-  }
-
-  // Always write to /tmp for serverless runtime persistence
-  try {
-    await writeFile(tmpFilePath, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Error writing to tmp projects file:', err);
-  }
-}
-
+/**
+ * Public GET: Fetches projects for both the public portfolio and Admin CRM
+ */
 export async function GET() {
   try {
-    const projects = await readProjectsData();
+    const projects = await getProjects();
     return NextResponse.json({ success: true, projects });
   } catch (err: unknown) {
     return NextResponse.json(
@@ -69,12 +22,22 @@ export async function GET() {
   }
 }
 
+/**
+ * Admin POST: Add a new project
+ */
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const projects = await readProjectsData();
+    const isAdmin = await verifyAdminSession();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: Admin session required to create projects.' },
+        { status: 401 }
+      );
+    }
 
-    // Generate unique slug id if not provided
+    const body = await request.json();
+
+    // Generate clean slug ID if not provided
     const slug = (body.id || body.title || `project-${Date.now()}`)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
@@ -99,11 +62,8 @@ export async function POST(request: Request) {
       satelliteCategory: body.satelliteCategory || 'None',
     };
 
-    // Prepend to list so newest project appears first
-    projects.unshift(newProject);
-    await writeProjectsData(projects);
-
-    return NextResponse.json({ success: true, project: newProject });
+    const saved = await saveProject(newProject, true);
+    return NextResponse.json({ success: true, project: saved });
   } catch (err: unknown) {
     console.error('Error adding project:', err);
     return NextResponse.json(
@@ -113,35 +73,33 @@ export async function POST(request: Request) {
   }
 }
 
+/**
+ * Admin PUT: Update an existing project or reorder projects
+ */
 export async function PUT(request: Request) {
   try {
+    const isAdmin = await verifyAdminSession();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: Admin session required to update projects.' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
-    // Support bulk reordering of projects
+    // Bulk reordering
     if (body.reorder) {
-      const projects = await readProjectsData();
-      let reordered: any[] = [];
-
+      let idsToReorder: string[] = [];
       if (Array.isArray(body.projectIds)) {
-        const projectMap = new Map(projects.map((p: { id: string }) => [p.id, p]));
-        for (const id of body.projectIds) {
-          const item = projectMap.get(id);
-          if (item) {
-            reordered.push(item);
-            projectMap.delete(id);
-          }
-        }
-        // Append any omitted projects to ensure no data loss
-        for (const remaining of projectMap.values()) {
-          reordered.push(remaining);
-        }
+        idsToReorder = body.projectIds;
       } else if (Array.isArray(body.projects)) {
-        reordered = body.projects;
+        idsToReorder = body.projects.map((p: { id: string }) => p.id);
       } else {
         return NextResponse.json({ success: false, error: 'Invalid reorder data' }, { status: 400 });
       }
 
-      await writeProjectsData(reordered);
+      const reordered = await reorderProjects(idsToReorder);
       return NextResponse.json({ success: true, projects: reordered });
     }
 
@@ -149,14 +107,13 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: false, error: 'Project ID is required' }, { status: 400 });
     }
 
-    const projects = await readProjectsData();
-    const index = projects.findIndex((p: { id: string }) => p.id === body.id);
+    const currentList = await getProjects();
+    const existing = currentList.find((p) => p.id === body.id);
 
-    if (index === -1) {
+    if (!existing) {
       return NextResponse.json({ success: false, error: 'Project not found' }, { status: 404 });
     }
 
-    const existing = projects[index];
     const updated = {
       ...existing,
       title: body.title !== undefined ? body.title : existing.title,
@@ -169,7 +126,9 @@ export async function PUT(request: Request) {
       capacity: body.capacity !== undefined ? body.capacity : existing.capacity,
       client: body.client !== undefined ? body.client : existing.client,
       folder: body.folder !== undefined ? body.folder : existing.folder,
-      images: Array.isArray(body.images) ? body.images.join(', ') : (body.images !== undefined ? body.images : existing.images),
+      images: Array.isArray(body.images)
+        ? body.images.join(', ')
+        : (body.images !== undefined ? body.images : existing.images),
       systemType: body.systemType !== undefined ? body.systemType : existing.systemType,
       completionDate: body.completionDate !== undefined ? body.completionDate : existing.completionDate,
       annualYield: body.annualYield !== undefined ? body.annualYield : existing.annualYield,
@@ -179,10 +138,8 @@ export async function PUT(request: Request) {
       tags: Array.isArray(body.tags) ? body.tags.filter(Boolean) : existing.tags,
     };
 
-    projects[index] = updated;
-    await writeProjectsData(projects);
-
-    return NextResponse.json({ success: true, project: updated });
+    const saved = await saveProject(updated, false);
+    return NextResponse.json({ success: true, project: saved });
   } catch (err: unknown) {
     console.error('Error updating project:', err);
     return NextResponse.json(
@@ -192,8 +149,19 @@ export async function PUT(request: Request) {
   }
 }
 
+/**
+ * Admin DELETE: Delete a project
+ */
 export async function DELETE(request: Request) {
   try {
+    const isAdmin = await verifyAdminSession();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: Admin session required to delete projects.' },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -201,14 +169,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: false, error: 'Project ID is required' }, { status: 400 });
     }
 
-    const projects = await readProjectsData();
-    const filtered = projects.filter((p: { id: string }) => p.id !== id);
-
-    if (filtered.length === projects.length) {
-      return NextResponse.json({ success: false, error: 'Project not found' }, { status: 404 });
-    }
-
-    await writeProjectsData(filtered);
+    await deleteProject(id);
     return NextResponse.json({ success: true, message: 'Project deleted successfully' });
   } catch (err: unknown) {
     console.error('Error deleting project:', err);

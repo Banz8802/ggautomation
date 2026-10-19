@@ -55,7 +55,7 @@ import {
 import AdminCareersManager from '@/components/admin/AdminCareersManager';
 import AdminHomeCategoriesManager from '@/components/admin/AdminHomeCategoriesManager';
 import RichText from '@/components/RichText';
-import { isVideoUrl, generateProjectDetailsFromTitle } from '@/data/projectsData';
+import { isVideoUrl, generateProjectDetailsFromTitle, splitMediaUrls } from '@/data/projectsData';
 
 /* -------------------------------------------------------------------------- */
 /* Type Definitions                                                           */
@@ -678,10 +678,7 @@ function AdminDashboardContent() {
 
   const getRawMediaList = () => {
     if (!formData.images) return [];
-    return formData.images
-      .split(',')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
+    return splitMediaUrls(formData.images);
   };
 
   const setRawMediaList = (list: string[]) => {
@@ -1330,23 +1327,36 @@ function AdminDashboardContent() {
   // Project Image list parser for preview
   const parsedImageList = useMemo(() => {
     if (!formData.images) return [];
-    return formData.images
-      .split(',')
-      .map((img) => img.trim())
-      .filter((img) => img.length > 0)
-      .map((img) => {
-        if (img.startsWith('/') || img.startsWith('http://') || img.startsWith('https://')) return img;
-        if (formData.folder) return `${formData.folder.replace(/\/+$/, '')}/${img}`;
-        return `/images/projects/${img}`;
-      });
+    return splitMediaUrls(formData.images).map((img) => {
+      if (
+        img.startsWith('/') ||
+        img.startsWith('http://') ||
+        img.startsWith('https://') ||
+        img.startsWith('data:') ||
+        img.startsWith('blob:')
+      ) {
+        return img;
+      }
+      if (formData.folder) return `${formData.folder.replace(/\/+$/, '')}/${img}`;
+      return `/images/projects/${img}`;
+    });
   }, [formData.images, formData.folder]);
 
   // Helper to extract first project image
   const getFirstProjectImage = (p: ProjectRecord) => {
     if (!p.images) return '/images/placeholder.webp';
-    const first = p.images.split(',')[0].trim();
+    const list = splitMediaUrls(p.images);
+    const first = list[0];
     if (!first) return '/images/placeholder.webp';
-    if (first.startsWith('/') || first.startsWith('http://') || first.startsWith('https://')) return first;
+    if (
+      first.startsWith('/') ||
+      first.startsWith('http://') ||
+      first.startsWith('https://') ||
+      first.startsWith('data:') ||
+      first.startsWith('blob:')
+    ) {
+      return first;
+    }
     if (p.folder) return `${p.folder.replace(/\/+$/, '')}/${first}`;
     return `/images/projects/${first}`;
   };
@@ -2156,7 +2166,7 @@ function AdminDashboardContent() {
                           const isBottom = catRank === categoryProjects.length;
                           const imgUrl = getFirstProjectImage(p);
                           const isVid = isVideoUrl(imgUrl);
-                          const imgCount = p.images ? p.images.split(',').length : 0;
+                          const imgCount = p.images ? splitMediaUrls(p.images).length : 0;
                           const isDragged = draggedProjectId === p.id;
                           const isDragOver = dragOverProjectId === p.id;
 
@@ -2205,7 +2215,14 @@ function AdminDashboardContent() {
                                         </div>
                                       </div>
                                     ) : (
-                                      <Image src={imgUrl} alt={p.title} fill className="object-cover" sizes="48px" />
+                                      <Image
+                                        src={imgUrl}
+                                        alt={p.title}
+                                        fill
+                                        className="object-cover"
+                                        sizes="48px"
+                                        unoptimized={imgUrl.startsWith('data:') || imgUrl.startsWith('blob:')}
+                                      />
                                     )}
                                   </div>
                                   <div className="min-w-0 max-w-[280px]">
@@ -3661,6 +3678,7 @@ function AdminDashboardContent() {
                                   fill
                                   className="object-cover pointer-events-none"
                                   sizes="160px"
+                                  unoptimized={url.startsWith('data:') || url.startsWith('blob:')}
                                 />
                               )}
 
@@ -3928,6 +3946,7 @@ function AdminDashboardContent() {
                             alt={formData.title}
                             fill
                             className="object-cover"
+                            unoptimized={parsedImageList[0]?.startsWith('data:') || parsedImageList[0]?.startsWith('blob:')}
                           />
                         )}
                         <div className="absolute top-4 left-4 z-10 pointer-events-none">
