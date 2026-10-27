@@ -1,5 +1,47 @@
 [
   {
+    "id": "huawei-solar-home-demo-presentation-copy-1792258855704-copy-1793121257141",
+    "title": "📢 Huawei Solar VAN Roadshow in Bohol from Oct. 28, 29 & 30th...",
+    "category": "Technical Seminar",
+    "date": "2026-10-28",
+    "formattedDate": "October 28, 29, & 30, 2026",
+    "displayDates": [
+      "October 28, 29, & 30, 2026"
+    ],
+    "authorOrHost": "GG Automation Team",
+    "location": "Chateau De Paz | Royal Palms-Uno | Royal Oceancrest-Panglao | Ubujan District",
+    "locations": [
+      "Chateau De Paz",
+      "Royal Palms-Uno",
+      "Royal Oceancrest-Panglao",
+      "Ubujan District"
+    ],
+    "image": "https://iqgxucmtxzlbybqgmlfc.supabase.co/storage/v1/object/public/project-media/uploads/1793122433471_panglao.png",
+    "images": [
+      "https://iqgxucmtxzlbybqgmlfc.supabase.co/storage/v1/object/public/project-media/uploads/1793122433471_panglao.png",
+      "https://iqgxucmtxzlbybqgmlfc.supabase.co/storage/v1/object/public/project-media/uploads/1793125515289_99e67218-d8c3-4a21-8653-dd7d8d8e1d0a.jpg",
+      "https://iqgxucmtxzlbybqgmlfc.supabase.co/storage/v1/object/public/project-media/uploads/1793125516129_f6730078-2682-4790-9d97-8ea5801f617c.jpg",
+      "https://iqgxucmtxzlbybqgmlfc.supabase.co/storage/v1/object/public/project-media/uploads/1793125516374_922a3677-9335-4c0b-836e-7371046fe84f.jpg",
+      "https://iqgxucmtxzlbybqgmlfc.supabase.co/storage/v1/object/public/project-media/uploads/1793125516610_def31573-fd12-4069-88f3-a53deb324ba0.jpg"
+    ],
+    "summary": "It's a hands-on, easy-to-understand demonstration of how a modern residential solar hybrid system works.",
+    "fullContent": [
+      "Are you looking to eliminate or reduce your power bills? We’ve got the perfect solution for you!\n​HUAWEI and GG Automation Construction Services invite you to come, learn, and understand at the HUAWEI Solar Home Demo Presentation! Join us for a hands-on, easy-to-understand demonstration of how a modern residential solar hybrid system works.\n\n🗓️ When: Wed., Oct. 28, 2026\n⏰ Time: 8:00 AM to 12:00 NN\n📍 Where: Chateau De Paz, Tutulan, Dauis, Panglao Island, Bohol\n\n⏰ Time: 1:00 PM to  5:30 PM\n📍 Where: Royal Palms Panglao Uno, Dauis, Panglao Island, Bohol\n\n---------------------\n\n🗓️ When: Wed., Oct. 29, 2026\n⏰ Time: 1:00 PM to  5:30 PM\n📍 Where: Royal Oceancrest Panglao, Dauis, Panglao Island, Bohol\n\n---------------------\n\n🗓️ When: Wed., Oct. 30, 2026\n⏰ Time: 8:00 AM to  5:30 PM\n📍 Where: Ubujan District, Tagbilaran City, Bohol\n\n\n\n​Come see and understand what the following are:\n​- Solar Panels\n​- Hybrid Inverter\n- ​Battery Energy Storage\n​- Backup Power\n- ​Smart Energy Management\n\n​Take the first step toward smart energy and big savings. We can't wait to see you there! 👋\n\n​📞 Contact us: 0968-176-1919"
+    ],
+    "highlights": [],
+    "contactInfo": {
+      "phone": "",
+      "email": "",
+      "facebookUrl": ""
+    },
+    "tags": [
+      "Training",
+      "Solar Home Demo"
+    ],
+    "isUpcomingEvent": true,
+    "isPastEvent": false
+  },
+  {
     "id": "huawei-solar-home-demo-presentation-copy-1792258855704",
     "title": "📢 HUAWEI Solar Home Demo Presentation - MIDORI PLAINS",
     "category": "Technical Seminar",
@@ -8,6 +50,9 @@
     "authorOrHost": "GG Automation Team",
     "location": "MIDORI PLAINS, Tungkop Minglanilla, Cebu",
     "image": "/images/projects/uploads/1792259216985_midori-plains.png",
+    "images": [
+      "/images/projects/uploads/1792259216985_midori-plains.png"
+    ],
     "summary": "Are you looking to eliminate or reduce your power bills? We’ve got the perfect solution for you!\n​HUAWEI and GG Automation Construction Services invite you to come, learn, and understand at the HUAWEI Solar Home Demo Presentation! Join us for a hands-on, easy-to-understand demonstration of how a modern residential solar hybrid system works.\n\n🗓️ When: Monday, October 19, 2026\n⏰ Time: 8:00 AM to 12:00 PM\n📍 Where: MIDORI PLAINS, Tungkop Minglanilla, Cebu\n\n​Come see and understand what the following are:\n​- Solar Panels\n​- Hybrid Inverter\n- ​Battery Energy Storage\n​- Backup Power\n- ​Smart Energy Management\n\n​Take the first step toward smart energy and big savings. We can't wait to see you there! 👋\n\n​📞 Contact us: 0968-176-1919",
     "fullContent": [
       "Are you looking to eliminate or reduce your power bills? We’ve got the perfect solution for you!\n​HUAWEI and GG Automation Construction Services invite you to come, learn, and understand at the HUAWEI Solar Home Demo Presentation! Join us for a hands-on, easy-to-understand demonstration of how a modern residential solar hybrid system works.\n\n🗓️ When: Monday, October 19, 2026\n⏰ Time: 8:00 AM to 12:00 PM\n📍 Where: MIDORI PLAINS, Tungkop Minglanilla, Cebu\n\n​Come see and understand what the following are:\n​- Solar Panels\n​- Hybrid Inverter\n- ​Battery Energy Storage\n​- Backup Power\n- ​Smart Energy Management\n\n​Take the first step toward smart energy and big savings. We can't wait to see you there! 👋\n\n​📞 Contact us: 0968-176-1919"
@@ -21,7 +66,15 @@
     "tags": [
       "Training",
       "Solar Home Demo"
-    ]
+    ],
+    "displayDates": [
+      "October 19, 2026"
+    ],
+    "locations": [
+      "MIDORI PLAINS, Tungkop Minglanilla, Cebu"
+    ],
+    "isUpcomingEvent": false,
+    "isPastEvent": true
   },
   {
     "id": "huawei-solar-home-demo-presentation",
@@ -45,7 +98,15 @@
     "tags": [
       "Training",
       "Solar Home Demo"
-    ]
+    ],
+    "displayDates": [
+      "October 19, 2026"
+    ],
+    "locations": [
+      "Casa Mira South, Naga City, Cebu Philippines"
+    ],
+    "isUpcomingEvent": false,
+    "isPastEvent": true
   },
   {
     "id": "tesda-scholarship-solar-pv",
@@ -82,6 +143,12 @@
       "Renewable Energy",
       "Green Jobs",
       "Clean Energy Future"
+    ],
+    "displayDates": [
+      "September 4, 2026"
+    ],
+    "locations": [
+      "TESDA-Cebu Compound, Lahug, Cebu City"
     ]
   },
   {
@@ -113,6 +180,12 @@
       "Grid-Forming ESS",
       "150kW Inverter",
       "Global Tech"
+    ],
+    "displayDates": [
+      "August 27, 2026"
+    ],
+    "locations": [
+      "Huawei Global R&D Headquarters, Dongguan, China"
     ]
   },
   {
@@ -143,7 +216,14 @@
       "Belmont Hardware Depot",
       "Trade Show",
       "Solar Hardware"
-    ]
+    ],
+    "displayDates": [
+      "May 27, 2026 (Expo: June 4-7, 2026)"
+    ],
+    "locations": [
+      "SM Seaside City Cebu (Sky Hall & Convention Center)"
+    ],
+    "isPastEvent": true
   },
   {
     "id": "floating-solar-seminar-cavinti-laguna",
@@ -172,6 +252,13 @@
       "Cavinti Laguna",
       "Technical Seminar",
       "Live Demo"
-    ]
+    ],
+    "displayDates": [
+      "August 15, 2025"
+    ],
+    "locations": [
+      "Chandava Lake Resort, Cavinti, Laguna"
+    ],
+    "isPastEvent": true
   }
 ]

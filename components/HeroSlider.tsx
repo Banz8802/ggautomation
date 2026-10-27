@@ -17,7 +17,9 @@ import {
   MapPin,
   Calendar,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Clock,
+  CheckCircle2
 } from 'lucide-react';
 import { initialTrainings, parseRawTrainings, TrainingItem, TrainingRawInput } from '@/data/trainingsData';
 import { newsArticles as fallbackNews, NewsArticle } from '@/data/newsData';
@@ -38,6 +40,8 @@ interface Slide {
   videoUrl?: string;
   isTraining?: boolean;
   isNews?: boolean;
+  isUpcomingEvent?: boolean;
+  isPastEvent?: boolean;
   slideDate?: string;
   slideLocation?: string;
   slideHost?: string;
@@ -114,6 +118,7 @@ export default function HeroSlider() {
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [copiedToast, setCopiedToast] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const slideDuration = 6500; // 6.5 seconds
 
@@ -164,6 +169,10 @@ export default function HeroSlider() {
 
     // 1 & 2: Two Latest News Articles
     recentNews.forEach((newsItem, index) => {
+      const isUpcoming = Boolean(newsItem.isUpcomingEvent);
+      const isPast = Boolean(newsItem.isPastEvent);
+      const fbChatUrl = 'https://www.facebook.com/messages/t/GGAutomation.1';
+
       list.push({
         id: `news-${newsItem.id}-${index}`,
         badge: `${(newsItem.category || 'News').toUpperCase()} UPDATE`,
@@ -175,21 +184,38 @@ export default function HeroSlider() {
           newsItem.summary ||
           'Stay informed with the latest renewable energy developments, international delegations, scholarship updates, and exhibitions.',
         primaryCtaText: 'Read Full News',
-        primaryCtaHref: '/news-updates',
+        primaryCtaHref: `/news-updates?id=${encodeURIComponent(newsItem.id)}`,
         secondaryCtaText: 'Inquire Details',
-        secondaryCtaHref: '/contact',
+        secondaryCtaHref: fbChatUrl,
         image: newsItem.image || '/images/news/tesda-scholarship.png',
         isNews: true,
-        slideDate: newsItem.formattedDate || newsItem.date,
-        slideLocation: newsItem.location,
+        isUpcomingEvent: isUpcoming,
+        isPastEvent: isPast,
+        slideDate:
+          newsItem.displayDates && newsItem.displayDates.length > 0
+            ? newsItem.displayDates.join(' & ')
+            : newsItem.formattedDate || newsItem.date,
+        slideLocation:
+          newsItem.locations && newsItem.locations.length > 0
+            ? newsItem.locations.join(' & ')
+            : newsItem.location,
         slideHost: newsItem.authorOrHost,
         stats: [
-          { label: 'Category', value: newsItem.category || 'General' },
           {
-            label: 'Published Date',
-            value: newsItem.formattedDate
-              ? newsItem.formattedDate.split('(')[0].trim()
-              : newsItem.date || 'Recent',
+            label: 'Location/Venue',
+            value:
+              (newsItem.locations && newsItem.locations.length > 0
+                ? newsItem.locations.join(' & ')
+                : newsItem.location) || 'Cebu City, Philippines',
+          },
+          {
+            label: 'Event Dates',
+            value:
+              newsItem.displayDates && newsItem.displayDates.length > 0
+                ? newsItem.displayDates.join(' & ')
+                : newsItem.formattedDate
+                ? newsItem.formattedDate.split('(')[0].trim()
+                : newsItem.date || 'Recent',
           },
           {
             label: 'Host / Partner',
@@ -335,16 +361,25 @@ export default function HeroSlider() {
                   <span className="text-xs md:text-sm font-bold tracking-widest text-[#ffc000] uppercase">
                     {slide.badge}
                   </span>
-                  {slide.isTraining && (
+                  {slide.isUpcomingEvent ? (
+                    <span className="ml-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-wider border border-emerald-400/60 shadow-[0_0_12px_rgba(16,185,129,0.35)] animate-pulse flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-emerald-400" />
+                      <span>UPCOMING EVENT</span>
+                    </span>
+                  ) : slide.isPastEvent ? (
+                    <span className="ml-1.5 px-2.5 py-0.5 rounded-full bg-slate-700/60 text-slate-300 text-[10px] font-black uppercase tracking-wider border border-slate-500/60 shadow-sm flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-slate-400" />
+                      <span>PAST EVENT</span>
+                    </span>
+                  ) : slide.isTraining ? (
                     <span className="ml-1.5 px-2 py-0.5 rounded-full bg-cyan-500/30 text-cyan-300 text-[10px] font-black uppercase tracking-wider border border-cyan-400/30">
                       NEW /TRAININGS
                     </span>
-                  )}
-                  {slide.isNews && (
+                  ) : slide.isNews ? (
                     <span className="ml-1.5 px-2 py-0.5 rounded-full bg-emerald-500/30 text-emerald-300 text-[10px] font-black uppercase tracking-wider border border-emerald-400/30">
                       NEW /NEWS-UPDATES
                     </span>
-                  )}
+                  ) : null}
                 </div>
 
                 {/* Main Headline */}
@@ -375,12 +410,39 @@ export default function HeroSlider() {
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
 
-                  <Link
-                    href={slide.secondaryCtaHref}
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-base font-bold bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all duration-200 hover:scale-105"
-                  >
-                    <span>{slide.secondaryCtaText}</span>
-                  </Link>
+                  {slide.secondaryCtaHref.startsWith('http') ? (
+                    <a
+                      href={slide.secondaryCtaHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        if (slide.isNews) {
+                          try {
+                            const inquiry = `Hello GG Automation! I would like to inquire about: "${slide.title}"`;
+                            navigator.clipboard.writeText(inquiry);
+                            setCopiedToast(`Article title copied! Simply press Ctrl+V (Paste) in the Facebook Chat.`);
+                            setTimeout(() => setCopiedToast(null), 4500);
+                          } catch {}
+                        }
+                      }}
+                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-base font-bold bg-white/10 hover:bg-[#0084ff]/25 text-white hover:text-white border border-white/30 hover:border-[#0084ff]/80 backdrop-blur-md transition-all duration-200 hover:scale-105 shadow-md group"
+                      title={slide.isNews ? `Open Facebook Chat with GG Automation for "${slide.title}"` : undefined}
+                    >
+                      {slide.isNews && (
+                        <svg className="w-4 h-4 fill-current text-[#0084ff] group-hover:scale-110 transition-transform flex-shrink-0" viewBox="0 0 24 24">
+                          <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.518 3.735 7.207v3.535l3.39-1.862c.907.251 1.875.388 2.875.388 5.523 0 10-4.145 10-9.268C22 6.145 17.523 2 12 2zm1.066 12.443l-2.612-2.784-5.099 2.784 5.61-5.955 2.678 2.784 5.033-2.784-5.61 5.955z" />
+                        </svg>
+                      )}
+                      <span>{slide.secondaryCtaText}</span>
+                    </a>
+                  ) : (
+                    <Link
+                      href={slide.secondaryCtaHref}
+                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-base font-bold bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all duration-200 hover:scale-105"
+                    >
+                      <span>{slide.secondaryCtaText}</span>
+                    </Link>
+                  )}
                 </div>
 
                 {/* Key Metrics Bar */}
@@ -414,16 +476,28 @@ export default function HeroSlider() {
 
                     {/* Top Floating Badge on Image Card */}
                     <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                      <span className="bg-slate-950/85 backdrop-blur-md text-[#ffc000] text-xs font-black px-3.5 py-1.5 rounded-full border border-white/15 shadow-lg flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[#ffc000]" />
-                        <span>
-                          {slide.isTraining
-                            ? 'Featured /trainings'
-                            : slide.isNews
-                            ? 'Featured /news-updates'
-                            : 'GG Automation'}
+                      {slide.isUpcomingEvent ? (
+                        <span className="bg-emerald-950/85 backdrop-blur-md text-emerald-400 text-xs font-black px-3.5 py-1.5 rounded-full border border-emerald-500/50 shadow-lg shadow-emerald-950/50 flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Upcoming Event</span>
                         </span>
-                      </span>
+                      ) : slide.isPastEvent ? (
+                        <span className="bg-slate-900/90 backdrop-blur-md text-slate-300 text-xs font-black px-3.5 py-1.5 rounded-full border border-slate-600/60 shadow-lg flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Past Event</span>
+                        </span>
+                      ) : (
+                        <span className="bg-slate-950/85 backdrop-blur-md text-[#ffc000] text-xs font-black px-3.5 py-1.5 rounded-full border border-white/15 shadow-lg flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-[#ffc000]" />
+                          <span>
+                            {slide.isTraining
+                              ? 'Featured /trainings'
+                              : slide.isNews
+                              ? 'Featured /news-updates'
+                              : 'GG Automation'}
+                          </span>
+                        </span>
+                      )}
 
                       {slide.slideDate && (
                         <span className="bg-cyan-500/90 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1">
@@ -528,6 +602,13 @@ export default function HeroSlider() {
           0{currentSlide + 1} / 0{slides.length}
         </span>
       </div>
+      {/* Floating Inquiry Copied Notification Toast */}
+      {copiedToast && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#091833]/95 border border-emerald-500/60 text-white px-5 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-3 animate-fade-in pointer-events-none">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+          <span className="text-xs sm:text-sm font-semibold tracking-wide text-slate-100">{copiedToast}</span>
+        </div>
+      )}
     </section>
   );
 }

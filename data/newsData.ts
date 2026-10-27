@@ -11,9 +11,12 @@ export interface NewsArticle {
     | string;
   date: string;
   formattedDate: string;
+  displayDates?: string[];
   authorOrHost: string;
   location: string;
+  locations?: string[];
   image: string;
+  images?: string[] | string;
   summary: string;
   fullContent: string[];
   highlights: string[];
@@ -23,6 +26,41 @@ export interface NewsArticle {
     facebookUrl?: string;
   };
   tags: string[];
+  isUpcomingEvent?: boolean;
+  isPastEvent?: boolean;
+}
+
+/**
+ * Utility helper to extract a clean array of image URLs from an article
+ */
+export function getArticleImages(article?: { image?: string; images?: string[] | string } | null): string[] {
+  if (!article) return [];
+  const list: string[] = [];
+
+  if (Array.isArray(article.images)) {
+    article.images.forEach((img) => {
+      if (typeof img === 'string' && img.trim()) {
+        img.split(/[\n,]+/).forEach((sub) => {
+          const clean = sub.trim();
+          if (clean && !list.includes(clean)) list.push(clean);
+        });
+      }
+    });
+  } else if (typeof article.images === 'string' && article.images.trim()) {
+    article.images.split(/[\n,]+/).forEach((sub) => {
+      const clean = sub.trim();
+      if (clean && !list.includes(clean)) list.push(clean);
+    });
+  }
+
+  if (article.image && typeof article.image === 'string' && article.image.trim()) {
+    article.image.split(/[\n,]+/).forEach((sub) => {
+      const clean = sub.trim();
+      if (clean && !list.includes(clean)) list.push(clean);
+    });
+  }
+
+  return list.length > 0 ? list : (article.image ? [article.image] : ['/images/hero-solar-engineering.webp']);
 }
 
 export const newsArticles: NewsArticle[] = [

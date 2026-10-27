@@ -50,12 +50,14 @@ import {
   GripVertical,
   ChevronLeft,
   Star,
-  Hospital
+  Hospital,
+  Clock
 } from 'lucide-react';
 import AdminCareersManager from '@/components/admin/AdminCareersManager';
 import AdminHomeCategoriesManager from '@/components/admin/AdminHomeCategoriesManager';
 import RichText from '@/components/RichText';
 import { isVideoUrl, generateProjectDetailsFromTitle, splitMediaUrls } from '@/data/projectsData';
+import { getArticleImages } from '@/data/newsData';
 
 /* -------------------------------------------------------------------------- */
 /* Type Definitions                                                           */
@@ -103,9 +105,12 @@ interface NewsRecord {
   category: string;
   date: string;
   formattedDate: string;
+  displayDates?: string[];
   authorOrHost: string;
   location: string;
+  locations?: string[];
   image: string;
+  images?: string[];
   summary: string;
   fullContent: string[];
   highlights: string[];
@@ -115,6 +120,8 @@ interface NewsRecord {
     facebookUrl?: string;
   };
   tags: string[];
+  isUpcomingEvent?: boolean;
+  isPastEvent?: boolean;
 }
 
 export default function AdminPage() {
@@ -293,9 +300,12 @@ function AdminDashboardContent() {
     category: 'Scholarship',
     date: new Date().toISOString().split('T')[0],
     formattedDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+    displayDates: [new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })],
     authorOrHost: 'GG Automation Team',
     location: 'Cebu City, Philippines',
+    locations: ['Cebu City, Philippines'],
     image: '/images/hero-solar-engineering.webp',
+    images: ['/images/hero-solar-engineering.webp'],
     summary: '',
     fullContent: [],
     highlights: [],
@@ -304,12 +314,15 @@ function AdminDashboardContent() {
       email: '',
     },
     tags: [],
+    isUpcomingEvent: false,
+    isPastEvent: false,
   };
   const [newsFormData, setNewsFormData] = useState<NewsRecord>(initialNewsFormState);
   const [originalNewsId, setOriginalNewsId] = useState<string>('');
   const [newsHighlightInput, setNewsHighlightInput] = useState('');
   const [newsTagInput, setNewsTagInput] = useState('');
   const [newsParagraphInput, setNewsParagraphInput] = useState('');
+  const [newsImageUrlInput, setNewsImageUrlInput] = useState('');
   const newsFileInputRef = useRef<HTMLInputElement>(null);
 
   // Toast helper
@@ -1069,12 +1082,21 @@ function AdminDashboardContent() {
   const handleOpenCreateNews = () => {
     setNewsModalMode('create');
     setOriginalNewsId('');
+    const today = new Date().toISOString().split('T')[0];
+    const formatted = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     setNewsFormData({
       ...initialNewsFormState,
       id: '',
-      date: new Date().toISOString().split('T')[0],
-      formattedDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      date: today,
+      formattedDate: formatted,
+      displayDates: [formatted],
+      locations: ['Cebu City, Philippines'],
+      image: '/images/hero-solar-engineering.webp',
+      images: ['/images/hero-solar-engineering.webp'],
+      isUpcomingEvent: false,
+      isPastEvent: false,
     });
+    setNewsImageUrlInput('');
     setActiveNewsTabInModal('general');
     setIsNewsModalOpen(true);
   };
@@ -1082,12 +1104,42 @@ function AdminDashboardContent() {
   const handleOpenEditNews = (item: NewsRecord) => {
     setNewsModalMode('edit');
     setOriginalNewsId(item.id);
+
+    let normalizedDates: string[] = [];
+    if (Array.isArray(item.displayDates) && item.displayDates.length > 0) {
+      normalizedDates = [...item.displayDates];
+    } else if (item.formattedDate) {
+      normalizedDates = item.formattedDate.split(/\s*,\s*/).filter(Boolean);
+      if (normalizedDates.length === 0) normalizedDates = [item.formattedDate];
+    } else {
+      normalizedDates = [item.date || ''];
+    }
+
+    let normalizedLocs: string[] = [];
+    if (Array.isArray(item.locations) && item.locations.length > 0) {
+      normalizedLocs = [...item.locations];
+    } else if (item.location) {
+      normalizedLocs = item.location.split(/\s*\|\s*/).filter(Boolean);
+      if (normalizedLocs.length === 0) normalizedLocs = [item.location];
+    } else {
+      normalizedLocs = [''];
+    }
+
+    const existingImgs = getArticleImages(item);
+
     setNewsFormData({
       ...item,
+      image: existingImgs[0] || item.image || '/images/hero-solar-engineering.webp',
+      images: existingImgs,
+      displayDates: normalizedDates.length > 0 ? normalizedDates : [''],
+      locations: normalizedLocs.length > 0 ? normalizedLocs : [''],
+      isUpcomingEvent: Boolean(item.isUpcomingEvent),
+      isPastEvent: Boolean(item.isPastEvent),
       fullContent: item.fullContent || [],
       highlights: item.highlights || [],
       tags: item.tags || [],
     });
+    setNewsImageUrlInput('');
     setActiveNewsTabInModal('general');
     setIsNewsModalOpen(true);
   };
@@ -1095,14 +1147,40 @@ function AdminDashboardContent() {
   const handleDuplicateNews = (item: NewsRecord) => {
     setNewsModalMode('create');
     setOriginalNewsId('');
+
+    let normalizedDates: string[] = [];
+    if (Array.isArray(item.displayDates) && item.displayDates.length > 0) {
+      normalizedDates = [...item.displayDates];
+    } else if (item.formattedDate) {
+      normalizedDates = item.formattedDate.split(/\s*,\s*/).filter(Boolean);
+      if (normalizedDates.length === 0) normalizedDates = [item.formattedDate];
+    }
+
+    let normalizedLocs: string[] = [];
+    if (Array.isArray(item.locations) && item.locations.length > 0) {
+      normalizedLocs = [...item.locations];
+    } else if (item.location) {
+      normalizedLocs = item.location.split(/\s*\|\s*/).filter(Boolean);
+      if (normalizedLocs.length === 0) normalizedLocs = [item.location];
+    }
+
+    const existingImgs = getArticleImages(item);
+
     setNewsFormData({
       ...item,
       id: `${item.id}-copy-${Date.now()}`,
       title: `${item.title} (Copy)`,
+      image: existingImgs[0] || item.image || '/images/hero-solar-engineering.webp',
+      images: existingImgs.length > 0 ? [...existingImgs] : ['/images/hero-solar-engineering.webp'],
+      displayDates: normalizedDates.length > 0 ? normalizedDates : [item.formattedDate || ''],
+      locations: normalizedLocs.length > 0 ? normalizedLocs : [item.location || ''],
+      isUpcomingEvent: Boolean(item.isUpcomingEvent),
+      isPastEvent: Boolean(item.isPastEvent),
       fullContent: item.fullContent || [],
       highlights: item.highlights || [],
       tags: item.tags || [],
     });
+    setNewsImageUrlInput('');
     setActiveNewsTabInModal('general');
     setIsNewsModalOpen(true);
     showToast('success', 'Article cloned. Make adjustments and click Save.');
@@ -1121,8 +1199,25 @@ function AdminDashboardContent() {
     setIsSavingNews(true);
     try {
       const method = newsModalMode === 'create' ? 'POST' : 'PUT';
+
+      const cleanDates = (newsFormData.displayDates || []).map((d) => d.trim()).filter(Boolean);
+      const cleanLocations = (newsFormData.locations || []).map((l) => l.trim()).filter(Boolean);
+      const cleanImages = (newsFormData.images || []).map((img) => img.trim()).filter(Boolean);
+      const primaryImage = cleanImages[0] || newsFormData.image || '/images/hero-solar-engineering.webp';
+
+      const finalFormattedDate = cleanDates.length > 0 ? cleanDates.join(', ') : newsFormData.formattedDate;
+      const finalLocation = cleanLocations.length > 0 ? cleanLocations.join(' | ') : newsFormData.location;
+
       const payload = {
         ...newsFormData,
+        image: primaryImage,
+        images: cleanImages.length > 0 ? cleanImages : [primaryImage],
+        displayDates: cleanDates.length > 0 ? cleanDates : [finalFormattedDate],
+        formattedDate: finalFormattedDate,
+        locations: cleanLocations.length > 0 ? cleanLocations : [finalLocation],
+        location: finalLocation,
+        isUpcomingEvent: Boolean(newsFormData.isUpcomingEvent),
+        isPastEvent: Boolean(newsFormData.isPastEvent),
         originalId: newsModalMode === 'edit' ? (originalNewsId || newsFormData.id) : undefined,
       };
 
@@ -1182,27 +1277,48 @@ function AdminDashboardContent() {
       });
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.urls) && data.urls.length > 0) {
-        setNewsFormData((prev) => ({
-          ...prev,
-          image: data.urls[0],
-        }));
-        showToast('success', 'Article cover photo uploaded successfully!');
+        setNewsFormData((prev) => {
+          const currentImages = Array.isArray(prev.images) && prev.images.length > 0
+            ? prev.images.filter((img) => img !== '/images/hero-solar-engineering.webp')
+            : [];
+          const combined = [...currentImages, ...data.urls];
+          return {
+            ...prev,
+            images: combined,
+            image: combined[0] || prev.image,
+          };
+        });
+        showToast('success', `${data.urls.length} photo(s) uploaded successfully!`);
       } else {
         const base64List = await Promise.all(Array.from(files).map(readFileAsDataUrl));
-        setNewsFormData((prev) => ({
-          ...prev,
-          image: base64List[0],
-        }));
-        showToast('success', 'Article cover photo processed successfully!');
+        setNewsFormData((prev) => {
+          const currentImages = Array.isArray(prev.images) && prev.images.length > 0
+            ? prev.images.filter((img) => img !== '/images/hero-solar-engineering.webp')
+            : [];
+          const combined = [...currentImages, ...base64List];
+          return {
+            ...prev,
+            images: combined,
+            image: combined[0] || prev.image,
+          };
+        });
+        showToast('success', `${base64List.length} photo(s) processed successfully!`);
       }
     } catch {
       try {
         const base64List = await Promise.all(Array.from(files).map(readFileAsDataUrl));
-        setNewsFormData((prev) => ({
-          ...prev,
-          image: base64List[0],
-        }));
-        showToast('success', 'Article cover photo processed successfully!');
+        setNewsFormData((prev) => {
+          const currentImages = Array.isArray(prev.images) && prev.images.length > 0
+            ? prev.images.filter((img) => img !== '/images/hero-solar-engineering.webp')
+            : [];
+          const combined = [...currentImages, ...base64List];
+          return {
+            ...prev,
+            images: combined,
+            image: combined[0] || prev.image,
+          };
+        });
+        showToast('success', `${base64List.length} photo(s) processed successfully!`);
       } catch {
         showToast('error', 'Image processing error');
       }
@@ -1210,6 +1326,72 @@ function AdminDashboardContent() {
       setIsUploadingNews(false);
       if (newsFileInputRef.current) newsFileInputRef.current.value = '';
     }
+  };
+
+  const handleAddNewsImageUrl = () => {
+    if (!newsImageUrlInput.trim()) return;
+    const urls = newsImageUrlInput
+      .split(/[\n,]+/)
+      .map((u) => u.trim())
+      .filter(Boolean);
+    if (urls.length === 0) return;
+
+    setNewsFormData((prev) => {
+      const currentImages = Array.isArray(prev.images) && prev.images.length > 0
+        ? prev.images.filter((img) => img !== '/images/hero-solar-engineering.webp')
+        : [];
+      const combined = [...currentImages, ...urls];
+      return {
+        ...prev,
+        images: combined,
+        image: combined[0] || prev.image,
+      };
+    });
+    setNewsImageUrlInput('');
+    showToast('success', `Added ${urls.length} image URL(s)`);
+  };
+
+  const handleRemoveNewsImage = (index: number) => {
+    setNewsFormData((prev) => {
+      const remaining = (prev.images || []).filter((_, i) => i !== index);
+      const fallback = remaining.length > 0 ? remaining : ['/images/hero-solar-engineering.webp'];
+      return {
+        ...prev,
+        images: fallback,
+        image: fallback[0],
+      };
+    });
+  };
+
+  const handleSetCoverNewsImage = (index: number) => {
+    setNewsFormData((prev) => {
+      const list = [...(prev.images || [])];
+      if (index <= 0 || index >= list.length) return prev;
+      const [selected] = list.splice(index, 1);
+      list.unshift(selected);
+      return {
+        ...prev,
+        images: list,
+        image: list[0],
+      };
+    });
+    showToast('success', 'Cover photo updated!');
+  };
+
+  const handleMoveNewsImage = (index: number, direction: 'left' | 'right') => {
+    setNewsFormData((prev) => {
+      const list = [...(prev.images || [])];
+      const targetIndex = direction === 'left' ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= list.length) return prev;
+      const temp = list[index];
+      list[index] = list[targetIndex];
+      list[targetIndex] = temp;
+      return {
+        ...prev,
+        images: list,
+        image: list[0],
+      };
+    });
   };
 
   const handleAddNewsParagraph = () => {
@@ -3018,30 +3200,52 @@ function AdminDashboardContent() {
                               </div>
                             </td>
                             <td className="py-3 px-4 whitespace-nowrap">
-                              <span
-                                className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                                  n.category === 'Scholarship'
-                                    ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                                    : n.category === 'Global Tour'
-                                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                    : n.category === 'Exhibition'
-                                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                }`}
-                              >
-                                {n.category}
-                              </span>
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span
+                                  className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                                    n.category === 'Scholarship'
+                                      ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                      : n.category === 'Global Tour'
+                                      ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                      : n.category === 'Exhibition'
+                                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                      : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                  }`}
+                                >
+                                  {n.category}
+                                </span>
+                                {n.isUpcomingEvent && (
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[9px] font-black border border-emerald-500/40 uppercase">
+                                    <Sparkles className="w-2.5 h-2.5 text-emerald-400" />
+                                    <span>Upcoming</span>
+                                  </span>
+                                )}
+                                {n.isPastEvent && (
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-700/60 text-slate-300 text-[9px] font-black border border-slate-500/50 uppercase">
+                                    <Clock className="w-2.5 h-2.5 text-slate-400" />
+                                    <span>Past</span>
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td className="py-3 px-4 whitespace-nowrap">
                               <div className="flex items-center gap-1.5 text-slate-200">
                                 <Calendar className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
-                                <span>{n.formattedDate || n.date}</span>
+                                <span>
+                                  {n.displayDates && n.displayDates.length > 0
+                                    ? n.displayDates.join(', ')
+                                    : n.formattedDate || n.date}
+                                </span>
                               </div>
                             </td>
                             <td className="py-3 px-4 text-slate-300 whitespace-nowrap">
                               <div className="flex items-center gap-1">
                                 <MapPin className="w-3 h-3 text-[#e51a24] flex-shrink-0" />
-                                <span className="truncate max-w-[150px]">{n.location}</span>
+                                <span className="truncate max-w-[180px]">
+                                  {n.locations && n.locations.length > 0
+                                    ? n.locations.join(' • ')
+                                    : n.location}
+                                </span>
                               </div>
                             </td>
                             <td className="py-3 px-4 text-slate-300 whitespace-nowrap">
@@ -3133,11 +3337,25 @@ function AdminDashboardContent() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#091833] via-transparent to-transparent"></div>
                         <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                          <span className="px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-[#ffc000] text-[10px] font-black border border-white/10">
-                            {n.category}
-                          </span>
-                          <span className="px-2.5 py-1 rounded-full bg-emerald-600/90 text-white text-[10px] font-black">
-                            {n.formattedDate || n.date}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-[#ffc000] text-[10px] font-black border border-white/10">
+                              {n.category}
+                            </span>
+                            {n.isUpcomingEvent && (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-black uppercase shadow-sm">
+                                Upcoming
+                              </span>
+                            )}
+                            {n.isPastEvent && (
+                              <span className="px-2 py-0.5 rounded-full bg-slate-700 text-slate-200 border border-slate-500/50 text-[9px] font-black uppercase shadow-sm">
+                                Past Event
+                              </span>
+                            )}
+                          </div>
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-600/90 text-white text-[10px] font-black truncate max-w-[160px]">
+                            {n.displayDates && n.displayDates.length > 0
+                              ? n.displayDates.join(', ')
+                              : n.formattedDate || n.date}
                           </span>
                         </div>
                       </div>
@@ -3150,7 +3368,11 @@ function AdminDashboardContent() {
                         <div className="space-y-1.5 text-xs text-slate-300 pt-1 border-t border-white/5">
                           <div className="flex items-center gap-2">
                             <MapPin className="w-3.5 h-3.5 text-[#e51a24] flex-shrink-0" />
-                            <span className="truncate">{n.location}</span>
+                            <span className="truncate">
+                              {n.locations && n.locations.length > 0
+                                ? n.locations.join(' • ')
+                                : n.location}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <User className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
@@ -4556,52 +4778,264 @@ function AdminDashboardContent() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                        Date (YYYY-MM-DD)
+                  {/* Hero Slider Event Badges Option (Upcoming vs Past Event) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Mark as Upcoming Event */}
+                    <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-3">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[9px] font-black uppercase tracking-wider border border-emerald-500/40 flex items-center gap-1">
+                            <Sparkles className="w-2.5 h-2.5 text-emerald-400" />
+                            <span>Badge</span>
+                          </span>
+                          <label htmlFor="news-is-upcoming" className="text-xs font-bold text-white cursor-pointer">
+                            Upcoming Event
+                          </label>
+                        </div>
+                        <p className="text-[10px] text-slate-300">
+                          Glowing green &quot;UPCOMING EVENT&quot; badge
+                        </p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input
+                          id="news-is-upcoming"
+                          type="checkbox"
+                          checked={Boolean(newsFormData.isUpcomingEvent)}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setNewsFormData({
+                              ...newsFormData,
+                              isUpcomingEvent: checked,
+                              isPastEvent: checked ? false : newsFormData.isPastEvent,
+                            });
+                          }}
+                          className="sr-only peer"
+                        />
+                        <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
                       </label>
-                      <input
-                        type="date"
-                        value={newsFormData.date}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setNewsFormData({
-                            ...newsFormData,
+                    </div>
+
+                    {/* Mark as Past Event */}
+                    <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-600/40 flex items-center justify-between gap-3">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-700/60 text-slate-300 text-[9px] font-black uppercase tracking-wider border border-slate-500/50 flex items-center gap-1">
+                            <Clock className="w-2.5 h-2.5 text-slate-300" />
+                            <span>Badge</span>
+                          </span>
+                          <label htmlFor="news-is-past" className="text-xs font-bold text-white cursor-pointer">
+                            Past Event
+                          </label>
+                        </div>
+                        <p className="text-[10px] text-slate-300">
+                          Sleek slate &quot;PAST EVENT&quot; badge
+                        </p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input
+                          id="news-is-past"
+                          type="checkbox"
+                          checked={Boolean(newsFormData.isPastEvent)}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setNewsFormData({
+                              ...newsFormData,
+                              isPastEvent: checked,
+                              isUpcomingEvent: checked ? false : newsFormData.isUpcomingEvent,
+                            });
+                          }}
+                          className="sr-only peer"
+                        />
+                        <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-slate-400"></div>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Primary Date (YYYY-MM-DD) */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                      Calendar Date (YYYY-MM-DD)
+                    </label>
+                    <input
+                      type="date"
+                      value={newsFormData.date}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const formatted = val
+                          ? new Date(val).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                          : '';
+                        setNewsFormData((prev) => {
+                          const dates = [...(prev.displayDates || [])];
+                          if (dates.length <= 1 && formatted) {
+                            dates[0] = formatted;
+                          }
+                          return {
+                            ...prev,
                             date: val,
-                            formattedDate: val
-                              ? new Date(val).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                              : newsFormData.formattedDate,
-                          });
+                            formattedDate: formatted || prev.formattedDate,
+                            displayDates: dates.length > 0 ? dates : [formatted],
+                          };
+                        });
+                      }}
+                      className="w-full px-4 py-3 rounded-xl bg-[#091833] border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors cursor-pointer"
+                    />
+                  </div>
+
+                  {/* Multiple Event / Display Dates */}
+                  <div className="space-y-2 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-[#ffc000]" />
+                        <label className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                          Event Dates / Display Dates
+                        </label>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNewsFormData((prev) => ({
+                            ...prev,
+                            displayDates: [...(prev.displayDates || []), ''],
+                          }));
                         }}
-                        className="w-full px-4 py-3 rounded-xl bg-[#091833] border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors cursor-pointer"
-                      />
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 text-xs font-bold border border-emerald-500/30 transition-all cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add More Date</span>
+                      </button>
                     </div>
+                    <p className="text-[11px] text-slate-400">
+                      Add multiple dates for multi-day, multi-batch, or recurrent events (e.g. &quot;October 19, 2026&quot;, &quot;Batch 2: Nov 5-8, 2026&quot;).
+                    </p>
 
-                    <div>
-                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                        Display Date String
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. September 4, 2026 or June 4-7, 2026"
-                        value={newsFormData.formattedDate}
-                        onChange={(e) => setNewsFormData({ ...newsFormData, formattedDate: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors"
-                      />
+                    <div className="space-y-2 pt-1">
+                      {(newsFormData.displayDates && newsFormData.displayDates.length > 0
+                        ? newsFormData.displayDates
+                        : [newsFormData.formattedDate || '']
+                      ).map((dStr, dIdx) => (
+                        <div key={dIdx} className="flex items-center gap-2">
+                          <div className="relative flex-1">
+                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 uppercase">
+                              #{dIdx + 1}
+                            </span>
+                            <input
+                              type="text"
+                              placeholder="e.g. October 19, 2026 or Batch 1: Oct 19-23, 2026"
+                              value={dStr}
+                              onChange={(e) => {
+                                const newDates = [
+                                  ...(newsFormData.displayDates && newsFormData.displayDates.length > 0
+                                    ? newsFormData.displayDates
+                                    : [newsFormData.formattedDate || '']),
+                                ];
+                                newDates[dIdx] = e.target.value;
+                                setNewsFormData({
+                                  ...newsFormData,
+                                  displayDates: newDates,
+                                  formattedDate: newDates.filter(Boolean).join(', ') || newsFormData.formattedDate,
+                                });
+                              }}
+                              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-xs sm:text-sm focus:outline-none focus:border-[#ffc000] transition-colors"
+                            />
+                          </div>
+                          {(newsFormData.displayDates?.length || 1) > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newDates = (newsFormData.displayDates || []).filter((_, idx) => idx !== dIdx);
+                                setNewsFormData({
+                                  ...newsFormData,
+                                  displayDates: newDates,
+                                  formattedDate: newDates.filter(Boolean).join(', ') || '',
+                                });
+                              }}
+                              className="p-2.5 rounded-xl bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 border border-white/10 transition-colors cursor-pointer shrink-0"
+                              title="Remove Date"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
                     </div>
+                  </div>
 
-                    <div>
-                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                        Location / Venue
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. TESDA-Cebu Compound, Lahug"
-                        value={newsFormData.location}
-                        onChange={(e) => setNewsFormData({ ...newsFormData, location: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-[#ffc000] transition-colors"
-                      />
+                  {/* Multiple Locations / Venues */}
+                  <div className="space-y-2 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-[#e51a24]" />
+                        <label className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                          Location / Venue
+                        </label>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNewsFormData((prev) => ({
+                            ...prev,
+                            locations: [...(prev.locations || []), ''],
+                          }));
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 text-xs font-bold border border-emerald-500/30 transition-all cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add More Location/Venue</span>
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-slate-400">
+                      Add multiple venues or branches (e.g. &quot;MIDORI PLAINS, Tungkop Minglanilla, Cebu&quot;, &quot;Casa Mira South, Naga City, Cebu&quot;).
+                    </p>
+
+                    <div className="space-y-2 pt-1">
+                      {(newsFormData.locations && newsFormData.locations.length > 0
+                        ? newsFormData.locations
+                        : [newsFormData.location || '']
+                      ).map((locStr, locIdx) => (
+                        <div key={locIdx} className="flex items-center gap-2">
+                          <div className="relative flex-1">
+                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 uppercase">
+                              #{locIdx + 1}
+                            </span>
+                            <input
+                              type="text"
+                              placeholder="e.g. MIDORI PLAINS, Tungkop Minglanilla, Cebu"
+                              value={locStr}
+                              onChange={(e) => {
+                                const newLocs = [
+                                  ...(newsFormData.locations && newsFormData.locations.length > 0
+                                    ? newsFormData.locations
+                                    : [newsFormData.location || '']),
+                                ];
+                                newLocs[locIdx] = e.target.value;
+                                setNewsFormData({
+                                  ...newsFormData,
+                                  locations: newLocs,
+                                  location: newLocs.filter(Boolean).join(' | ') || newsFormData.location,
+                                });
+                              }}
+                              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-xs sm:text-sm focus:outline-none focus:border-[#ffc000] transition-colors"
+                            />
+                          </div>
+                          {(newsFormData.locations?.length || 1) > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newLocs = (newsFormData.locations || []).filter((_, idx) => idx !== locIdx);
+                                setNewsFormData({
+                                  ...newsFormData,
+                                  locations: newLocs,
+                                  location: newLocs.filter(Boolean).join(' | ') || '',
+                                });
+                              }}
+                              className="p-2.5 rounded-xl bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 border border-white/10 transition-colors cursor-pointer shrink-0"
+                              title="Remove Location/Venue"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -4806,11 +5240,13 @@ function AdminDashboardContent() {
               {/* TAB 4: MEDIA & CONTACT */}
               {activeNewsTabInModal === 'media' && (
                 <div className="space-y-5">
+                  {/* Upload Box */}
                   <div className="p-6 rounded-2xl bg-white/5 border-2 border-dashed border-white/20 hover:border-emerald-400 transition-colors text-center">
                     <input
                       type="file"
                       ref={newsFileInputRef}
                       accept="image/*"
+                      multiple
                       onChange={handleNewsFileUpload}
                       className="hidden"
                       id="news-photo-upload"
@@ -4822,28 +5258,138 @@ function AdminDashboardContent() {
                       <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-400">
                         <Upload className="w-6 h-6" />
                       </div>
-                      <div className="text-xs font-bold text-white">Click here to upload article cover image</div>
-                      <div className="text-[11px] text-slate-400">Supports WebP, PNG, JPG</div>
+                      <div className="text-xs font-bold text-white">Click here to upload multiple photos / images</div>
+                      <div className="text-[11px] text-slate-400">Select one or multiple files (WebP, PNG, JPG). Each card will continuous slide loop through them.</div>
                     </label>
                     {isUploadingNews && (
                       <div className="mt-3 text-xs text-emerald-400 font-bold flex items-center justify-center gap-2">
                         <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Uploading file...</span>
+                        <span>Uploading files...</span>
                       </div>
                     )}
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Cover Image Path or URL
+                  {/* Add URL input */}
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                      Add Image by URL or Path
                     </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. /images/news/tesda-scholarship.png"
-                      value={newsFormData.image}
-                      onChange={(e) => setNewsFormData({ ...newsFormData, image: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-emerald-400 transition-colors"
-                    />
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="Paste image URL (or multiple separated by commas)..."
+                        value={newsImageUrlInput}
+                        onChange={(e) => setNewsImageUrlInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddNewsImageUrl();
+                          }
+                        }}
+                        className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-emerald-400"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddNewsImageUrl}
+                        className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer transition-colors shrink-0 flex items-center gap-1.5"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add URL</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Gallery of Uploaded Images */}
+                  <div className="space-y-2.5 pt-2 border-t border-white/5">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                        Article Photos ({(newsFormData.images || []).length})
+                      </label>
+                      <span className="text-[11px] text-slate-400">
+                        Auto-loops in card feed. The first photo is the cover image.
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                      {(newsFormData.images || []).map((imgUrl, idx) => {
+                        const isCover = idx === 0;
+                        return (
+                          <div
+                            key={idx}
+                            className={`relative group rounded-xl overflow-hidden border bg-slate-900 aspect-video flex items-center justify-center ${
+                              isCover ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-white/10'
+                            }`}
+                          >
+                            <img
+                              src={imgUrl}
+                              alt={`Photo ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+
+                            {/* Badge */}
+                            {isCover ? (
+                              <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-black tracking-wider uppercase shadow-md flex items-center gap-1">
+                                <Star className="w-2.5 h-2.5 fill-current" />
+                                <span>Cover</span>
+                              </span>
+                            ) : (
+                              <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/60 text-white text-[10px] font-bold">
+                                #{idx + 1}
+                              </span>
+                            )}
+
+                            {/* Overlay Controls */}
+                            <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                              <div className="flex items-center justify-between">
+                                {!isCover ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSetCoverNewsImage(idx)}
+                                    title="Set as Cover Photo"
+                                    className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold cursor-pointer"
+                                  >
+                                    Set Cover
+                                  </button>
+                                ) : (
+                                  <div />
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveNewsImage(idx)}
+                                  title="Delete photo"
+                                  className="p-1 rounded bg-red-600/80 hover:bg-red-600 text-white cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+
+                              <div className="flex items-center justify-center gap-1.5">
+                                {idx > 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMoveNewsImage(idx, 'left')}
+                                    title="Move left"
+                                    className="p-1 rounded bg-white/20 hover:bg-white/40 text-white cursor-pointer"
+                                  >
+                                    <ChevronLeft className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                {idx < (newsFormData.images || []).length - 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMoveNewsImage(idx, 'right')}
+                                    title="Move right"
+                                    className="p-1 rounded bg-white/20 hover:bg-white/40 text-white cursor-pointer"
+                                  >
+                                    <ChevronRight className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/5">
@@ -4896,25 +5442,58 @@ function AdminDashboardContent() {
                   <div className="max-w-md mx-auto bg-slate-900 text-white rounded-3xl overflow-hidden border border-white/10 shadow-2xl p-6 space-y-4">
                     <div className="relative h-48 w-full rounded-2xl overflow-hidden bg-slate-950">
                       <Image
-                        src={newsFormData.image || '/images/hero-solar-engineering.webp'}
+                        src={newsFormData.image || (newsFormData.images && newsFormData.images[0]) || '/images/hero-solar-engineering.webp'}
                         alt={newsFormData.title || 'Preview'}
                         fill
                         className="object-cover"
                       />
-                      <div className="absolute top-3 left-3">
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5">
                         <span className="bg-slate-900/90 text-[#ffc000] text-[10px] font-black px-2.5 py-1 rounded-full border border-white/10">
                           {newsFormData.category}
                         </span>
+                        {newsFormData.isUpcomingEvent && (
+                          <span className="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md animate-pulse">
+                            UPCOMING EVENT
+                          </span>
+                        )}
+                        {newsFormData.isPastEvent && (
+                          <span className="bg-slate-700 text-slate-200 border border-slate-500/50 text-[10px] font-black px-2.5 py-1 rounded-full shadow-md">
+                            PAST EVENT
+                          </span>
+                        )}
                       </div>
+                      {(newsFormData.images || []).length > 1 && (
+                        <div className="absolute bottom-2 right-2 px-2 py-1 rounded-md bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold border border-white/10 flex items-center gap-1">
+                          <span>1 / {newsFormData.images?.length}</span>
+                          <span className="text-emerald-400 font-normal">• Auto-slides</span>
+                        </div>
+                      )}
                     </div>
 
                     <h3 className="text-base font-black text-white">{newsFormData.title || 'Untitled Article'}</h3>
                     <p className="text-xs text-slate-300 line-clamp-2">
                       {newsFormData.summary || 'Summary of clean energy development.'}
                     </p>
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-white/10">
-                      <span>{newsFormData.authorOrHost}</span>
-                      <span>{newsFormData.formattedDate || newsFormData.date}</span>
+                    <div className="space-y-1.5 pt-2 border-t border-white/10 text-[11px] text-slate-300">
+                      <div className="flex items-center justify-between text-slate-400">
+                        <span className="font-semibold text-emerald-400">{newsFormData.authorOrHost}</span>
+                        <div className="flex items-center gap-1 text-[#ffc000]">
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span>
+                            {newsFormData.displayDates && newsFormData.displayDates.length > 0
+                              ? newsFormData.displayDates.filter(Boolean).join(' • ')
+                              : newsFormData.formattedDate || newsFormData.date}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-slate-300">
+                        <MapPin className="w-3.5 h-3.5 text-[#e51a24] shrink-0" />
+                        <span className="truncate">
+                          {newsFormData.locations && newsFormData.locations.length > 0
+                            ? newsFormData.locations.filter(Boolean).join(' • ')
+                            : newsFormData.location}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Formatted Content Preview */}
