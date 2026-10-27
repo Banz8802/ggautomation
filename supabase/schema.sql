@@ -119,3 +119,40 @@ CREATE POLICY "Authorized media delete access"
 ON storage.objects FOR DELETE 
 TO authenticated 
 USING (bucket_id = 'project-media');
+
+-- ==============================================================================
+-- 6. News & Updates Table
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.news (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'General Update',
+  date TEXT DEFAULT '',
+  formatted_date TEXT DEFAULT '',
+  display_dates JSONB DEFAULT '[]'::jsonb,
+  author_or_host TEXT DEFAULT 'GG Automation Team',
+  location TEXT DEFAULT '',
+  locations JSONB DEFAULT '[]'::jsonb,
+  image TEXT DEFAULT '',
+  images JSONB DEFAULT '[]'::jsonb,
+  summary TEXT DEFAULT '',
+  full_content JSONB DEFAULT '[]'::jsonb,
+  highlights JSONB DEFAULT '[]'::jsonb,
+  contact_info JSONB DEFAULT '{}'::jsonb,
+  tags JSONB DEFAULT '[]'::jsonb,
+  is_upcoming_event BOOLEAN DEFAULT false,
+  is_past_event BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public news are viewable by everyone" ON public.news;
+CREATE POLICY "Public news are viewable by everyone" 
+ON public.news FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Service role can manage news" ON public.news;
+CREATE POLICY "Service role can manage news" 
+ON public.news FOR ALL TO authenticated USING (true) WITH CHECK (true);
+

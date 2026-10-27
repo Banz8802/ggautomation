@@ -1,82 +1,12 @@
 import { NextResponse } from 'next/server';
-import { readFile, writeFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
-import os from 'os';
-
-const localFilePath = path.join(process.cwd(), 'data', 'news.json');
-const tmpFilePath = path.join(os.tmpdir(), 'ggautomation_news.json');
-
-// In-memory cache for fast serverless persistence across executions in the same instance
-let newsMemoryCache: unknown[] | null = null;
-
-async function readNewsData(): Promise<any[]> {
-  // In development, prioritize reading the repository file directly so updates are always fresh
-  if (process.env.NODE_ENV !== 'production') {
-    try {
-      if (existsSync(localFilePath)) {
-        const raw = await readFile(localFilePath, 'utf-8');
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          newsMemoryCache = parsed;
-          return [...parsed];
-        }
-      }
-    } catch {}
-  }
-
-  if (newsMemoryCache && Array.isArray(newsMemoryCache) && newsMemoryCache.length > 0) {
-    return [...newsMemoryCache];
-  }
-
-  // 1. Try reading from writable /tmp
-  try {
-    if (existsSync(tmpFilePath)) {
-      const raw = await readFile(tmpFilePath, 'utf-8');
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        newsMemoryCache = parsed;
-        return [...parsed];
-      }
-    }
-  } catch {}
-
-  // 2. Fall back to bundled data file
-  try {
-    const raw = await readFile(localFilePath, 'utf-8');
-    const parsed = JSON.parse(raw);
-    newsMemoryCache = parsed;
-    return [...parsed];
-  } catch (err) {
-    console.error('Error reading news.json:', err);
-    return [];
-  }
-}
-
-async function writeNewsData(data: unknown[]) {
-  newsMemoryCache = [...data];
-
-  // Try writing to local project directory (works in local dev)
-  try {
-    await writeFile(localFilePath, JSON.stringify(data, null, 2), 'utf-8');
-  } catch {
-    // Read-only filesystem on Vercel / Lambda - expected
-  }
-
-  // Always write to /tmp for serverless runtime persistence
-  try {
-    await writeFile(tmpFilePath, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Error writing to tmp news file:', err);
-  }
-}
+import { getNews, saveNews, deleteNews } from '@/lib/supabaseNews';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET() {
   try {
-    const news = await readNewsData();
+    const news = await getNews();
     return NextResponse.json(
       { success: true, news },
       {
@@ -103,7 +33,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const news = await readNewsData();
+    const news = await getNews();
 
     // Generate unique slug
     let baseSlug = (body.id?.trim() || body.title.trim())
@@ -181,10 +111,8 @@ export async function POST(request: Request) {
       isPastEvent: Boolean(body.isPastEvent),
     };
 
-    news.unshift(newArticle);
-    await writeNewsData(news);
-
-    return NextResponse.json({ success: true, article: newArticle });
+    const savedArticle = await saveNews(newArticle, true);
+    return NextResponse.json({ success: true, article: savedArticle });
   } catch (err: unknown) {
     console.error('Error adding news:', err);
     return NextResponse.json(
@@ -202,14 +130,13 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: false, error: 'Article ID is required' }, { status: 400 });
     }
 
-    const news = await readNewsData();
-    const index = news.findIndex((n: { id: string }) => n.id === targetId);
+    const news = await getNews();
+    const existing = news.find((n: { id: string }) => n.id === targetId);
 
-    if (index === -1) {
+    if (!existing) {
       return NextResponse.json({ success: false, error: 'Article not found' }, { status: 404 });
     }
 
-    const existing = news[index];
     const parsedContent = body.fullContent !== undefined
       ? (Array.isArray(body.fullContent) ? body.fullContent.filter(Boolean) : [body.fullContent].filter(Boolean))
       : existing.fullContent;
@@ -271,10 +198,13 @@ export async function PUT(request: Request) {
       isPastEvent: body.isPastEvent !== undefined ? Boolean(body.isPastEvent) : Boolean(existing.isPastEvent),
     };
 
-    news[index] = updated;
-    await writeNewsData(news);
+    // If ID changed, delete the old ID
+    if (body.id && body.id.trim() !== targetId) {
+      await deleteNews(targetId);
+    }
 
-    return NextResponse.json({ success: true, article: updated });
+    const savedArticle = await saveNews(updated, false);
+    return NextResponse.json({ success: true, article: savedArticle });
   } catch (err: unknown) {
     console.error('Error updating news:', err);
     return NextResponse.json(
@@ -293,14 +223,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: false, error: 'Article ID is required' }, { status: 400 });
     }
 
-    const news = await readNewsData();
-    const filtered = news.filter((n: { id: string }) => n.id !== id);
-
-    if (filtered.length === news.length) {
-      return NextResponse.json({ success: false, error: 'Article not found' }, { status: 404 });
-    }
-
-    await writeNewsData(filtered);
+    await deleteNews(id);
     return NextResponse.json({ success: true, message: 'Article deleted successfully' });
   } catch (err: unknown) {
     console.error('Error deleting news:', err);
