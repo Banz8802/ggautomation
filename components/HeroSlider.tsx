@@ -22,7 +22,8 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { initialTrainings, parseRawTrainings, TrainingItem, TrainingRawInput } from '@/data/trainingsData';
-import { newsArticles as fallbackNews, NewsArticle } from '@/data/newsData';
+import { newsArticles as fallbackNews, NewsArticle, getArticleImages } from '@/data/newsData';
+import HeroRightImageCard from '@/components/HeroRightImageCard';
 
 interface Slide {
   id: number | string;
@@ -37,6 +38,7 @@ interface Slide {
   secondaryCtaText: string;
   secondaryCtaHref: string;
   image: string;
+  images?: string[];
   videoUrl?: string;
   isTraining?: boolean;
   isNews?: boolean;
@@ -170,6 +172,7 @@ export default function HeroSlider() {
     // 1 & 2: Two Latest News Articles
     recentNews.forEach((newsItem, index) => {
       const isUpcoming = Boolean(newsItem.isUpcomingEvent);
+      const articleImages = getArticleImages(newsItem);
       const isPast = Boolean(newsItem.isPastEvent);
       const fbChatUrl = 'https://www.facebook.com/messages/t/GGAutomation.1';
 
@@ -187,7 +190,8 @@ export default function HeroSlider() {
         primaryCtaHref: `/news-updates?id=${encodeURIComponent(newsItem.id)}`,
         secondaryCtaText: 'Inquire Details',
         secondaryCtaHref: fbChatUrl,
-        image: newsItem.image || '/images/news/tesda-scholarship.png',
+        image: articleImages[0] || newsItem.image || '/images/news/tesda-scholarship.png',
+        images: articleImages,
         isNews: true,
         isUpcomingEvent: isUpcoming,
         isPastEvent: isPast,
@@ -227,6 +231,12 @@ export default function HeroSlider() {
 
     // 3: Latest Technical Training
     if (latestTraining) {
+      const trainingImages = [
+        latestTraining.image,
+        ...(Array.isArray(latestTraining.gallery) ? latestTraining.gallery : []),
+      ].filter((img): img is string => Boolean(img && typeof img === 'string' && img.trim()));
+      const uniqueTrainingImages = Array.from(new Set(trainingImages));
+
       list.push({
         id: `training-${latestTraining.id}`,
         badge: latestTraining.badge ? latestTraining.badge.toUpperCase() : 'LATEST TECHNICAL TRAINING',
@@ -245,7 +255,8 @@ export default function HeroSlider() {
         primaryCtaHref: '/trainings',
         secondaryCtaText: 'Request Workshop',
         secondaryCtaHref: latestTraining.registrationUrl || '/contact',
-        image: latestTraining.image || '/images/hero-floating-solar.jpg',
+        image: uniqueTrainingImages[0] || latestTraining.image || '/images/hero-floating-solar.jpg',
+        images: uniqueTrainingImages.length > 0 ? uniqueTrainingImages : [latestTraining.image || '/images/hero-floating-solar.jpg'],
         videoUrl: latestTraining.videoUrl,
         isTraining: true,
         slideDate: latestTraining.date,
@@ -460,96 +471,9 @@ export default function HeroSlider() {
                 </div>
               </div>
 
-              {/* RIGHT COLUMN: Same Uploaded Image Beside Content in Left */}
+              {/* RIGHT COLUMN: Showcase Box with Animated Image Transitions */}
               <div className="lg:col-span-5 hidden lg:block">
-                <div className="relative rounded-3xl overflow-hidden border border-white/20 bg-slate-900/80 shadow-2xl backdrop-blur-xl group/card hover:border-[#ffc000]/50 transition-all duration-500">
-                  <div className="relative h-80 sm:h-[400px] w-full overflow-hidden bg-slate-950">
-                    <Image
-                      src={slide.image}
-                      alt={slide.title}
-                      fill
-                      className="object-cover group-hover/card:scale-105 transition-transform duration-700"
-                      sizes="(max-width: 1200px) 50vw, 40vw"
-                      priority={index === 0}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-
-                    {/* Top Floating Badge on Image Card */}
-                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                      {slide.isUpcomingEvent ? (
-                        <span className="bg-emerald-950/85 backdrop-blur-md text-emerald-400 text-xs font-black px-3.5 py-1.5 rounded-full border border-emerald-500/50 shadow-lg shadow-emerald-950/50 flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Upcoming Event</span>
-                        </span>
-                      ) : slide.isPastEvent ? (
-                        <span className="bg-slate-900/90 backdrop-blur-md text-slate-300 text-xs font-black px-3.5 py-1.5 rounded-full border border-slate-600/60 shadow-lg flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
-                          <span>Past Event</span>
-                        </span>
-                      ) : (
-                        <span className="bg-slate-950/85 backdrop-blur-md text-[#ffc000] text-xs font-black px-3.5 py-1.5 rounded-full border border-white/15 shadow-lg flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-[#ffc000]" />
-                          <span>
-                            {slide.isTraining
-                              ? 'Featured /trainings'
-                              : slide.isNews
-                              ? 'Featured /news-updates'
-                              : 'GG Automation'}
-                          </span>
-                        </span>
-                      )}
-
-                      {slide.slideDate && (
-                        <span className="bg-cyan-500/90 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          <span className="truncate max-w-[120px]">{slide.slideDate}</span>
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Center Video Play Button if available */}
-                    {slide.videoUrl ? (
-                      <a
-                        href={slide.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Play Video"
-                        className="absolute inset-0 flex items-center justify-center group/play cursor-pointer"
-                      >
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#e51a24] to-[#ffc000] text-white shadow-2xl flex items-center justify-center group-hover/play:scale-110 active:scale-95 transition-all">
-                          <Play className="w-7 h-7 fill-current ml-1" />
-                        </div>
-                      </a>
-                    ) : null}
-
-                    {/* Bottom Card Caption Details */}
-                    <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-white/15 space-y-2">
-                      <div className="text-xs font-black text-white line-clamp-2 leading-snug">
-                        {slide.title}
-                      </div>
-
-                      {slide.slideLocation && (
-                        <div className="flex items-center gap-1.5 text-[11px] text-slate-300">
-                          <MapPin className="w-3.5 h-3.5 text-[#e51a24] flex-shrink-0" />
-                          <span className="truncate">{slide.slideLocation}</span>
-                        </div>
-                      )}
-
-                      <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 pt-1 border-t border-white/10">
-                        <span className="truncate max-w-[180px]">
-                          {slide.slideHost || 'GG Automation Clean Energy'}
-                        </span>
-                        <Link
-                          href={slide.primaryCtaHref}
-                          className="text-[#ffc000] hover:underline flex items-center gap-1"
-                        >
-                          <span>Explore</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <HeroRightImageCard slide={slide} isActive={index === currentSlide} />
               </div>
             </div>
           );
