@@ -1394,6 +1394,64 @@ function AdminDashboardContent() {
     });
   };
 
+  /* -------------------------------------------------------------------------- */
+  /* News Article Photos Drag & Rearrange Handlers                              */
+  /* -------------------------------------------------------------------------- */
+  const [draggedNewsImgIdx, setDraggedNewsImgIdx] = useState<number | null>(null);
+  const [dragOverNewsImgIdx, setDragOverNewsImgIdx] = useState<number | null>(null);
+
+  const handleNewsImgDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedNewsImgIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(index));
+  };
+
+  const handleNewsImgDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverNewsImgIdx !== index) {
+      setDragOverNewsImgIdx(index);
+    }
+  };
+
+  const handleNewsImgDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    setDragOverNewsImgIdx(null);
+    if (draggedNewsImgIdx === null || draggedNewsImgIdx === targetIndex) {
+      setDraggedNewsImgIdx(null);
+      return;
+    }
+
+    setNewsFormData((prev) => {
+      const list = [...(prev.images || [])];
+      if (
+        draggedNewsImgIdx < 0 ||
+        draggedNewsImgIdx >= list.length ||
+        targetIndex < 0 ||
+        targetIndex >= list.length
+      ) {
+        return prev;
+      }
+
+      const [moved] = list.splice(draggedNewsImgIdx, 1);
+      list.splice(targetIndex, 0, moved);
+
+      return {
+        ...prev,
+        images: list,
+        image: list[0],
+      };
+    });
+
+    setDraggedNewsImgIdx(null);
+    showToast('success', 'Images reordered successfully!');
+  };
+
+  const handleNewsImgDragEnd = () => {
+    setDraggedNewsImgIdx(null);
+    setDragOverNewsImgIdx(null);
+  };
+
   const handleAddNewsParagraph = () => {
     if (newsParagraphInput.trim()) {
       setNewsFormData((prev) => ({
@@ -5302,9 +5360,15 @@ function AdminDashboardContent() {
                   {/* Gallery of Uploaded Images */}
                   <div className="space-y-2.5 pt-2 border-t border-white/5">
                     <div className="flex items-center justify-between">
-                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
-                        Article Photos ({(newsFormData.images || []).length})
-                      </label>
+                      <div className="flex items-center gap-2">
+                        <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                          Article Photos ({(newsFormData.images || []).length})
+                        </label>
+                        <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                          <GripVertical className="w-3 h-3" />
+                          <span>Drag cards to rearrange</span>
+                        </span>
+                      </div>
                       <span className="text-[11px] text-slate-400">
                         Auto-loops in card feed. The first photo is the cover image.
                       </span>
@@ -5313,77 +5377,103 @@ function AdminDashboardContent() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                       {(newsFormData.images || []).map((imgUrl, idx) => {
                         const isCover = idx === 0;
+                        const isDragged = draggedNewsImgIdx === idx;
+                        const isDragOver = dragOverNewsImgIdx === idx;
+
                         return (
                           <div
                             key={idx}
-                            className={`relative group rounded-xl overflow-hidden border bg-slate-900 aspect-video flex items-center justify-center ${
-                              isCover ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-white/10'
+                            draggable
+                            onDragStart={(e) => handleNewsImgDragStart(e, idx)}
+                            onDragOver={(e) => handleNewsImgDragOver(e, idx)}
+                            onDrop={(e) => handleNewsImgDrop(e, idx)}
+                            onDragEnd={handleNewsImgDragEnd}
+                            className={`relative group rounded-xl overflow-hidden border bg-slate-900 aspect-video flex items-center justify-center cursor-grab active:cursor-grabbing transition-all duration-200 select-none ${
+                              isDragged ? 'opacity-30 scale-95 border-dashed border-white/40' : ''
+                            } ${
+                              isDragOver
+                                ? 'border-2 border-emerald-400 scale-105 shadow-2xl ring-2 ring-emerald-400/40 z-20'
+                                : isCover
+                                ? 'border-emerald-500 ring-2 ring-emerald-500/30'
+                                : 'border-white/10 hover:border-white/30'
                             }`}
                           >
                             <img
                               src={imgUrl}
                               alt={`Photo ${idx + 1}`}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover pointer-events-none"
                             />
 
-                            {/* Badge */}
+                            {/* Top Right: Drag Handle Icon */}
+                            <div className="absolute top-1.5 right-1.5 p-1 rounded bg-black/60 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                              <GripVertical className="w-3.5 h-3.5" />
+                            </div>
+
+                            {/* Top Left: Cover / Rank Badge */}
                             {isCover ? (
-                              <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-black tracking-wider uppercase shadow-md flex items-center gap-1">
+                              <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-black tracking-wider uppercase shadow-md flex items-center gap-1 pointer-events-none">
                                 <Star className="w-2.5 h-2.5 fill-current" />
                                 <span>Cover</span>
                               </span>
                             ) : (
-                              <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/60 text-white text-[10px] font-bold">
+                              <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/60 text-white text-[10px] font-bold pointer-events-none">
                                 #{idx + 1}
                               </span>
                             )}
 
                             {/* Overlay Controls */}
-                            <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                            <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
                               <div className="flex items-center justify-between">
                                 {!isCover ? (
                                   <button
                                     type="button"
                                     onClick={() => handleSetCoverNewsImage(idx)}
                                     title="Set as Cover Photo"
-                                    className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold cursor-pointer"
+                                    className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold cursor-pointer transition-colors shadow-sm"
                                   >
                                     Set Cover
                                   </button>
                                 ) : (
-                                  <div />
+                                  <span className="text-[10px] text-emerald-400 font-bold">Primary</span>
                                 )}
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveNewsImage(idx)}
                                   title="Delete photo"
-                                  className="p-1 rounded bg-red-600/80 hover:bg-red-600 text-white cursor-pointer"
+                                  className="p-1 rounded bg-red-600/80 hover:bg-red-600 text-white cursor-pointer transition-colors"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               </div>
 
-                              <div className="flex items-center justify-center gap-1.5">
-                                {idx > 0 && (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleMoveNewsImage(idx, 'left')}
-                                    title="Move left"
-                                    className="p-1 rounded bg-white/20 hover:bg-white/40 text-white cursor-pointer"
-                                  >
-                                    <ChevronLeft className="w-3.5 h-3.5" />
-                                  </button>
-                                )}
-                                {idx < (newsFormData.images || []).length - 1 && (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleMoveNewsImage(idx, 'right')}
-                                    title="Move right"
-                                    className="p-1 rounded bg-white/20 hover:bg-white/40 text-white cursor-pointer"
-                                  >
-                                    <ChevronRight className="w-3.5 h-3.5" />
-                                  </button>
-                                )}
+                              <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                                <span className="text-[9px] text-slate-300 font-medium flex items-center gap-1">
+                                  <GripVertical className="w-3 h-3 text-slate-400" />
+                                  <span>Drag to reorder</span>
+                                </span>
+
+                                <div className="flex items-center gap-1">
+                                  {idx > 0 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleMoveNewsImage(idx, 'left')}
+                                      title="Move left"
+                                      className="p-1 rounded bg-white/20 hover:bg-white/40 text-white cursor-pointer"
+                                    >
+                                      <ChevronLeft className="w-3.5 h-3.5" />
+                                    </button>
+                                  )}
+                                  {idx < (newsFormData.images || []).length - 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleMoveNewsImage(idx, 'right')}
+                                      title="Move right"
+                                      className="p-1 rounded bg-white/20 hover:bg-white/40 text-white cursor-pointer"
+                                    >
+                                      <ChevronRight className="w-3.5 h-3.5" />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
