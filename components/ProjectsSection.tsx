@@ -321,6 +321,7 @@ function ProjectModal({
   onClose: () => void;
 }) {
   const [activePhotoIdx, setActivePhotoIdx] = useState(initialIndex);
+  const [isImageExpanded, setIsImageExpanded] = useState(false);
 
   const prevPhoto = useCallback(() => {
     setActivePhotoIdx((prev) => (prev === 0 ? project.images.length - 1 : prev - 1));
@@ -333,13 +334,25 @@ function ProjectModal({
   // Keyboard navigation support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        if (!isImageExpanded) onClose();
+        return;
+      }
       if (e.key === 'ArrowLeft') prevPhoto();
       if (e.key === 'ArrowRight') nextPhoto();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose, prevPhoto, nextPhoto]);
+  }, [onClose, prevPhoto, nextPhoto, isImageExpanded]);
+
+  useEffect(() => {
+    if (!isImageExpanded) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter') setIsImageExpanded(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isImageExpanded]);
 
   return (
     <div 
@@ -396,7 +409,8 @@ function ProjectModal({
                   src={project.images[activePhotoIdx]}
                   alt={`${project.title} - Photo ${activePhotoIdx + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-cover cursor-zoom-in"
+                  onClick={() => setIsImageExpanded(true)}
                   priority
                   unoptimized={project.images[activePhotoIdx]?.startsWith('data:') || project.images[activePhotoIdx]?.startsWith('blob:')}
                 />
@@ -552,6 +566,34 @@ function ProjectModal({
           </div>
         </div>
       </div>
+      {isImageExpanded && !isVideoUrl(project.images[activePhotoIdx]) && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center p-3 sm:p-8 cursor-zoom-out"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsImageExpanded(false);
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close enlarged image"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsImageExpanded(false);
+            }
+          }}
+        >
+          <Image
+            src={project.images[activePhotoIdx]}
+            alt={`${project.title} - Photo ${activePhotoIdx + 1}`}
+            fill
+            sizes="100vw"
+            className="!relative !h-auto !w-auto max-h-full max-w-full object-contain"
+            priority
+            unoptimized={project.images[activePhotoIdx]?.startsWith('data:') || project.images[activePhotoIdx]?.startsWith('blob:')}
+          />
+        </div>
+      )}
     </div>
   );
 }
