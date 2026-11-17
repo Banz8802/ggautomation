@@ -66,8 +66,7 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<ChatMessage[]>([initialBotMessage]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(1);
-  const [hasOpened, setHasOpened] = useState(false);
+  const [showTeaser, setShowTeaser] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -80,15 +79,13 @@ export default function ChatBot() {
   useEffect(() => {
     if (isOpen) {
       scrollToBottom();
-      setUnreadCount(0);
-      setHasOpened(true);
     }
   }, [isOpen, messages, isTyping]);
 
   const handleOpen = () => {
     setIsOpen(true);
     setIsMinimized(false);
-    setUnreadCount(0);
+    setShowTeaser(false);
     setTimeout(() => inputRef.current?.focus(), 200);
   };
 
@@ -398,72 +395,48 @@ export default function ChatBot() {
 
   return (
     <>
-      {/* -------------------------------------------------------------------------- */}
-      {/* Floating Trigger Button & Teaser Speech Bubble                             */}
-      {/* -------------------------------------------------------------------------- */}
-      <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 flex flex-col items-end gap-2 pointer-events-auto">
-        
-        {/* Floating Bubble Teaser (Positioned on TOP of the button) */}
-        {!isOpen && !hasOpened && (
-          <div 
-            className="flex items-center gap-2 cursor-pointer bg-white text-slate-900 text-xs font-extrabold py-2 px-3.5 rounded-full shadow-2xl border border-slate-200/90 animate-bounce hover:border-[#e51a24]/40 transition-all select-none relative group mr-1"
-          >
-            <div 
-              onClick={handleOpen}
-              className="flex items-center gap-2"
-            >
-              <div className="w-2 h-2 rounded-full bg-[#0b7337] animate-ping flex-shrink-0"></div>
-              <span className="whitespace-nowrap">Need a Solar Estimate? Ask AI</span>
-            </div>
+      {/* Floating Chat Trigger */}
+      <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end gap-2 pointer-events-auto">
+        {!isOpen && showTeaser && (
+          <div className="relative flex max-w-[calc(100vw-2rem)] items-center gap-2 rounded-full border border-slate-200/90 bg-white py-2.5 pl-3.5 pr-2.5 text-xs font-extrabold text-slate-900 shadow-2xl animate-bounce">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setHasOpened(true);
-              }}
-              title="Dismiss"
-              aria-label="Dismiss label"
-              className="ml-0.5 p-0.5 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+              type="button"
+              onClick={handleOpen}
+              className="flex items-center gap-2 whitespace-nowrap"
             >
-              <X className="w-3 h-3" />
+              <span className="h-2 w-2 flex-shrink-0 rounded-full bg-[#0b7337] animate-ping" />
+              <span>Need a Solar Estimate? Ask AI</span>
             </button>
-            {/* Tooltip pointer pointing down to the chatbot button */}
-            <div className="w-2 h-2 bg-white transform rotate-45 absolute -bottom-1 right-8 border-b border-r border-slate-200"></div>
+            <button
+              type="button"
+              onClick={() => setShowTeaser(false)}
+              aria-label="Dismiss chat prompt"
+              className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            >
+              <X className="h-3 w-3" />
+            </button>
+            <span className="absolute -bottom-1 right-7 h-2 w-2 rotate-45 border-b border-r border-slate-200 bg-white" />
           </div>
         )}
 
-        {/* Trigger Button */}
         {!isOpen ? (
           <button
             onClick={handleOpen}
             aria-label="Open Solar AI Chat Assistant"
-            className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#091833] via-[#0d2247] to-[#091833] text-white shadow-2xl hover:shadow-cyan-900/40 border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer flex-shrink-0"
+            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[#091833] via-[#0d2247] to-[#091833] text-white shadow-2xl hover:shadow-cyan-900/40 border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
           >
             {/* Glowing Halo */}
             <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#e51a24]/30 via-[#ffc000]/30 to-[#0b7337]/30 blur-md opacity-70 group-hover:opacity-100 transition-opacity"></span>
 
-            <div className="relative flex items-center justify-center w-7 h-7 rounded-full bg-white/15 p-1 shadow-inner overflow-hidden border border-white/25">
+            <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/25 bg-white/15 p-1 shadow-inner">
               <Image
                 src="/images/icon-logo.png"
-                alt="GG Automation Icon"
-                width={28}
-                height={28}
-                className="w-full h-full object-contain"
+                alt=""
+                width={36}
+                height={36}
+                className="h-full w-full object-contain"
               />
-            </div>
-
-            <div className="relative text-left hidden sm:block">
-              <div className="text-xs font-black tracking-wide text-white flex items-center gap-1.5">
-                <span>GG Solar AI</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              </div>
-              <div className="text-[10px] text-slate-300 font-medium">Instant Consultation</div>
-            </div>
-
-            {unreadCount > 0 && (
-              <span className="relative flex items-center justify-center w-5 h-5 rounded-full bg-[#e51a24] text-white text-[10px] font-black shadow-md">
-                {unreadCount}
-              </span>
-            )}
+            </span>
           </button>
         ) : null}
       </div>

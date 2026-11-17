@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import { Menu, X, ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
+import InquiryModal from './InquiryModal';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -20,6 +21,7 @@ export default function Header() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,13 +101,14 @@ export default function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center">
-            <a
-              href="/contact"
+            <button
+              type="button"
+              onClick={() => setInquiryModalOpen(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-md hover:shadow-lg transition-all duration-200 group"
             >
-              <span>Book Now</span>
+              <span>Inquire Now</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </a>
+            </button>
           </div>
 
           {/* Mobile Hamburger Button */}
@@ -185,14 +188,17 @@ export default function Header() {
 
           {/* Drawer Footer with Actions and Contacts */}
           <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50/70 space-y-4">
-            <a
-              href="/contact"
-              onClick={() => setMobileMenuOpen(false)}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setInquiryModalOpen(true);
+              }}
               className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-bold bg-[#e51a24] hover:bg-[#c8141d] text-white shadow-md active:scale-[0.99] transition-all"
             >
-              <span>Book Free Consultation</span>
+              <span>Inquire Now</span>
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </button>
 
             <div className="space-y-1.5 text-xs text-slate-600 pt-1">
               <a 
@@ -217,6 +223,11 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      <InquiryModal
+        isOpen={inquiryModalOpen}
+        onClose={() => setInquiryModalOpen(false)}
+      />
     </>
   );
 }
