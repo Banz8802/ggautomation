@@ -1,6 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import SectionHeading from './SectionHeading';
+import ProjectTotal from './ProjectTotal';
 import {
   Sun,
   Zap,
@@ -73,10 +75,21 @@ const pillars = [
 ];
 
 const stats = [
-  { label: 'Years Experience', value: '10+', sub: 'EPC & Construction' },
-  { label: 'Engineering Standards', value: '100%', sub: 'PEC & IEEE Compliant' },
-  { label: 'Solar Warranty', value: '25 Yrs', sub: 'Linear Performance' },
-  { label: 'Energy Savings', value: 'Up to 80%', sub: 'Utility Bill Reduction' },
+  {
+    label: 'Years Experience', value: '10+', sub: 'EPC & Construction', href: '/about',
+    hover: 'hover:border-[#e51a24]/40 hover:bg-red-50/70 hover:shadow-red-900/10',
+    hoverText: 'group-hover:text-[#e51a24]',
+  },
+  {
+    label: 'Engineering Standards', value: '100%', sub: 'PEC & IEEE Compliant', href: '/services',
+    hover: 'hover:border-[#0b7337]/40 hover:bg-emerald-50/70 hover:shadow-emerald-900/10',
+    hoverText: 'group-hover:text-[#0b7337]',
+  },
+  {
+    label: 'Energy Savings', value: 'Up to 80%', sub: 'Utility Bill Reduction', href: '/services#solar-systems',
+    hover: 'hover:border-[#ffc000]/60 hover:bg-amber-50/70 hover:shadow-amber-900/10',
+    hoverText: 'group-hover:text-amber-700',
+  },
 ];
 
 export default function AboutSection() {
@@ -121,15 +134,7 @@ export default function AboutSection() {
             </div>
 
             {/* Experience Floating Badge */}
-            <div className="absolute -bottom-6 -right-3 sm:right-6 bg-white p-4 sm:p-5 rounded-2xl shadow-xl border border-slate-200 flex items-center gap-4 max-w-xs">
-              <div className="w-12 h-12 rounded-xl bg-[#e51a24]/10 border border-[#e51a24]/20 flex items-center justify-center flex-shrink-0">
-                <Award className="w-7 h-7 text-[#e51a24]" />
-              </div>
-              <div>
-                <div className="text-2xl font-black text-[#091833]">10+ Years</div>
-                <div className="text-xs font-bold text-slate-500">Engineering & EPC Excellence</div>
-              </div>
-            </div>
+            <ProjectTotal variant="badge" />
           </div>
 
           {/* About Narrative & Highlights (Right) */}
@@ -154,12 +159,20 @@ export default function AboutSection() {
 
             {/* Micro Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-              {stats.map((stat, idx) => (
-                <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 text-center space-y-0.5">
-                  <div className="text-xl sm:text-2xl font-black text-[#091833]">{stat.value}</div>
+              {stats.slice(0, 2).map((stat) => (
+                <Link key={stat.label} href={stat.href} className={`group p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 text-center space-y-0.5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffc000] ${stat.hover}`}>
+                  <div className={`text-xl sm:text-2xl font-black text-[#091833] transition-colors ${stat.hoverText}`}>{stat.value}</div>
                   <div className="text-[11px] font-bold text-slate-800 leading-tight">{stat.label}</div>
                   <div className="text-[10px] text-slate-500">{stat.sub}</div>
-                </div>
+                </Link>
+              ))}
+              <ProjectTotal />
+              {stats.slice(2).map((stat) => (
+                <Link key={stat.label} href={stat.href} className={`group p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 text-center space-y-0.5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffc000] ${stat.hover}`}>
+                  <div className={`text-xl sm:text-2xl font-black text-[#091833] transition-colors ${stat.hoverText}`}>{stat.value}</div>
+                  <div className="text-[11px] font-bold text-slate-800 leading-tight">{stat.label}</div>
+                  <div className="text-[10px] text-slate-500">{stat.sub}</div>
+                </Link>
               ))}
             </div>
 
